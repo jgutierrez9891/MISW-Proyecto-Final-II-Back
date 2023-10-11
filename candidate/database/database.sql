@@ -10,11 +10,11 @@ CREATE TABLE candidato(
     nombre varchar(100) NOT NULL,
     usuario varchar(50) NOT NULL,
     clave varchar(50) NOT NULL,
-    telefono int NOT NULL,
+    telefono bigint NOT NULL,
     email varchar(100) NOT NULL,
     pais varchar(50) NOT NULL,
     ciudad varchar(50) NOT NULL,
-    aspiracion_salarial int NOT NULL,
+    aspiracion_salarial bigint NOT NULL,
     fecha_nacimiento datetime NOT NULL,
     idiomas varchar(200) NOT NULL,
     PRIMARY KEY(id)
