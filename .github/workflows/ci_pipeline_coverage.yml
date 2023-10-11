@@ -15,7 +15,6 @@ jobs:
       matrix:
         python-version: [ 3.10.6 ]
     env:
-      SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
       DB_USER: root
       DB_PASSWORD: root
       IF_TEST: "True"

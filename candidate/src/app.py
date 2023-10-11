@@ -10,9 +10,7 @@ app = Flask(__name__)
 test = os.getenv('IF_TEST')
 
 if test:
-    sqlpass = 'root'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
-
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/candidatos'
 
