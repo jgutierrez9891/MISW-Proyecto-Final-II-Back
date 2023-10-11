@@ -54,3 +54,9 @@ class VistaCrearCandidato(Resource):
             data['idiomas'],
             )
         return candidato_schema_single.dump(response)
+    
+
+class ping(Resource):
+
+    def get(self):
+        return "pong", 200
