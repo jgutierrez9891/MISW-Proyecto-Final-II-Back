@@ -7,6 +7,11 @@ import os
 sqlpass = os.getenv("SQL_PASSWORD")
 app = Flask(__name__)
 
+test = os.getenv('IF_TEST')
+
+if test:
+    sqlpass = 'root'
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/candidatos'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
