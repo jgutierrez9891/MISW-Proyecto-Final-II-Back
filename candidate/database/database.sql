@@ -16,6 +16,6 @@ CREATE TABLE candidato(
     ciudad varchar(50) NOT NULL,
     aspiracion_salarial int NOT NULL,
     fecha_nacimiento datetime NOT NULL,
-    ciudad varchar(200) NOT NULL,
+    idiomas varchar(200) NOT NULL,
     PRIMARY KEY(id)
 );
