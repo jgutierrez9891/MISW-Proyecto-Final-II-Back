@@ -29,8 +29,13 @@ jobs:
         working-directory: ./candidate/src
         run: |
           pip3 install -r requirements.txt
-      - name: Run user unit tests
+      - name: Run candidate unit tests
         working-directory: ./candidate/src
         run: |
-          coverage run --include=./app.py,./tests/tests.py -m unittest tests/* -v 
+          coverage run --include=./app.py,./tests/tests.py,./vistas/vistas.py -m unittest tests/* -v 
           coverage report --fail-under=80
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
