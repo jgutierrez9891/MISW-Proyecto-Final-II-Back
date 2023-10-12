@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - main
-      - develop
-      - createCandidate
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:

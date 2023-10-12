@@ -34,6 +34,8 @@ jobs:
         run: |
           coverage run --include=./app.py,./tests/tests.py,./vistas/vistas.py -m unittest tests/* -v 
           coverage report --fail-under=80
+          coverage html
+          coverage xml
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
