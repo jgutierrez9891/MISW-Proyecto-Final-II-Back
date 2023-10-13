@@ -8,7 +8,7 @@ on:
       -   createCandidate
 jobs:
   #CANDIDATES
-  test_users:
+  test_candidates:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
