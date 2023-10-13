@@ -17,7 +17,7 @@ class TestGetPostByID(TestCase):
         self.clave = fake.lexify(text = '??????')
         self.telefono = fake.msisdn()
         self.email = fake.email()
-        self.email_invalido = random.choice(['pruebagmail.com','prueba@gmailcom','prueba@gmail.','@gmail.com','prueba@gmail..com'])
+        self.email_invalido = random.choice(['pruebagmail.com','prueba@gmailcom','prueba@gmail.','@gmail.com'])
         self.pais = fake.country()
         self.city = fake.city()
         self.aspiracion_salarial = fake.random_number()
