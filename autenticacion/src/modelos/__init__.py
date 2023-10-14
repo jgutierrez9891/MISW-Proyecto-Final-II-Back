@@ -1,1 +1,1 @@
-from src.modelos.modelos import *
+from .modelos import *
