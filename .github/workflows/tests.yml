@@ -76,10 +76,10 @@ jobs:
             username: _json_key
             password: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
-      # - name: Build and Push Container
-      #   run: |-
-      #     docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.CANDIDATES_SERVICE }}:latest" ./candidate/src/
-      #     docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.CANDIDATES_SERVICE }}:latest"
+      - name: Build and Push Container
+        run: |-
+          docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.CANDIDATES_SERVICE }}:latest" ./candidate/src/
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.CANDIDATES_SERVICE }}:latest"
 
       # END - Docker auth and build
 
