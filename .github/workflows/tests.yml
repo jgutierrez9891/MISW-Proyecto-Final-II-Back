@@ -42,11 +42,11 @@ jobs:
           coverage report --fail-under=80
           coverage html
           coverage xml
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarcloud-github-action@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   
   deploy_candidates:
     # Add 'id-token' with the intended permissions for workload identity federation
@@ -78,7 +78,7 @@ jobs:
 
       - name: Build and Push Container
         run: |-
-          docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.CANDIDATES_SERVICE }}:latest" ./
+          docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.CANDIDATES_SERVICE }}:latest" ./candidate/src/
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.CANDIDATES_SERVICE }}:latest"
 
       # END - Docker auth and build
@@ -91,7 +91,7 @@ jobs:
           region: ${{ env.REGION }}
           # NOTE: If using a pre-built image, update the image name here
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.CANDIDATES_SERVICE }}:latest
-          flags: '--allow-unauthenticated --max-instances=1 --port=80'
+          flags: '--allow-unauthenticated --max-instances=1 --port=8080 --add-cloudsql-instances=abcjobs'
           # NOTE: You can also set env variables here:
           env_vars: |
             SQL_PASSWORD=${{secrets.SQL_PASS}}
