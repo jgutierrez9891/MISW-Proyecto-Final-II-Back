@@ -94,8 +94,7 @@ jobs:
           flags: '--allow-unauthenticated --max-instances=1 --port=80'
           # NOTE: You can also set env variables here:
           env_vars: |
-              SQL_PASS=${{secrets.GOOGLE_PROJECT}}
-              TOKEN_EXPIRE=6400
+            SQL_PASSWORD=${{secrets.SQL_PASS}}
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output
