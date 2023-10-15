@@ -1,1 +1,1 @@
-from .modelos import *
+from modelos.modelos import *

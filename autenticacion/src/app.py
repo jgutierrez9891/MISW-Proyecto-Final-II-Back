@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
-from modelos import db
-from vistas import (VistaLogInCandidato)
+from modelos.modelos import db
+from vistas.vistas import (VistaLogInCandidato)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
 app = Flask(__name__)

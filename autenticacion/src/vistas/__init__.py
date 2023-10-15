@@ -1,1 +1,1 @@
-from .vistas import *
+from vistas.vistas import *

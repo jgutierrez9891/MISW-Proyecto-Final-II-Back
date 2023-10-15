@@ -42,11 +42,23 @@ class TestLogin(TestCase):
         cursor.close()
         
     def tearDown(self) -> None:
-       
+        connection = mysql.connector.connect(host='34.27.118.190',
+        database='candidatos',
+        user='root',
+        password=sqlpass)
+
+
+        sql = "DELETE FROM candidatos.candidato WHERE usuario=%s"
+        val = (self.usuario, )
+
+        cursor = connection.cursor()
+        cursor.execute(sql, val)
+        connection.commit()
+        cursor.close()
 
         return super().tearDown()
 
-    def test_1_login_OK(self):
+    def test_1_login_candidato_OK(self):
         solicitud_login = self.client.post("/autenticacion/candidatos/login",
                             data=json.dumps(self.datos_login),
                             headers={'Content-Type': 'application/json'})
@@ -54,7 +66,7 @@ class TestLogin(TestCase):
         self.assertEqual(solicitud_login.status_code, 200)
         self.assertIsNotNone(respuesta_login["token"])
 
-    def test_2_login_ERROR(self):
+    def test_2_login_candidato_ERROR(self):
         datos_login_error = {"usuario": self.usuario, 
                     "clave": "OTRA_CLAVE"}
         solicitud_login = self.client.post("/autenticacion/candidatos/login",

@@ -26,4 +26,3 @@ class CandidatoSchema(ma.SQLAlchemyAutoSchema):
         model = Candidato
         include_relationships = False
         load_instance = True
-
