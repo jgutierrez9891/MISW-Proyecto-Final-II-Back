@@ -8,9 +8,8 @@ sqlpass = os.getenv("SQL_PASSWORD")
 app = Flask(__name__)
 
 test = os.getenv('IF_TEST')
-
 if(os.path.isdir('/cloudsql/')):
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:'+sqlpass+'@/candidatos?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@/candidatos?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
 else:
     if test:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
