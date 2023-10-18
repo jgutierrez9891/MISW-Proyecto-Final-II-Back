@@ -3,17 +3,23 @@ import datetime
 from unittest import TestCase
 import mysql.connector
 from faker import Faker
-from faker.generator import random
-from app import app, sqlpass
+from app import app, sqlpass, test
 
 
 class TestLogin(TestCase):
 
     def setUp(self):
-        connection = mysql.connector.connect(host='34.27.118.190',
-        database='candidatos',
-        user='root',
-        password=sqlpass)
+        if test:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
+            self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='candidatos',
+            user='root',
+            password='root')
+        else:
+            self.connection = mysql.connector.connect(host='34.27.118.190',
+            database='candidatos',
+            user='root',
+            password=sqlpass)
 
         self.client = app.test_client()
         self.data_factory = Faker()
@@ -36,24 +42,18 @@ class TestLogin(TestCase):
         sql = "INSERT INTO candidatos.candidato (tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         val = (tipo_doc, num_doc, nombre, self.usuario, clave, telefono,correo, pais, ciudad, aspiracion_salarial, fecha_nacimiento.strftime("%Y-%m-%d"), idiomas)
 
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(sql, val)
-        connection.commit()
+        self.connection.commit()
         cursor.close()
         
     def tearDown(self) -> None:
-        connection = mysql.connector.connect(host='34.27.118.190',
-        database='candidatos',
-        user='root',
-        password=sqlpass)
-
-
         sql = "DELETE FROM candidatos.candidato WHERE usuario=%s"
         val = (self.usuario, )
 
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(sql, val)
-        connection.commit()
+        self.connection.commit()
         cursor.close()
 
         return super().tearDown()

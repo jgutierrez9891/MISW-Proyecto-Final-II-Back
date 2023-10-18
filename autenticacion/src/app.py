@@ -1,11 +1,15 @@
 from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from modelos.modelos import db
 from vistas.vistas import (VistaLogInCandidato)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
+test = os.getenv('IF_TEST')
+
 app = Flask(__name__)
+CORS(app, origins=["http://localhost:4200", "http://localhost:4201"])
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/candidatos'
 #app.config['SQLALCHEMY_BINDS'] = {

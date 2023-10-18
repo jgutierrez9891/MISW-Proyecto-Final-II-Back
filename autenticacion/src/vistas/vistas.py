@@ -14,4 +14,9 @@ class VistaLogInCandidato(Resource):
             return {"mensaje": "Autenticación fallida"}, 404
         else:
             token_de_acceso = create_access_token(identity=candidato.id)
-            return {"mensaje": "Inicio de sesión exitoso", "token": token_de_acceso}
+            return {"mensaje": "Inicio de sesión exitoso", "token": token_de_acceso, "info_candidato": {
+                    "usuario": candidato.usuario,
+                    "nombre": candidato.nombre,
+                    "email": candidato.email,
+                    "id": candidato.id}
+            }
