@@ -17,11 +17,11 @@ class VistaCrearCandidato(Resource):
         or request.json["email"] == "" or request.json["pais"] == "" or request.json["ciudad"] == "" or request.json["aspiracion_salarial"] == "" or request.json["fecha_nacimiento"] == "" \
         or request.json["idiomas"] == "":
 
-            return {"status_code": 401, "message": "Debe ingresar todos los campos"}, 401
+            return {"status_code": 400, "message": "Debe ingresar todos los campos"}, 400
         
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
         if not(re.fullmatch(regex, request.json["email"])):
-            return {"status_code": 402, "message": "El formato del correo es inválido"}, 402
+            return {"status_code": 400, "message": "El formato del correo es inválido"}, 400
 
         candidato_documento = candidato.query.filter(candidato.num_doc == request.json["num_doc"]).first()
         db.session.commit()
@@ -31,11 +31,11 @@ class VistaCrearCandidato(Resource):
         db.session.commit()
 
         if candidato_documento is not None:
-            return {"status_code": 402, "message": "El documento ingresado ya existe"}, 402
+            return {"status_code": 409, "message": "El documento ingresado ya existe"}, 409
         elif candidato_usuario is not None:
-            return {"status_code": 402, "message": "El usuario ingresado ya existe"}, 402
+            return {"status_code": 409, "message": "El usuario ingresado ya existe"}, 409
         elif candidato_correo is not None:
-            return {"status_code": 402, "message": "El correo ingresado ya existe"}, 402
+            return {"status_code": 409, "message": "El correo ingresado ya existe"}, 409
 
 
         data = request.json

@@ -65,7 +65,7 @@ class TestGetPostByID(TestCase):
             "idiomas": self.idiomas
         }
         post_request = self.client.post("/candidato/create", json=json_request)
-        self.assertEqual(post_request.status_code, 401)
+        self.assertEqual(post_request.status_code, 400)
         post_response = json.loads(post_request.get_data())
         self.assertEqual("Debe ingresar todos los campos",post_response.get("message"))
 
@@ -85,7 +85,7 @@ class TestGetPostByID(TestCase):
             "idiomas": self.idiomas
         }
         post_request = self.client.post("/candidato/create", json=json_request)
-        self.assertEqual(post_request.status_code, 402)
+        self.assertEqual(post_request.status_code, 400)
         post_response = json.loads(post_request.get_data())
         self.assertEqual("El formato del correo es inválido",post_response.get("message"))
 
@@ -110,7 +110,7 @@ class TestGetPostByID(TestCase):
 
         post_request_2 = self.client.post("/candidato/create", json=json_request)
 
-        self.assertEqual(post_request_2.status_code, 402)
+        self.assertEqual(post_request_2.status_code, 409)
         post_response = json.loads(post_request_2.get_data())
         self.assertEqual("El documento ingresado ya existe",post_response.get("message"))
 
@@ -149,7 +149,7 @@ class TestGetPostByID(TestCase):
 
         post_request_2 = self.client.post("/candidato/create", json=json_request_user2)
 
-        self.assertEqual(post_request_2.status_code, 402)
+        self.assertEqual(post_request_2.status_code, 409)
         post_response = json.loads(post_request_2.get_data())
         self.assertEqual("El usuario ingresado ya existe",post_response.get("message"))
 
@@ -188,7 +188,7 @@ class TestGetPostByID(TestCase):
 
         post_request_2 = self.client.post("/candidato/create", json=json_request_user2)
 
-        self.assertEqual(post_request_2.status_code, 402)
+        self.assertEqual(post_request_2.status_code, 409)
         post_response = json.loads(post_request_2.get_data())
         self.assertEqual("El correo ingresado ya existe",post_response.get("message"))
 
