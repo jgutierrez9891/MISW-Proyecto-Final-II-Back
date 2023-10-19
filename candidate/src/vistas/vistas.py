@@ -1,12 +1,18 @@
 from http.client import NOT_FOUND
 from flask import request
 from flask_restful import Resource
-from modelos import db, candidato, candidatoSchema
+from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema
 from servicios import SaveCandidate
 import re
 
 candidato_schema = candidatoSchema(many=True)
 candidato_schema_single = candidatoSchema()
+
+entrevista_schema = entrevistaSchema(many=True)
+entrevista_schema_single = entrevistaSchema()
+
+empresa_schema = empresaSchema(many=True)
+empresa_schema_single = empresaSchema()
     
 class VistaCrearCandidato(Resource):
 
@@ -53,10 +59,31 @@ class VistaCrearCandidato(Resource):
             data['fecha_nacimiento'],
             data['idiomas'],
             )
-        return {"id":response.id, "status_code": "200", "message": "Candidato creado exitosamente"}
+        return {"id":response.id, "status_code": 200, "message": "Candidato creado exitosamente"}
+    
+class VistaHistorialEntrevistas(Resource):
+    
+    def get(self):
+
+        #Check if some field is empty
+        if request.json.get('id_candidato') is None:
+            return {"status_code": 400, "message": "Debe ingresar todos los campos"}, 400
+
+        entrevistas_candidato = entrevista.query.filter(entrevista.id_candidato == request.json["id_candidato"]).all()
+        db.session.commit()
+
+        listOfItems = []
+        
+        for entrevista_item in entrevistas_candidato:
+            empresaNombre = empresa.query.filter(empresa.id == entrevista_item.id_empresa).all()
+            db.session.commit()
+            newEntrevistaFormat = {"id_entrevista":entrevista_item.id, "fecha_entrevista":entrevista_item.fecha, "estado":entrevista_item.estado, "empresa":empresaNombre[0].nombre}
+            listOfItems.append(newEntrevistaFormat)
+
+        return {"response":listOfItems, "status_code": 200}
     
 
 class ping(Resource):
-
+    
     def get(self):
         return "pong", 200
