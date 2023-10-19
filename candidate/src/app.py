@@ -6,7 +6,6 @@ import os
 
 sqlpass = os.getenv("SQL_PASSWORD")
 app = Flask(__name__)
-sqlpass = "Grupo9Proyecto2"
 test = os.getenv('IF_TEST')
 
 if test:
