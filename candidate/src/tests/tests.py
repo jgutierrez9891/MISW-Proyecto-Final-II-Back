@@ -196,21 +196,21 @@ class TestGetPostByID(TestCase):
         json_request_user1 = {
             "id_candidato":10
         }
-        post_request_1 = self.client.get("/candidato/historialEntrevistas", json=json_request_user1)
+        post_request_1 = self.client.get("/candidato/historialEntrevistas?id_candidato=10", json=json_request_user1)
         self.assertEqual(post_request_1.status_code, 200)
         
     def test_historial_entrevistas_candidato_SI_existe(self):
         json_request_user1 = {
             "id_candidato":1
         }
-        post_request_1 = self.client.get("/candidato/historialEntrevistas", json=json_request_user1)
+        post_request_1 = self.client.get("/candidato/historialEntrevistas?id_candidato=1", json=json_request_user1)
         self.assertEqual(post_request_1.status_code, 200)
         
     def test_historial_entrevistas_bad_request(self):
         json_request_user1 = {
             "a":1
         }
-        post_request_1 = self.client.get("/candidato/historialEntrevistas", json=json_request_user1)
+        post_request_1 = self.client.get("/candidato/historialEntrevistas?as=1", json=json_request_user1)
         self.assertEqual(post_request_1.status_code, 400)
 
     def tearDown(self):

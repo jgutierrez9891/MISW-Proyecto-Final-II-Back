@@ -66,10 +66,10 @@ class VistaHistorialEntrevistas(Resource):
     def get(self):
 
         #Check if some field is empty
-        if request.json.get('id_candidato') is None:
+        if request.args.get('id_candidato') is None:
             return {"status_code": 400, "message": "Debe ingresar todos los campos"}, 400
 
-        entrevistas_candidato = entrevista.query.filter(entrevista.id_candidato == request.json["id_candidato"]).all()
+        entrevistas_candidato = entrevista.query.filter(entrevista.id_candidato == request.args.get("id_candidato")).all()
         db.session.commit()
 
         listOfItems = []
