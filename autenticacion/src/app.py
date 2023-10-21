@@ -3,19 +3,24 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from modelos.modelos import db
-from vistas.vistas import (VistaLogInCandidato)
+from vistas.vistas import (VistaLogInCandidato,VistaLogInEmpresa)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
 test = os.getenv('IF_TEST')
-
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201"])
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/candidatos'
-#app.config['SQLALCHEMY_BINDS'] = {
-#    "empresas": {"url": "mysql+pymysql://root:'+'sqlpass'+'@34.27.118.190:3306/empresas"},
-#    "empleados": {"url": "mysql+pymysql://root:'+'sqlpass'+'@34.27.118.190:3306/empleados"},
-#}
+if test:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
+    app.config['SQLALCHEMY_BINDS'] = {
+        "empresas" : "mysql+pymysql://root:root@0.0.0.0:3306/empresas"
+    }
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/candidatos'
+    app.config['SQLALCHEMY_BINDS'] = {
+        "empresas": "mysql+pymysql://root:"+sqlpass+"@34.27.118.190:3306/empresas"
+    }
+    
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['JWT_SECRET_KEY'] = 'frase-secreta'
@@ -28,6 +33,7 @@ db.init_app(app)
 
 api = Api(app)
 api.add_resource(VistaLogInCandidato, '/autenticacion/candidatos/login')
+api.add_resource(VistaLogInEmpresa, '/autenticacion/empresas/login')
 
 jwt = JWTManager(app)
 

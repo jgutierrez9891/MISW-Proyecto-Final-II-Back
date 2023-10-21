@@ -3,6 +3,7 @@ import datetime
 from unittest import TestCase
 import mysql.connector
 from faker import Faker
+from modelos.modelos import db, Representante, Empresa
 from app import app, sqlpass, test
 
 
@@ -15,6 +16,7 @@ class TestLogin(TestCase):
             database='candidatos',
             user='root',
             password='root')
+
         else:
             self.connection = mysql.connector.connect(host='34.27.118.190',
             database='candidatos',
@@ -37,7 +39,7 @@ class TestLogin(TestCase):
         idiomas = 'Español, ingles'
 
         self.datos_login = {"usuario": self.usuario, 
-                    "clave": clave}
+                            "clave": clave}
 
         sql = "INSERT INTO candidatos.candidato (tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         val = (tipo_doc, num_doc, nombre, self.usuario, clave, telefono,correo, pais, ciudad, aspiracion_salarial, fecha_nacimiento.strftime("%Y-%m-%d"), idiomas)
@@ -47,18 +49,23 @@ class TestLogin(TestCase):
         self.connection.commit()
         cursor.close()
         
-    def tearDown(self) -> None:
-        sql = "DELETE FROM candidatos.candidato WHERE usuario=%s"
-        val = (self.usuario, )
+        
+    #PRUEBAS AUTENTIACION COMO EMPRESA
+    def test_1_login_empresa_OK(self):
+        post_request = self.client.post("/autenticacion/empresas/login", json={"usuario":"maupena","clave":"miclave123"})
+        self.assertEqual(post_request.status_code, 200)
 
-        cursor = self.connection.cursor()
-        cursor.execute(sql, val)
-        self.connection.commit()
-        cursor.close()
+    def test_2_login_empresa_404(self):
+        post_request = self.client.post("/autenticacion/empresas/login", json={"usuario" : "mauspena", "clave" : "miclave123s"})
+        self.assertEqual(post_request.status_code, 404)
+        
+    def test_3_login_empresa_400(self):
+        post_request = self.client.post("/autenticacion/empresas/login", json={"usuarios" : "maupena", "clave" : "miclave123"})
+        self.assertEqual(post_request.status_code, 400)
 
-        return super().tearDown()
 
-    def test_1_login_candidato_OK(self):
+    #PRUEBAS AUTENTIACION COMO CANDIDATO
+    def test_4_login_candidato_OK(self):
         solicitud_login = self.client.post("/autenticacion/candidatos/login",
                             data=json.dumps(self.datos_login),
                             headers={'Content-Type': 'application/json'})
@@ -66,10 +73,30 @@ class TestLogin(TestCase):
         self.assertEqual(solicitud_login.status_code, 200)
         self.assertIsNotNone(respuesta_login["token"])
 
-    def test_2_login_candidato_ERROR(self):
+    def test_5_login_candidato_ERROR(self):
         datos_login_error = {"usuario": self.usuario, 
                     "clave": "OTRA_CLAVE"}
         solicitud_login = self.client.post("/autenticacion/candidatos/login",
                             data=json.dumps(datos_login_error),
                             headers={'Content-Type': 'application/json'})
-        self.assertEqual(solicitud_login.status_code, 404)
+        self.assertEqual(solicitud_login.status_code, 404)       
+        
+    #TEARDOWN
+    def tearDown(self) -> None:
+        representantes = db.session.query(Representante).all()
+        for item in representantes:
+            db.session.delete(item)
+            
+        empresas = db.session.query(Empresa).all()
+        for item in empresas:
+            db.session.delete(item)
+            
+        sql = "DELETE FROM candidatos.candidato WHERE usuario=%s"
+        val = (self.usuario, )
+
+        cursor = self.connection.cursor()
+        cursor.execute(sql, val)
+        self.connection.commit()
+        cursor.close()
+        
+        return super().tearDown()
