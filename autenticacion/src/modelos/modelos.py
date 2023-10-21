@@ -26,3 +26,40 @@ class CandidatoSchema(ma.SQLAlchemyAutoSchema):
         model = Candidato
         include_relationships = False
         load_instance = True
+        
+
+#REPRESENTANTE
+class Representante(db.Model):
+    __bind_key__ = "empresas"
+    id = db.Column(db.Integer, primary_key=True)
+    tipo_doc = db.Column(db.String(50))
+    num_doc = db.Column(db.String(50))
+    nombre = db.Column(db.String(100))
+    email = db.Column(db.String(50))
+    telefono = db.Column(db.Integer)
+    clave = db.Column(db.String(50))
+    id_empresa = db.Column(db.Integer)
+    usuario = db.Column(db.String(50))
+
+class RepresentanteSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Representante
+        include_relationships = False
+        load_instance = True
+        
+        
+#EMPRESA
+class Empresa(db.Model):
+    __bind_key__ = "empresas"
+    id = db.Column(db.Integer, primary_key=True)
+    tipo_doc = db.Column(db.String(50))
+    num_doc = db.Column(db.String(50))
+    email = db.Column(db.String(50))
+    telefono = db.Column(db.Integer)
+    nombre = db.Column(db.String(100))
+
+class EmpresaSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Empresa
+        include_relationships = False
+        load_instance = True
