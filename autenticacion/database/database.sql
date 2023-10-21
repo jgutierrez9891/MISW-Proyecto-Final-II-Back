@@ -20,9 +20,6 @@ CREATE TABLE candidato(
     PRIMARY KEY(id)
 );
 
-INSERT INTO candidatos.candidato (tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas) VALUES ("CC", "0123458887", "TEST CANDIDATE", "testCandidate", "testpass", 300303, "test@email.com", "TEST_COUNTRY", "TEST_CITY", 200000, "08/08/2023", "eng,esp,eng")
-
-
 CREATE DATABASE empresas;
 use empresas;
 
@@ -33,7 +30,7 @@ CREATE TABLE empresa(
     tipo_doc varchar(10) NOT NULL,
     num_doc varchar(50) NOT NULL,
     email varchar(100) NOT NULL,
-    telefono varchar(50) NOT NULL,
+    telefono varchar(30) NOT NULL,
     nombre varchar(50) NOT NULL,
     PRIMARY KEY(id)
 );
@@ -45,9 +42,9 @@ CREATE TABLE representante(
     id int not null AUTO_INCREMENT,
     tipo_doc varchar(10) NOT NULL,
     num_doc varchar(50) NOT NULL,
-    nombre varchar(50) NOT NULL,
+    nombre varchar(100) NOT NULL,
     email varchar(100) NOT NULL,
-    telefono varchar(50) NOT NULL,
+    telefono varchar(30) NOT NULL,
     usuario varchar(50) NOT NULL,
     clave varchar(50) NOT NULL,
     id_empresa int NOT NULL,
