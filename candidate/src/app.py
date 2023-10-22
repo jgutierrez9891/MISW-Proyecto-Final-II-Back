@@ -11,6 +11,7 @@ test = os.getenv('IF_TEST')
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201"])
 if(os.path.isdir('/cloudsql/')):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@/candidatos?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
+    app.config['SQLALCHEMY_BINDS'] = 'mysql+pymysql://root:'+sqlpass+'@/empresas?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
 else:
     if test:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
