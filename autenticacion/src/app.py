@@ -10,16 +10,14 @@ test = os.getenv('IF_TEST')
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201"])
 
-if test:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
-    app.config['SQLALCHEMY_BINDS'] = {
-        "empresas" : "mysql+pymysql://root:root@0.0.0.0:3306/empresas"
-    }
+if(os.path.isdir('/cloudsql/')):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@/candidatos?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/candidatos'
-    app.config['SQLALCHEMY_BINDS'] = {
-        "empresas": "mysql+pymysql://root:"+sqlpass+"@34.27.118.190:3306/empresas"
-    }
+    if test:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/candidatos'
+    
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
