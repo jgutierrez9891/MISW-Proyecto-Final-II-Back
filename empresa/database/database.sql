@@ -22,5 +22,6 @@ CREATE TABLE representante(
     telefono varchar(30) NOT NULL,
     usuario varchar(50) NOT NULL,
     clave varchar(50) NOT NULL,
+    id_empresa int NOT NULL,
     PRIMARY KEY(id)
 );

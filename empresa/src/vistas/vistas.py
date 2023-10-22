@@ -64,21 +64,33 @@ class VistaRegistroEmpresa(Resource):
                               nombre = empresa_nombre,
                               email = empresa_email,
                               telefono = empresa_telefono)
-        
-        representante = Representante(tipo_doc = representante_tipo_doc,
-                                      num_doc = representante_num_doc,
-                                      nombre = representante_nombre,
-                                      email = representante_email,
-                                      telefono = representante_telefono,
-                                      usuario = representante_usuario,
-                                      clave = representante_clave)
         try:
             db.session.add(empresa)
-            db.session.add(representante)
             db.session.commit()
-            return {"status_code": 200, "message": "Empresa y representante creados exitosamente"}, 200
         except Exception as err:
             print("VA A RETORNAR 500 POR ERROR: "+str(err))
-            return {"status_code": 500, "message": "Error creando empresa y/o representante"}, 500
+            return {"status_code": 500, "message": "Error creando empresa"}, 500
+        
+        empresa = Empresa.query.filter(Empresa.tipo_doc == empresa_tipo_doc,
+                                           Empresa.num_doc == empresa_num_doc).first()
+        if empresa is None:
+            print("No existe la empresa")
+            return {"status_code": 500, "message": "Error creando empresa"}, 500
+        else:           
+            representante = Representante(tipo_doc = representante_tipo_doc,
+                                        num_doc = representante_num_doc,
+                                        nombre = representante_nombre,
+                                        email = representante_email,
+                                        telefono = representante_telefono,
+                                        usuario = representante_usuario,
+                                        clave = representante_clave,
+                                        id_empresa = empresa.id)
+            try:
+                db.session.add(representante)
+                db.session.commit()
+                return {"status_code": 200, "message": "Empresa y representante creados exitosamente"}, 200
+            except Exception as err:
+                print("VA A RETORNAR 500 POR ERROR: "+str(err))
+                return {"status_code": 500, "message": "Error creando representante"}, 500
         
         

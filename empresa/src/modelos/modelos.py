@@ -29,6 +29,7 @@ class Representante(db.Model):
     telefono = db.Column(db.String(20))
     usuario = db.Column(db.String(50))
     clave = db.Column(db.String(50))
+    id_empresa = db.Column(db.Integer)
 
 class RepresentanteSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
