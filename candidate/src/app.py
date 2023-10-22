@@ -2,12 +2,13 @@ from flask import Flask
 from flask_restful import Api
 from modelos import db
 from vistas import (VistaCrearCandidato, VistaHistorialEntrevistas, ping)
+from flask_cors import CORS
 import os
 
 sqlpass = os.getenv("SQL_PASSWORD")
 app = Flask(__name__)
 test = os.getenv('IF_TEST')
-
+CORS(app, origins=["http://localhost:4200", "http://localhost:4201"])
 if test:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
     app.config['SQLALCHEMY_BINDS'] = {
