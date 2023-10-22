@@ -49,6 +49,25 @@ class TestGetPostByID(TestCase):
         post_response = json.loads(post_request.get_data())
         self.assertEqual("Candidato creado exitosamente",post_response.get("message"))
 
+    def test_campoRequeridoNoExiste(self):
+        json_request = {
+            "num_doc": self.num_doc,
+            "nombre": "",
+            "usuario": self.usuario,
+            "clave": self.clave,
+            "telefono": self.telefono,
+            "email": self.email,
+            "pais": self.pais,
+            "ciudad": self.city,
+            "aspiracion_salarial": self.aspiracion_salarial,
+            "fecha_nacimiento": self.fecha_nacimiento,
+            "idiomas": self.idiomas
+        }
+        post_request = self.client.post("/candidato/create", json=json_request)
+        self.assertEqual(post_request.status_code, 400)
+        post_response = json.loads(post_request.get_data())
+        self.assertEqual("Ingrese todos los campos requeridos",post_response.get("message"))    
+
     def test_campoRequeridoVacio(self):
         json_request = {
             "tipo_doc": self.tipo_doc,
@@ -67,7 +86,7 @@ class TestGetPostByID(TestCase):
         post_request = self.client.post("/candidato/create", json=json_request)
         self.assertEqual(post_request.status_code, 400)
         post_response = json.loads(post_request.get_data())
-        self.assertEqual("Debe ingresar todos los campos",post_response.get("message"))
+        self.assertEqual("Campo requerido se encuentra vacío",post_response.get("message"))
 
     def test_correoInvalido(self):
         json_request = {
