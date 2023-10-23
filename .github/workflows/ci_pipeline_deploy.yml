@@ -3,7 +3,7 @@ name: Coverage test project CI
 on:
   push:
     branches: 
-      -   cd-2
+      -   main
 env:
   PROJECT_ID: ${{secrets.GOOGLE_PROJECT}} 
   GAR_LOCATION: us-central1 
