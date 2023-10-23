@@ -5,6 +5,7 @@ from vistas import (VistaCrearCandidato, VistaHistorialEntrevistas, ping)
 from flask_cors import CORS
 import os
 
+
 sqlpass = os.getenv("SQL_PASSWORD")
 app = Flask(__name__)
 test = os.getenv('IF_TEST')
