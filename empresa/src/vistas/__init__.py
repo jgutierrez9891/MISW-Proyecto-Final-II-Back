@@ -1,1 +1,0 @@
-from vistas.vistas import *
