@@ -9,7 +9,7 @@ import os
 sqlpass = os.getenv("SQL_PASSWORD")
 app = Flask(__name__)
 test = os.getenv('IF_TEST')
-CORS(app, origins=["http://localhost:4200", "http://localhost:4201"])
+CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000"])
 if(os.path.isdir('/cloudsql/')):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@/candidatos?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
     app.config['SQLALCHEMY_BINDS'] = {
