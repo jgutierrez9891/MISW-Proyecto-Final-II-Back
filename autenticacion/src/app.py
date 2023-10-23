@@ -10,16 +10,22 @@ test = os.getenv('IF_TEST')
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201"])
 
-if test:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
+if(os.path.isdir('/cloudsql/')):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@/candidatos?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
     app.config['SQLALCHEMY_BINDS'] = {
-        "empresas" : "mysql+pymysql://root:root@0.0.0.0:3306/empresas"
-    }
+            "empresas": 'mysql+pymysql://root:'+sqlpass+'@/empresas?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
+        }
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/candidatos'
-    app.config['SQLALCHEMY_BINDS'] = {
-        "empresas": "mysql+pymysql://root:"+sqlpass+"@34.27.118.190:3306/empresas"
-    }
+    if test:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
+        app.config['SQLALCHEMY_BINDS'] = {
+            "empresas" : "mysql+pymysql://root:root@0.0.0.0:3306/empresas"
+        }
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/candidatos'
+        app.config['SQLALCHEMY_BINDS'] = {
+            "empresas": "mysql+pymysql://root:"+sqlpass+"@34.27.118.190:3306/empresas"
+        }
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
@@ -38,6 +44,6 @@ api.add_resource(VistaLogInEmpresa, '/autenticacion/empresas/login')
 jwt = JWTManager(app)
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 8081))
     app.run(debug=True, host='0.0.0.0', port=port)
     
