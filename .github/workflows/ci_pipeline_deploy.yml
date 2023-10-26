@@ -346,6 +346,7 @@ jobs:
           flags: '--allow-unauthenticated --max-instances=1 --port=8082 --add-cloudsql-instances=abcjobs' #tener presente que el puerto deberia ser didstinto en cada micro (o eso supongo yo daria menos problemas)
           env_vars: |
             SQL_PASSWORD=${{secrets.SQL_PASS}}
+            JWT_SECRET_KEY=${{secrets.JWT_SECRET_KEY}}
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
