@@ -49,3 +49,8 @@ class VistaLogInEmpresa(Resource):
                         "nombre":empresa.nombre,
                         "id_empresa":empresa.id
                     }}
+
+class ping(Resource):
+    
+    def get(self):
+        return "pong", 200
