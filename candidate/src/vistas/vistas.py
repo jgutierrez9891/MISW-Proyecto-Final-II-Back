@@ -3,6 +3,7 @@ from flask import request
 from flask_restful import Resource
 from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema
 from servicios import SaveCandidate, SaveInfoTecnica
+from flask_jwt_extended import jwt_required
 import re
 
 candidato_schema = candidatoSchema(many=True)
@@ -21,29 +22,40 @@ class VistaCrearCandidato(Resource):
 
     def post(self):
 
-        #Check if some field is empty
+        tipo_doc = request.json.get("tipo_doc")
+        num_doc = request.json.get("num_doc")
+        nombre = request.json.get("nombre")
+        usuario = request.json.get("usuario")
+        clave = request.json.get("clave")
+        telefono = request.json.get("telefono")
+        email = request.json.get("email")
+        pais = request.json.get("pais")
+        ciudad = request.json.get("ciudad")
+        aspiracion_salarial = request.json.get("aspiracion_salarial")
+        fecha_nacimiento = request.json.get("fecha_nacimiento")
+        idiomas = request.json.get("idiomas")
 
-        if request.json.get("tipo_doc") is None or request.json.get("num_doc") is None or request.json.get("nombre") is None or request.json.get("usuario") is None or request.json.get("clave") is None \
-            or request.json.get("telefono") is None or request.json.get("email") is None or request.json.get("pais") is None or request.json.get("ciudad") is None or request.json.get("aspiracion_salarial") is None\
-            or request.json.get("fecha_nacimiento") is None or request.json.get("idiomas") is None:
+        if tipo_doc is None or num_doc is None or nombre is None or usuario is None or clave is None \
+            or telefono is None or email is None or pais is None or ciudad is None or aspiracion_salarial is None\
+            or fecha_nacimiento is None or idiomas is None:
             
             return {"status_code": 400, "message": "Ingrese todos los campos requeridos"}, 400
         
-        elif request.json["tipo_doc"] == "" or request.json["num_doc"] == "" or request.json["nombre"] == "" or request.json["usuario"] == "" or request.json["clave"] == "" or request.json["telefono"] == "" \
-        or request.json["email"] == "" or request.json["pais"] == "" or request.json["ciudad"] == "" or request.json["aspiracion_salarial"] == "" or request.json["fecha_nacimiento"] == "" \
-        or request.json["idiomas"] == "":
+        elif tipo_doc == "" or num_doc == "" or nombre == "" or usuario == "" or "clave" == "" or telefono == "" \
+        or email == "" or pais == "" or ciudad == "" or aspiracion_salarial == "" or fecha_nacimiento == "" \
+        or idiomas == "":
 
             return {"status_code": 400, "message": "Campo requerido se encuentra vacío"}, 400
         
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
-        if not(re.fullmatch(regex, request.json["email"])):
+        if not(re.fullmatch(regex, email)):
             return {"status_code": 400, "message": "El formato del correo es inválido"}, 400
 
-        candidato_documento = candidato.query.filter(candidato.num_doc == request.json["num_doc"]).first()
+        candidato_documento = candidato.query.filter(candidato.num_doc == num_doc).first()
         db.session.commit()
-        candidato_usuario = candidato.query.filter(candidato.usuario == request.json["usuario"]).first()
+        candidato_usuario = candidato.query.filter(candidato.usuario == usuario).first()
         db.session.commit()
-        candidato_correo = candidato.query.filter(candidato.email == request.json["email"]).first()
+        candidato_correo = candidato.query.filter(candidato.email == email).first()
         db.session.commit()
 
         if candidato_documento is not None:
@@ -96,6 +108,7 @@ class VistaHistorialEntrevistas(Resource):
 #Vista que guarda la información técnica de un candidato
 class VistaInformacionTecnica(Resource):
 
+    @jwt_required()
     def post(self):
 
         tipo = request.json.get("tipo")
@@ -107,6 +120,12 @@ class VistaInformacionTecnica(Resource):
         
         elif tipo == "" or valor == "" or id_candidato == "":
             return {"status_code": 400, "message": "Campo requerido se encuentra vacío"}, 400
+        
+        candidato_id = candidato.query.filter(candidato.id == id_candidato).first()
+        db.session.commit()
+
+        if candidato_id is None:
+            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
 
         data = request.json
         response = SaveInfoTecnica(
@@ -115,8 +134,6 @@ class VistaInformacionTecnica(Resource):
             data['id_candidato'],
             )
         return {"id":response.id, "status_code": 201, "message": "Informacion registrada exitosamente"}, 201
-
-
 
 
 class ping(Resource):

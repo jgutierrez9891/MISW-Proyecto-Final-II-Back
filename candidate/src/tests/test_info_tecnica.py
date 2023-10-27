@@ -5,6 +5,7 @@ from modelos import db, candidato, infoTecnica
 import random
 import json
 import mysql.connector
+from flask_jwt_extended import create_access_token
 
 class TestInfoTecnica(TestCase):
     def setUp(self):
@@ -55,41 +56,77 @@ class TestInfoTecnica(TestCase):
         print("el id del candidato es: " + str(candidatoCreado[0][0]))
         cursor.close()
 
-    def test_registrarInfoTecnica(self):
+        #Token de autenticación
+        self.token_de_acceso = create_access_token(identity=123)
+
+    def test_success_registrar_InfoTecnica(self):
         json_request = {
             "tipo": self.tipo,
             "valor": self.valor,
             "id_candidato": self.id_candidato
         }
-        post_request = self.client.post("/candidato/infoTecnica", json=json_request)
+        post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
+                                        headers={'Content-Type': 'application/json',
+                                        "Authorization" : "Bearer "+str(self.token_de_acceso)})
         self.assertEqual(post_request.status_code, 201)
         post_response = json.loads(post_request.get_data())
         self.assertEqual("Informacion registrada exitosamente",post_response.get("message"))
 
-    def test_registrarInfoCampoNoEnviado(self):
+    def test_error_campo_no_enviado(self):
         json_request = {
             "tipo": self.tipo,
             "id_candidato": self.id_candidato
         }
-        post_request = self.client.post("/candidato/infoTecnica", json=json_request)
+        post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
+                                        headers={'Content-Type': 'application/json',
+                                        "Authorization" : "Bearer "+str(self.token_de_acceso)})
         self.assertEqual(post_request.status_code, 400)
         post_response = json.loads(post_request.get_data())
         self.assertEqual("Ingrese todos los campos requeridos",post_response.get("message"))
 
-    def test_registrarInfoCampoVacio(self):
+    def test_error_campo_vacio(self):
         json_request = {
             "tipo": "",
             "valor": self.valor,
             "id_candidato": self.id_candidato
         }
-        post_request = self.client.post("/candidato/infoTecnica", json=json_request)
+        post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
+                                        headers={'Content-Type': 'application/json',
+                                        "Authorization" : "Bearer "+str(self.token_de_acceso)})
         self.assertEqual(post_request.status_code, 400)
         post_response = json.loads(post_request.get_data())
-        self.assertEqual("Campo requerido se encuentra vacío",post_response.get("message"))    
+        self.assertEqual("Campo requerido se encuentra vacío",post_response.get("message"))
+
+    def test_error_sin_autenticacion(self):
+        json_request = {
+            "tipo": self.tipo,
+            "valor": self.valor,
+            "id_candidato": self.id_candidato
+        }
+        post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
+                                        headers={'Content-Type': 'application/json',})
+        self.assertEqual(post_request.status_code, 401)
+
+
+    def test_error_id_candidato_invalido(self):
+        json_request = {
+            "tipo": self.tipo,
+            "valor": self.valor,
+            "id_candidato": 0
+        }
+        post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
+                                        headers={'Content-Type': 'application/json',
+                                        "Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(post_request.status_code, 409)
+        post_response = json.loads(post_request.get_data())
+        self.assertEqual("El id_candidato ingresado no existe",post_response.get("message"))    
+
+
+
 
     def tearDown(self):
 
-        infosTecnicas = db.session.query(infoTecnica).all()
+        """ infosTecnicas = db.session.query(infoTecnica).all()
         for lista in infosTecnicas:
             db.session.delete(lista)
         
@@ -97,5 +134,5 @@ class TestInfoTecnica(TestCase):
         for lista in candidatos:
             db.session.delete(lista)
 
-        db.session.commit()
+        db.session.commit() """
         db.session.close()
