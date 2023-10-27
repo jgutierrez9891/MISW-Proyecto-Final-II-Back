@@ -4,7 +4,9 @@ on:
   push:
     branches: 
       -   develop
-      -   feature-ingresarInfoTecnica
+  pull_request:
+    branches: 
+      -   develop
 
 jobs:
   #CANDIDATES
