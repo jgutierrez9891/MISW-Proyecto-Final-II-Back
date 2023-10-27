@@ -1,8 +1,8 @@
 from http.client import NOT_FOUND
 from flask import request
 from flask_restful import Resource
-from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema
-from servicios import SaveCandidate
+from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema
+from servicios import SaveCandidate, SaveInfoTecnica
 import re
 
 candidato_schema = candidatoSchema(many=True)
@@ -13,6 +13,9 @@ entrevista_schema_single = entrevistaSchema()
 
 empresa_schema = empresaSchema(many=True)
 empresa_schema_single = empresaSchema()
+
+infoTecnica_schema = infoTecnicaSchema(many=True)
+infoTecnica_schema_single = infoTecnicaSchema()
     
 class VistaCrearCandidato(Resource):
 
@@ -89,6 +92,32 @@ class VistaHistorialEntrevistas(Resource):
 
         return {"response":listOfItems, "status_code": 200}
     
+
+#Vista que guarda la información técnica de un candidato
+class VistaInformacionTecnica(Resource):
+
+    def post(self):
+
+        tipo = request.json.get("tipo")
+        valor = request.json.get("valor")
+        id_candidato = request.json.get("id_candidato")
+
+        if tipo is None or valor is None or id_candidato is None:
+            return {"status_code": 400, "message": "Ingrese todos los campos requeridos"}, 400
+        
+        elif tipo == "" or valor == "" or id_candidato == "":
+            return {"status_code": 400, "message": "Campo requerido se encuentra vacío"}, 400
+
+        data = request.json
+        response = SaveInfoTecnica(
+            data['tipo'],
+            data['valor'],
+            data['id_candidato'],
+            )
+        return {"id":response.id, "status_code": 201, "message": "Informacion registrada exitosamente"}, 201
+
+
+
 
 class ping(Resource):
     

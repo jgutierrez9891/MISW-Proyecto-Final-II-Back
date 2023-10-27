@@ -6,7 +6,7 @@ import random
 import json
 import time
 
-class TestGetPostByID(TestCase):
+class TestCandidate(TestCase):
     def setUp(self):
         self.client = app.test_client()
         fake = Faker()
@@ -232,11 +232,11 @@ class TestGetPostByID(TestCase):
         post_request_1 = self.client.get("/candidato/historialEntrevistas?as=1", json=json_request_user1)
         self.assertEqual(post_request_1.status_code, 400)
 
-    def tearDown(self):
+    """ def tearDown(self):
        
         candidatos = db.session.query(candidato).all()
         for lista in candidatos:
             db.session.delete(lista)
 
         db.session.commit()
-        db.session.close()
+        db.session.close() """

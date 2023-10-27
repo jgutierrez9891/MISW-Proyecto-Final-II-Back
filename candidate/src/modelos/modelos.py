@@ -40,6 +40,20 @@ class entrevistaSchema(ma.SQLAlchemyAutoSchema):
         model = entrevista
         include_relationships = True
         load_instance = True
+
+
+class infoTecnica(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tipo = db.Column(db.String(50))
+    valor = db.Column(db.String(50))
+    id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id'))
+
+class infoTecnicaSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = infoTecnica
+        include_relationships = True
+        load_instance = True    
+
         
 #EMPRESA
 class empresa(db.Model):

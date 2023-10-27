@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 from modelos import db
-from vistas import (VistaCrearCandidato, VistaHistorialEntrevistas, ping)
+from vistas import (VistaCrearCandidato, VistaHistorialEntrevistas, VistaInformacionTecnica, ping)
 from flask_cors import CORS
 import os
 
@@ -39,6 +39,7 @@ db.create_all()
 api = Api(app)
 api.add_resource(VistaCrearCandidato, '/candidato/create')
 api.add_resource(VistaHistorialEntrevistas, '/candidato/historialEntrevistas')
+api.add_resource(VistaInformacionTecnica, '/candidato/historialEntrevistas')
 api.add_resource(ping, '/candidato/ping')
 
 if __name__ == '__main__':
