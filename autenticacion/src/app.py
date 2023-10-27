@@ -3,7 +3,7 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from modelos.modelos import db
-from vistas.vistas import (VistaLogInCandidato,VistaLogInEmpresa)
+from vistas.vistas import (VistaLogInCandidato,VistaLogInEmpresa,ping)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
 test = os.getenv('IF_TEST')
@@ -40,6 +40,7 @@ db.init_app(app)
 api = Api(app)
 api.add_resource(VistaLogInCandidato, '/autenticacion/candidatos/login')
 api.add_resource(VistaLogInEmpresa, '/autenticacion/empresas/login')
+api.add_resource(ping, '/autenticacion/ping')
 
 jwt = JWTManager(app)
 

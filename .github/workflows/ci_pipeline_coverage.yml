@@ -96,16 +96,16 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install empresa_db
-        working-directory: ./empresa/database #preparacion 1 para tests
+        working-directory: ./gestionClientes/empresa/database #preparacion 1 para tests
         run: |
           sudo /etc/init.d/mysql start
           mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < database.sql
       - name: Install empresa environment #preparacion 2 para tests
-        working-directory: ./empresa/src
+        working-directory: ./gestionClientes/empresa/src
         run: |
           pip3 install -r requirements.txt
       - name: Run empresa unit tests # tests
-        working-directory: ./empresa/src
+        working-directory: ./gestionClientes/empresa/src
         run: |
           coverage run --include=./app.py,./tests/tests.py,./vistas/vistas.py -m unittest tests/* -v 
           coverage report --fail-under=80
