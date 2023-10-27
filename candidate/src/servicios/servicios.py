@@ -1,5 +1,5 @@
 
-from modelos import candidato, db
+from modelos import candidato, infoTecnica, db
 
 
 def SaveCandidate(
@@ -33,3 +33,17 @@ def SaveCandidate(
     db.session.add(new_Candidate)
     db.session.commit()
     return new_Candidate
+
+def SaveInfoTecnica(
+        tipo,
+        valor,
+        id_candidato
+        ):
+    new_infoTecnica = infoTecnica(
+        tipo=tipo,
+        valor=valor,
+        id_candidato=id_candidato
+    )
+    db.session.add(new_infoTecnica)
+    db.session.commit()
+    return new_infoTecnica
