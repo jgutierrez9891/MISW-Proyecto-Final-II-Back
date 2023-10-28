@@ -29,11 +29,11 @@ class TestProyecto(TestCase):
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
-        sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"');"
+        sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
-        sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion) values (2, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"');"
+        sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (2, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
