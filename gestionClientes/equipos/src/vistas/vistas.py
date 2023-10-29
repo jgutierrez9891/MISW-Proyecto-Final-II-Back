@@ -1,7 +1,9 @@
 from flask import request
 from flask_restful import Resource
-from modelos.modelos import db, Proyecto, Ficha_trabajo
+from modelos.modelos import Ficha_trabajoSchema, db, Proyecto, Ficha_trabajo
 from flask_jwt_extended import jwt_required
+
+ficha_schema = Ficha_trabajoSchema()
     
 class VistaCrearProyecto(Resource):
 
@@ -63,7 +65,28 @@ class VistaCrearProyecto(Resource):
 
         return {"status_code": 200, "message": "Proyecto creado satisfactoriamente"}, 200
 
+class VistaConsultarFichas(Resource):
+
+    @jwt_required()
+    def get(self):
+        empresa_id = request.args.get("id_empresa")
+
+        if empresa_id is None:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar el id de la empresa"}, 400
+        
+        fichas = Ficha_trabajo.query.filter(Ficha_trabajo.id_empresa == empresa_id).all()
+        db.session.commit()
+        
+        if fichas is not None and len(fichas) > 0:
+            fichas_list = []
+            for ficha in fichas:
+                fichas_list.append(ficha_schema.dump(ficha))
+            return {"status_code": 200, "fichas": fichas_list}, 200
+        else:
+            return {"status_code": 204, "message": "No se encontraron fichas de trabajo para la empresa con id "+str(empresa_id)}, 204
+        
 class ping(Resource):
     
     def get(self):
         return "pong", 200
+        
