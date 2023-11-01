@@ -14,11 +14,11 @@ class TestProyecto(TestCase):
         self.data_factory = Faker()
 
         if test:
-            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
-            self.connection = mysql.connector.connect(host='0.0.0.0',
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin123@127.0.0.1:3306/empresas'
+            self.connection = mysql.connector.connect(host='127.0.0.1',
             database='empresas',
             user='root',
-            password='root')
+            password='admin123')
         else:
             self.connection = mysql.connector.connect(host='34.27.118.190',
             database='empresas',
@@ -38,15 +38,76 @@ class TestProyecto(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
+        sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (1, '"+self.data_factory.company()+"', '2023-01-01', '2023-01-30', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (2, '"+self.data_factory.company()+"', '2023-02-01', '2023-03-30', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (2, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (3, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 2);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (4, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 2);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (1, 10);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (1, 20);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (2, 30);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (2, 40);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
         self.token_de_acceso = create_access_token(identity=123)
 
         
     def tearDown(self) -> None:
-        sql = "DELETE FROM empresas.proyecto"
+        sql = "DELETE FROM empresas.ficha_trabajo"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
-        sql = "DELETE FROM empresas.ficha_trabajo"
+        cursor.close()
+        sql = "DELETE FROM empresas.candidatos_hoja_trabajo"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.hoja_trabajo"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.proyecto"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
@@ -178,3 +239,20 @@ class TestProyecto(TestCase):
                                         headers={'Content-Type': 'application/json',
                                                  "Authorization" : "Bearer "+str(self.token_de_acceso)})
         self.assertEqual(solicitud_creacion_proyecto.status_code, 400)
+    
+    def test_7_consultar_proyectos_OK_con_datos(self):
+        solicitud_consulta_proyectos = self.client.get("/proyectos/consultar?id_empresa=1",
+                                                       headers={"Authorization" : "Bearer "+str(self.token_de_acceso)})
+        respuesta_consulta = json.loads(solicitud_consulta_proyectos.get_data())
+        self.assertEqual(solicitud_consulta_proyectos.status_code, 200)
+        self.assertGreater(len(respuesta_consulta["proyectos"]), 0)
+    
+    def test_8_consultar_proyectos_ERROR_sin_datos(self):
+        solicitud_consulta_proyectos = self.client.get("/proyectos/consultar?id_empresa=156",
+                                                       headers={"Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(solicitud_consulta_proyectos.status_code, 404)
+    
+    def test_9_consultar_proyectos_ERROR_sin_parametro(self):
+        solicitud_consulta_proyectos = self.client.get("/proyectos/consultar",
+                                                       headers={"Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(solicitud_consulta_proyectos.status_code, 400)
