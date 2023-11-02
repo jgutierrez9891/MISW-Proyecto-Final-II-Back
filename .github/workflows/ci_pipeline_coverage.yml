@@ -40,12 +40,13 @@ jobs:
           coverage report --fail-under=80
           coverage html
           coverage xml
+        env:
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}  
       - name: SonarCloud Scan #sonar cloud
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
   #AUTENTICACION
   #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
