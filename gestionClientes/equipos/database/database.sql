@@ -64,3 +64,32 @@ CREATE TABLE candidatos_hoja_trabajo (
   KEY fk_candidatos_hoja_trabajo_idx (id_hoja_trabajo),
   CONSTRAINT fk_candidatos_hoja_trabajo FOREIGN KEY (id_hoja_trabajo) REFERENCES hoja_trabajo (id)
 ); 
+
+CREATE TABLE rol(
+    id_rol int not null AUTO_INCREMENT,
+    nombre varchar(60) NOT NULL,
+    descripcion varchar(250),
+    id_equipo int,
+    PRIMARY KEY(id_rol)
+);
+
+CREATE TABLE habilidad(
+    id_habilidad int not null AUTO_INCREMENT,
+    habilidad varchar(60) NOT NULL,
+    tipo varchar(60),
+    PRIMARY KEY(id_habilidad)
+);
+
+CREATE TABLE rol_habilidad(
+    id_asoc int not null AUTO_INCREMENT,
+    id_rol int  not null,
+    id_habilidad int not null,
+    PRIMARY KEY(id_asoc)
+);
+
+insert into empresas.rol (nombre, descripcion, id_equipo) value ("empresa prueba", "descripcion prueba", 1)
+insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 1", "blanda")
+insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "tecnica")
+insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda")
+insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,1)
+insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,2)

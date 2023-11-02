@@ -1,3 +1,4 @@
+import enum
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import fields, Schema
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
@@ -45,10 +46,14 @@ class entrevistaSchema(ma.SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
+class tipoHabilidad(enum.Enum):
+    TECNOLOGIA = "Tecnologia"
+    LENGUAJE = "Lenguaje"
+    ROL = "Rol"
 
 class infoTecnica(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    tipo = db.Column(db.String(50))
+    tipo = db.Column(db.Enum(tipoHabilidad))
     valor = db.Column(db.String(50))
     id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id'))
 
