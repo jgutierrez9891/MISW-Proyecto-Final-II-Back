@@ -44,16 +44,17 @@ CREATE TABLE info_tecnica (
   CONSTRAINT info_tecnica_ibfk_1 FOREIGN KEY (id_candidato) REFERENCES candidato (id)
 );
 
-CREATE TABLE infoAcademica (
+CREATE TABLE info_academica (
   id int NOT NULL AUTO_INCREMENT,
   tipo varchar(50) DEFAULT NULL,
   valor varchar(50) DEFAULT NULL,
   ano_finalizacion varchar(4) DEFAULT NULL,
-  id_candidato int NOT NULL,
+  id_candidato int DEFAULT NULL,
   PRIMARY KEY (id),
-  KEY infoAcademica_candidato_idx (id_candidato),
-  CONSTRAINT infoAcademica_candidato FOREIGN KEY (id_candidato) REFERENCES candidato (id)
-);
+  KEY id_candidato (id_candidato),
+  CONSTRAINT info_academica_ibfk_1 FOREIGN KEY (id_candidato) REFERENCES candidato (id)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+
 
 CREATE DATABASE empresas;
 use empresas;
