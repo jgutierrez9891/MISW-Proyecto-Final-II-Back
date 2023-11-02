@@ -82,7 +82,7 @@ class TestConsultaCandidatos(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM candidatos.infoAcademica"
+        sql = "DELETE FROM candidatos.info_cademica"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()

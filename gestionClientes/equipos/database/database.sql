@@ -87,9 +87,9 @@ CREATE TABLE rol_habilidad(
     PRIMARY KEY(id_asoc)
 );
 
-insert into empresas.rol (nombre, descripcion, id_equipo) value ("empresa prueba", "descripcion prueba", 1)
-insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 1", "blanda")
-insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "tecnica")
-insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda")
-insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,1)
-insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,2)
+insert into empresas.rol (nombre, descripcion, id_equipo) value ("empresa prueba", "descripcion prueba", 1);
+insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 1", "blanda");
+insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "tecnica");
+insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda");
+insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,1);
+insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,2);
