@@ -9,8 +9,7 @@ import os
 sqlpass = os.getenv("SQL_PASSWORD")
 test = os.getenv('IF_TEST')
 jwt_secret_key = os.getenv('JWT_SECRET_KEY')
-sqlpass = "Grupo9Proyecto2"
-jwt_secret_key = "frase-secreta"
+
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000", "https://micro-web-kdbo2knypq-uc.a.run.app", "http://localhost", "https://localhost"])
 
