@@ -5,6 +5,7 @@ from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema
 from servicios import SaveCandidate, SaveInfoTecnica
 from flask_jwt_extended import jwt_required
 import re
+import json
 
 candidato_schema = candidatoSchema(many=True)
 candidato_schema_single = candidatoSchema()
@@ -134,8 +135,49 @@ class VistaInformacionTecnica(Resource):
             data['id_candidato'],
             )
         return {"id":response.id, "status_code": 201, "message": "Informacion registrada exitosamente"}, 201
+    
+    
+    def get(self):
 
+        id_candidato = infoTecnica.query.filter(infoTecnica.id_candidato == request.args.get("id_candidato")).all()
+        db.session.commit()
 
+        print("El id_candidato es: " + str(id_candidato))
+
+        listOfItems = []
+        
+        for infoTecnica_item in id_candidato:
+            infoTecnicaFormat = {"tipo":infoTecnica_item.tipo, "valor":infoTecnica_item.valor, "id_candidato":infoTecnica_item.id_candidato}
+            listOfItems.append(infoTecnicaFormat)
+
+        return {"response":listOfItems, "status_code": 200}
+
+class VistaConsultarCandidato(Resource):
+
+    
+    def get(self):
+
+        if request.args.get('id_candidato') is None:
+            return {"status_code": 400, "message": "Debe ingresar el id del candidato"}, 400
+
+        #Get id from params and query from db to save it
+        id_candidato = candidato.query.filter(candidato.id == request.args.get("id_candidato")).first()
+        db.session.commit()
+
+        print ("id_candidato" + str(id_candidato))
+
+        #Get info candidate from db
+        candidatoItems = [elem.__dict__ for elem in db.session.query(candidato).filter(candidato.id == id_candidato.id).all()]
+
+        infoCandidatoResponse = {"tipo_doc":candidatoItems[0]['tipo_doc'], "num_doc":candidatoItems[0]['num_doc'], "nombre":candidatoItems[0]['nombre'],
+                                 "usuario":candidatoItems[0]['usuario'], "clave":candidatoItems[0]['clave'], "telefono":candidatoItems[0]['telefono'],
+                                 "email":candidatoItems[0]['email'], "pais":candidatoItems[0]['pais'], "ciudad":candidatoItems[0]['ciudad'],
+                                 "aspiracion_salarial":candidatoItems[0]['aspiracion_salarial'], "fecha_nacimiento":str(candidatoItems[0]['fecha_nacimiento']),
+                                 "idiomas":candidatoItems[0]['idiomas']}
+
+        return {"response":infoCandidatoResponse, "status_code": 200}
+
+   
 class ping(Resource):
     
     def get(self):

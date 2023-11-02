@@ -1,17 +1,16 @@
 from flask import Flask
 from flask_restful import Api
 from modelos import db
-from vistas import (VistaCrearCandidato, VistaHistorialEntrevistas, VistaInformacionTecnica, ping)
+from vistas import (VistaCrearCandidato, VistaHistorialEntrevistas, VistaInformacionTecnica, 
+                    VistaConsultarCandidato, ping)
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 import os
-
 sqlpass = os.getenv("SQL_PASSWORD")
 app = Flask(__name__)
 test = os.getenv('IF_TEST')
-jwt_secret_key = "frase-secreta"
-#jwt_secret_key = os.getenv('JWT_SECRET_KEY')
+jwt_secret_key = os.getenv('JWT_SECRET_KEY')
 
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000", "https://micro-web-kdbo2knypq-uc.a.run.app", "http://localhost", "https://localhost"])
 if(os.path.isdir('/cloudsql/')):
@@ -46,6 +45,7 @@ api = Api(app)
 api.add_resource(VistaCrearCandidato, '/candidato/create')
 api.add_resource(VistaHistorialEntrevistas, '/candidato/historialEntrevistas')
 api.add_resource(VistaInformacionTecnica, '/candidato/infoTecnica')
+api.add_resource(VistaConsultarCandidato, '/candidato/detalle')
 api.add_resource(ping, '/candidato/ping')
 
 jwt = JWTManager(app)
