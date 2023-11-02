@@ -41,6 +41,7 @@ CREATE TABLE ficha_trabajo(
     id int not null AUTO_INCREMENT,
     nombre varchar(100) NOT NULL,
     descripcion varchar(2000),
+    id_empresa int not null,
     id_proyecto int,
     PRIMARY KEY(id)
 );
