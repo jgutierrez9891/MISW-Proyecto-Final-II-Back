@@ -12,7 +12,7 @@ CREATE TABLE candidato(
     clave varchar(50) NOT NULL,
     telefono bigint NOT NULL,
     email varchar(100) NOT NULL,
-    pais varchar(50) NOT NULL,
+    pais varchar(100) NOT NULL,
     ciudad varchar(50) NOT NULL,
     aspiracion_salarial bigint NOT NULL,
     fecha_nacimiento datetime NOT NULL,

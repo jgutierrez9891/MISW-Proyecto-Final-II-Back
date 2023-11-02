@@ -46,7 +46,7 @@ class candidato(db.Model):
     clave = db.Column(db.String(50))
     telefono = db.Column(db.Integer)
     email = db.Column(db.String(100))
-    pais = db.Column(db.String(50))
+    pais = db.Column(db.String(100))
     ciudad = db.Column(db.String(50))
     aspiracion_salarial = db.Column(db.Integer)
     fecha_nacimiento = db.Column(db.DateTime)
