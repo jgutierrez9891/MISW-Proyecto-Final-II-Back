@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from modelos.modelos import Ficha_trabajoSchema, db, Proyecto, Ficha_trabajo
+from modelos.modelos import Rol, RolSchema, Habilidad, HabilidadSchema, RolHabilidad, RolHabilidadSchema, Ficha_trabajoSchema, db, Proyecto, Ficha_trabajo
 from flask_jwt_extended import jwt_required
 
 ficha_schema = Ficha_trabajoSchema()
@@ -84,6 +84,56 @@ class VistaConsultarFichas(Resource):
             return {"status_code": 200, "fichas": fichas_list}, 200
         else:
             return {"status_code": 204, "message": "No se encontraron fichas de trabajo para la empresa con id "+str(empresa_id)}, 204
+        
+        
+class VistaActualizarRol(Resource):
+    
+    @jwt_required()
+    def put(self):
+        
+        id_rol = request.json.get("id_rol")
+        titulo_rol = request.json.get("titulo_rol")
+        descripcion_rol = request.json.get("descripcion_rol")
+        lista_habilidades_blandas = request.json.get("lista_habilidades_blandas")
+        lista_habilidades_tecnicas = request.json.get("lista_habilidades_tecnicas")
+
+        if id_rol is None or titulo_rol is None or descripcion_rol is None or lista_habilidades_blandas is None or lista_habilidades_tecnicas is None:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+        
+        rol = Rol.query.filter(Rol.id_rol == id_rol).first()
+        
+        if rol is None:
+            return {"status_code": 404, "message": "No se encontro el Rol Esperado"}, 404
+                
+        for id in lista_habilidades_blandas:
+            idt = Habilidad.query.filter(Habilidad.id_habilidad == id).first()
+            if idt is None:
+                return {"status_code": 404, "message": "No se encontro una de las habilidades Esperadas"}, 404
+            
+        for id in lista_habilidades_tecnicas:
+            idt = Habilidad.query.filter(Habilidad.id_habilidad == id).first()
+            if idt is None:
+                return {"status_code": 404, "message": "No se encontro una de las habilidades Esperadas"}, 404
+            
+        deleteHabilidadRol = RolHabilidad.query.filter(RolHabilidad.id_rol == id_rol).delete()
+        
+        for id in lista_habilidades_blandas:
+            habilidad = RolHabilidad(id_rol = id_rol,
+                                      id_habilidad = id)
+            db.session.add(habilidad)
+            
+        for id in lista_habilidades_tecnicas:
+            habilidad = RolHabilidad(id_rol = id_rol,
+                                      id_habilidad = id)
+            db.session.add(habilidad)
+        
+        rol_updating = Rol.query.filter(Rol.id_rol == id_rol).first()
+        rol_updating.nombre = titulo_rol
+        rol_updating.descripcion = descripcion_rol
+        db.session.commit()
+    
+        return {"status_code": 200, "Mensaje": "Rol Actualizado con Exito"}, 200
+        
         
 class ping(Resource):
     

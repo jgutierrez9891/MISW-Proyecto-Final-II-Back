@@ -4,12 +4,13 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from modelos.modelos import db
-from vistas.vistas import (VistaConsultarFichas, VistaCrearProyecto, ping)
+from vistas.vistas import (VistaActualizarRol, VistaConsultarFichas, VistaCrearProyecto, ping)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
 test = os.getenv('IF_TEST')
 jwt_secret_key = os.getenv('JWT_SECRET_KEY')
-
+sqlpass = "Grupo9Proyecto2"
+jwt_secret_key = "frase-secreta"
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000", "https://micro-web-kdbo2knypq-uc.a.run.app", "http://localhost", "https://localhost"])
 
@@ -34,6 +35,7 @@ db.init_app(app)
 api = Api(app)
 api.add_resource(VistaCrearProyecto, '/proyecto/crear')
 api.add_resource(VistaConsultarFichas, '/equipos/consultar')
+api.add_resource(VistaActualizarRol, '/equipos/rol')
 api.add_resource(ping, '/equipos/ping')
 
 jwt = JWTManager(app)
