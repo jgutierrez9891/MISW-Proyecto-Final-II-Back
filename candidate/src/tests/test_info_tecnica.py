@@ -28,7 +28,7 @@ class TestInfoTecnica(TestCase):
         self.token_de_acceso = create_access_token(identity=123)
         self.headers ={'Content-Type': 'application/json',
                        "Authorization" : "Bearer "+str(self.token_de_acceso)}
-        self.tipo = random.choice(["TECNOLOGIA","LENGUAJE","ROL"])
+        #self.tipo = random.choice(["TECNOLOGIA","LENGUAJE","ROL"])
         self.valor = fake.word()
 
         #Data para crear usuario de prueba
@@ -62,7 +62,7 @@ class TestInfoTecnica(TestCase):
 
     def test_success_registrar_InfoTecnica(self):
         json_request = {
-            "tipo": self.tipo,
+            "tipo": "TECNOLOGIA",
             "valor": self.valor,
             "id_candidato": self.id_candidato
         }
@@ -74,7 +74,7 @@ class TestInfoTecnica(TestCase):
 
     def test_error_campo_no_enviado(self):
         json_request = {
-            "tipo": self.tipo,
+            "tipo": "LENGUAJE",
             "id_candidato": self.id_candidato
         }
         post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
@@ -97,7 +97,7 @@ class TestInfoTecnica(TestCase):
 
     def test_error_sin_autenticacion(self):
         json_request = {
-            "tipo": self.tipo,
+            "tipo": "ROL",
             "valor": self.valor,
             "id_candidato": self.id_candidato
         }
@@ -108,7 +108,7 @@ class TestInfoTecnica(TestCase):
 
     def test_error_id_candidato_invalido(self):
         json_request = {
-            "tipo": self.tipo,
+            "tipo": "TECNOLOGIA",
             "valor": self.valor,
             "id_candidato": 0
         }
