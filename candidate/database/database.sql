@@ -17,8 +17,9 @@ CREATE TABLE candidato(
     aspiracion_salarial bigint NOT NULL,
     fecha_nacimiento datetime NOT NULL,
     idiomas varchar(200) NOT NULL,
-    fecha_ultima_evaluacion datetime NOT NULL,
-    promedio_evaluaciones float NOT NULL,
+    fecha_ultima_evaluacion datetime DEFAULT NULL,
+    promedio_evaluaciones float DEFAULT NULL,
+    estado varchar(50) NOT NULL,
     PRIMARY KEY(id)
 );
 

@@ -13,11 +13,11 @@ class TestFichas(TestCase):
         self.data_factory = Faker()
 
         if test:
-            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin123@127.0.0.1:3306/empresas'
-            self.connection = mysql.connector.connect(host='127.0.0.1',
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
+            self.connection = mysql.connector.connect(host='0.0.0.0',
             database='empresas',
             user='root',
-            password='admin123')
+            password='root')
         else:
             self.connection = mysql.connector.connect(host='34.27.118.190',
             database='empresas',

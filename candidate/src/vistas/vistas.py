@@ -177,6 +177,21 @@ class VistaConsultarCandidato(Resource):
 
         return {"response":infoCandidatoResponse, "status_code": 200}
 
+
+class VistaConsultarCandidatosDisponibles(Resource):
+    
+    @jwt_required()
+    def get(self):
+
+        candidatos = candidato.query.filter(candidato.estado == "DISPONIBLE").all()
+        db.session.commit()
+        
+        if candidatos is not None and len(candidatos) > 0:
+            resultado = candidato_schema.dump(candidatos)
+            return {"status_code": 200, "candidatos": resultado}, 200
+        else:
+            return {"status_code": 404, "message": "No se encontraron candidatos disponibles"}, 404
+
    
 class ping(Resource):
     
