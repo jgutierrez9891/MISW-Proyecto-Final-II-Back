@@ -40,8 +40,6 @@ jobs:
           coverage report --fail-under=80
           coverage html
           coverage xml
-        env:
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}  
       - name: SonarCloud Scan #sonar cloud
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -111,6 +109,43 @@ jobs:
           pip3 install -r requirements.txt
       - name: Run empresa unit tests # tests
         working-directory: ./gestionClientes/empresa/src
+        run: |
+          coverage run --include=./app.py,./tests/tests.py,./vistas/vistas.py -m unittest tests/* -v 
+          coverage report --fail-under=80
+          coverage html
+          coverage xml
+      - name: SonarCloud Scan #sonar cloud
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
+  #EQUIPOS
+  #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
+  test_equipos:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        python-version: [ 3.10.6 ]
+    env:
+      DB_USER: root
+      DB_PASSWORD: root
+      IF_TEST: "True"
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install empresa_db
+        working-directory: ./gestionClientes/equipos/database #preparacion 1 para tests
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < database.sql
+      - name: Install equipos environment #preparacion 2 para tests
+        working-directory: ./gestionClientes/equipos/src
+        run: |
+          pip3 install -r requirements.txt
+      - name: Run equipos unit tests # tests
+        working-directory: ./gestionClientes/equipos/src
         run: |
           coverage run --include=./app.py,./tests/tests.py,./vistas/vistas.py -m unittest tests/* -v 
           coverage report --fail-under=80
