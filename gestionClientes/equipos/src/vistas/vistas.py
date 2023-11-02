@@ -1,9 +1,10 @@
-from flask import request
+from flask import json, request
 from flask_restful import Resource
-from modelos.modelos import Rol, RolSchema, Habilidad, HabilidadSchema, RolHabilidad, RolHabilidadSchema, Ficha_trabajoSchema, db, Proyecto, Ficha_trabajo
+from modelos.modelos import Rol, Habilidad, RolHabilidad, Ficha_trabajoSchema, ProyectoSchema, db, Proyecto, Ficha_trabajo
 from flask_jwt_extended import jwt_required
 
 ficha_schema = Ficha_trabajoSchema()
+proyectos_schema = ProyectoSchema(many=True)
     
 class VistaCrearProyecto(Resource):
 
@@ -84,6 +85,25 @@ class VistaConsultarFichas(Resource):
             return {"status_code": 200, "fichas": fichas_list}, 200
         else:
             return {"status_code": 204, "message": "No se encontraron fichas de trabajo para la empresa con id "+str(empresa_id)}, 204
+
+class VistaConsultarProyectos(Resource):
+
+    @jwt_required()
+    def get(self):
+        empresa_id = request.args.get("id_empresa")
+
+        if empresa_id is None:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar el id de la empresa"}, 400
+        
+        proyectos = Proyecto.query.filter(Proyecto.id_empresa == empresa_id).all()
+        db.session.commit()
+        
+        if proyectos is not None and len(proyectos) > 0:
+            resultado = proyectos_schema.dump(proyectos)
+            return {"status_code": 200, "proyectos": resultado}, 200
+        else:
+            return {"status_code": 404, "message": "No se encontraron registros para la empresa con id "+str(empresa_id)}, 404
+        
         
         
 class VistaActualizarRol(Resource):
