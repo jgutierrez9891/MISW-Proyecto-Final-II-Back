@@ -20,10 +20,14 @@ class candidato(db.Model):
     aspiracion_salarial = db.Column(db.Integer)
     fecha_nacimiento = db.Column(db.DateTime)
     idiomas = db.Column(db.String(200))
+    fecha_ultima_evaluacion = db.Column(db.DateTime)
+    promedio_evaluaciones = db.Column(db.Float)
+    habilidades_tecnicas = db.relationship('infoTecnica', cascade='all, delete, delete-orphan')
+    info_academica = db.relationship('infoAcademica', cascade='all, delete, delete-orphan')
 
-class candidatoSchema(ma.SQLAlchemyAutoSchema):
+class candidatoSchema(ma.Schema):
     class Meta:
-        model = candidato
+        fields = ("id", "tipo_doc", "num_doc", "nombre", "usuario", "clave", "telefono", "email", "pais", "ciudad", "aspiracion_salarial", "fecha_nacimiento", "idiomas", "fecha_ultima_evaluacion", "promedio_evaluaciones", "habilidades_tecnicas", "info_academica")
         include_relationships = True
         load_instance = True
 
@@ -50,10 +54,22 @@ class infoTecnica(db.Model):
 
 class infoTecnicaSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = infoTecnica
+        fields = ("id", "tipo", "valor", "id_candidato")
         include_relationships = True
         load_instance = True    
 
+class infoAcademica(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tipo = db.Column(db.String(50))
+    valor = db.Column(db.String(50))
+    ano_finalizacion = db.Column(db.String(4))
+    id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id'))
+
+class infoAcademicaSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "tipo", "valor", "ano_finalizacion", "id_candidato")
+        include_relationships = True
+        load_instance = True
         
 #EMPRESA
 class empresa(db.Model):

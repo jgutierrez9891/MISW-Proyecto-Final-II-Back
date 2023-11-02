@@ -17,6 +17,8 @@ CREATE TABLE candidato(
     aspiracion_salarial bigint NOT NULL,
     fecha_nacimiento datetime NOT NULL,
     idiomas varchar(200) NOT NULL,
+    fecha_ultima_evaluacion datetime NOT NULL,
+    promedio_evaluaciones float NOT NULL,
     PRIMARY KEY(id)
 );
 
@@ -31,6 +33,26 @@ CREATE TABLE entrevista(
 
 insert into candidatos.entrevista (id_candidato, fecha, estado, id_empresa) values (1,"2023-09-05","finalizado",1);
 
+CREATE TABLE info_tecnica (
+  id int NOT NULL AUTO_INCREMENT,
+  tipo varchar(50) DEFAULT NULL,
+  valor varchar(50) DEFAULT NULL,
+  id_candidato int DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY id_candidato (id_candidato),
+  CONSTRAINT info_tecnica_ibfk_1 FOREIGN KEY (id_candidato) REFERENCES candidato (id)
+);
+
+CREATE TABLE infoAcademica (
+  id int NOT NULL AUTO_INCREMENT,
+  tipo varchar(50) DEFAULT NULL,
+  valor varchar(50) DEFAULT NULL,
+  ano_finalizacion varchar(4) DEFAULT NULL,
+  id_candidato int NOT NULL,
+  PRIMARY KEY (id),
+  KEY infoAcademica_candidato_idx (id_candidato),
+  CONSTRAINT infoAcademica_candidato FOREIGN KEY (id_candidato) REFERENCES candidato (id)
+);
 
 CREATE DATABASE empresas;
 use empresas;
