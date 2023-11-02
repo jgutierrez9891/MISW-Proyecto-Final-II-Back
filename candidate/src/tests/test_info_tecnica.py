@@ -24,7 +24,7 @@ class TestInfoTecnica(TestCase):
 
         self.client = app.test_client()
         fake = Faker()
-        self.tipo = random.choice(["tecnologia","lenguaje","rol"])
+        self.tipo = random.choice(["TECNOLOGIA","LENGUAJE","ROL"])
         self.valor = fake.word()
 
         #Data para crear usuario de prueba
