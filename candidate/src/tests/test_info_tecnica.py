@@ -24,7 +24,11 @@ class TestInfoTecnica(TestCase):
 
         self.client = app.test_client()
         fake = Faker()
-        self.tipo = random.choice(["tecnologia","lenguaje","rol"])
+        #Token de autenticación
+        self.token_de_acceso = create_access_token(identity=123)
+        self.headers ={'Content-Type': 'application/json',
+                       "Authorization" : "Bearer "+str(self.token_de_acceso)}
+        #self.tipo = random.choice(["TECNOLOGIA","LENGUAJE","ROL"])
         self.valor = fake.word()
 
         #Data para crear usuario de prueba
@@ -56,30 +60,25 @@ class TestInfoTecnica(TestCase):
         print("el id del candidato es: " + str(candidatoCreado[0][0]))
         cursor.close()
 
-        #Token de autenticación
-        self.token_de_acceso = create_access_token(identity=123)
-
     def test_success_registrar_InfoTecnica(self):
         json_request = {
-            "tipo": self.tipo,
+            "tipo": "TECNOLOGIA",
             "valor": self.valor,
             "id_candidato": self.id_candidato
         }
         post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
-                                        headers={'Content-Type': 'application/json',
-                                        "Authorization" : "Bearer "+str(self.token_de_acceso)})
+                                        headers=self.headers)
         self.assertEqual(post_request.status_code, 201)
         post_response = json.loads(post_request.get_data())
         self.assertEqual("Informacion registrada exitosamente",post_response.get("message"))
 
     def test_error_campo_no_enviado(self):
         json_request = {
-            "tipo": self.tipo,
+            "tipo": "LENGUAJE",
             "id_candidato": self.id_candidato
         }
         post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
-                                        headers={'Content-Type': 'application/json',
-                                        "Authorization" : "Bearer "+str(self.token_de_acceso)})
+                                        headers=self.headers)
         self.assertEqual(post_request.status_code, 400)
         post_response = json.loads(post_request.get_data())
         self.assertEqual("Ingrese todos los campos requeridos",post_response.get("message"))
@@ -91,15 +90,14 @@ class TestInfoTecnica(TestCase):
             "id_candidato": self.id_candidato
         }
         post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
-                                        headers={'Content-Type': 'application/json',
-                                        "Authorization" : "Bearer "+str(self.token_de_acceso)})
+                                        headers=self.headers)
         self.assertEqual(post_request.status_code, 400)
         post_response = json.loads(post_request.get_data())
         self.assertEqual("Campo requerido se encuentra vacío",post_response.get("message"))
 
     def test_error_sin_autenticacion(self):
         json_request = {
-            "tipo": self.tipo,
+            "tipo": "ROL",
             "valor": self.valor,
             "id_candidato": self.id_candidato
         }
@@ -110,13 +108,12 @@ class TestInfoTecnica(TestCase):
 
     def test_error_id_candidato_invalido(self):
         json_request = {
-            "tipo": self.tipo,
+            "tipo": "TECNOLOGIA",
             "valor": self.valor,
             "id_candidato": 0
         }
         post_request = self.client.post("/candidato/infoTecnica", data=json.dumps(json_request),
-                                        headers={'Content-Type': 'application/json',
-                                        "Authorization" : "Bearer "+str(self.token_de_acceso)})
+                                        headers=self.headers)
         self.assertEqual(post_request.status_code, 409)
         post_response = json.loads(post_request.get_data())
         self.assertEqual("El id_candidato ingresado no existe",post_response.get("message"))    
