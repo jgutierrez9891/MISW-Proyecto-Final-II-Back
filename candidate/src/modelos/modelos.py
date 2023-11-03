@@ -3,11 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from marshmallow import fields, Schema
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from flask_marshmallow import Marshmallow
+from enum import Enum
 
 db = SQLAlchemy()
 ma = Marshmallow()
 
-class tipoHabilidad(enum.Enum):
+class tipoHabilidad(str, Enum):
     TECNOLOGIA = "Tecnologia"
     LENGUAJE = "Lenguaje"
     ROL = "Rol"
