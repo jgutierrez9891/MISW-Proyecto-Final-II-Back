@@ -116,9 +116,23 @@ class TestInfoTecnica(TestCase):
                                         headers=self.headers)
         self.assertEqual(post_request.status_code, 409)
         post_response = json.loads(post_request.get_data())
-        self.assertEqual("El id_candidato ingresado no existe",post_response.get("message"))    
+        self.assertEqual("El id_candidato ingresado no existe",post_response.get("message"))
 
 
+    def test_consultar_info_tecnica(self):
+
+        sql_crear_info = "INSERT INTO candidatos.info_tecnica (tipo, valor, id_candidato) VALUES (%s, %s, %s)"
+        val = ("ROL", "programador", self.id_candidato)
+        #Crear el candidato en BD
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear_info, val)
+        self.connection.commit()
+
+        solicitud_consulta = self.client.get("/candidato/infoTecnica?id_candidato="+str(self.id_candidato)+"",
+                                             headers={'Content-Type': 'application/json',
+                                                 "Authorization" : "Bearer "+str(self.token_de_acceso)})
+        respuesta_consulta = json.loads(solicitud_consulta.get_data())
+        self.assertEqual(solicitud_consulta.status_code, 200)
 
 
     def tearDown(self):
