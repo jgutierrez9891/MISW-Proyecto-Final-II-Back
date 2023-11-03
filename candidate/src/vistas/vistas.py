@@ -136,7 +136,7 @@ class VistaInformacionTecnica(Resource):
             )
         return {"id":response.id, "status_code": 201, "message": "Informacion registrada exitosamente"}, 201
     
-    
+    @jwt_required()
     def get(self):
 
         id_candidato = infoTecnica.query.filter(infoTecnica.id_candidato == request.args.get("id_candidato")).all()
@@ -154,7 +154,7 @@ class VistaInformacionTecnica(Resource):
 
 class VistaConsultarCandidato(Resource):
 
-    
+    @jwt_required()
     def get(self):
 
         if request.args.get('id_candidato') is None:
