@@ -19,7 +19,7 @@ class VistaCrearProyecto(Resource):
         if empresa_id is None or empresa_id is None or proyecto_titulo is None or proyecto_titulo is None or proyecto_fecha_inicio is None or proyecto_fecha_inicio is None:
             return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar todos los datos de la empresa y representante"}, 400
         
-        if proyecto_fecha_fin:
+        if proyecto_fecha_fin and proyecto_fecha_fin != "":
             if proyecto_fecha_fin < proyecto_fecha_inicio:
                 return {"status_code": 400, "message": "La fecha de finalización del proyecto no puede ser menor a la fecha de inicio"}, 400
         
@@ -38,6 +38,8 @@ class VistaCrearProyecto(Resource):
         if proyecto_actual is not None:
             return {"status_code": 409, "message": "El proyecto ingresado ya existe"}, 409
         
+        if(proyecto_fecha_fin is None or proyecto_fecha_fin == ""):
+            proyecto_fecha_fin = None
         proyecto = Proyecto(titulo = proyecto_titulo,
                             fecha_inicio = proyecto_fecha_inicio,
                             fecha_fin = proyecto_fecha_fin,
