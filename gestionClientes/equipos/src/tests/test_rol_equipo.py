@@ -12,93 +12,93 @@ class TestRol(TestCase):
         self.client = app.test_client()
         self.data_factory = Faker()
 
-        # if test:
-        #     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
-        #     self.connection = mysql.connector.connect(host='0.0.0.0',
-        #     database='empresas',
-        #     user='root',
-        #     password='root')
-        # else:
-        #     self.connection = mysql.connector.connect(host='34.27.118.190',
-        #     database='empresas',
-        #     user='root',
-        #     password=sqlpass)
+        if test:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
+            self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='empresas',
+            user='root',
+            password='root')
+        else:
+            self.connection = mysql.connector.connect(host='34.27.118.190',
+            database='empresas',
+            user='root',
+            password=sqlpass)
         
-        # sql = "insert into empresas.representante (tipo_doc, num_doc, nombre, email, telefono, usuario, clave, id_empresa) values ('CC','1023456789','Mauricio Peña', 'mauricio.pena@softwareia.com', '3123456789','maupena', 'miclave123', 1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (2, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (1, '"+self.data_factory.company()+"', '2023-01-01', '2023-01-30', 1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (2, '"+self.data_factory.company()+"', '2023-02-01', '2023-03-30', 1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (2, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (3, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 2);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (4, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 2);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (1, 10);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (1, 20);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (2, 30);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (2, 40);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
+        sql = "insert into empresas.representante (tipo_doc, num_doc, nombre, email, telefono, usuario, clave, id_empresa) values ('CC','1023456789','Mauricio Peña', 'mauricio.pena@softwareia.com', '3123456789','maupena', 'miclave123', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (2, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (1, '"+self.data_factory.company()+"', '2023-01-01', '2023-01-30', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (2, '"+self.data_factory.company()+"', '2023-02-01', '2023-03-30', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (2, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (3, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 2);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (4, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 2);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (1, 10);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (1, 20);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (2, 30);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (2, 40);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
 
-        # sql = "insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) values (1,1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
+        sql = "insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) values (1,1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
 
-        # sql = "insert into empresas.rol (id_rol,nombre, descripcion) values (1,'test rol','test desc');"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
+        sql = "insert into empresas.rol (id_rol,nombre, descripcion) values (1,'test rol','test desc');"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
 
         self.token_de_acceso = create_access_token(identity=123)
         self.headers ={'Content-Type': 'application/json',
