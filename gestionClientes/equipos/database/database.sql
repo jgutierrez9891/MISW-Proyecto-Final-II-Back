@@ -86,7 +86,32 @@ CREATE TABLE rol_habilidad(
     PRIMARY KEY(id_asoc)
 );
 
+CREATE TABLE empresas.empleado (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    cargo VARCHAR(50)
+);
+
+CREATE TABLE empresas.empleado_ficha_trabajo (
+id INT AUTO_INCREMENT PRIMARY KEY,
+    id_ficha_trabajo INT,
+    id_empleado INT,
+    FOREIGN KEY (id_ficha_trabajo) REFERENCES empresas.ficha_trabajo(id),
+    FOREIGN KEY (id_empleado) REFERENCES empresas.empleado(id)
+);
+
+CREATE TABLE empresas.rol_ficha_trabajo (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    id_ficha_trabajo INT,
+    id_rol INT,
+    FOREIGN KEY (id_ficha_trabajo) REFERENCES empresas.ficha_trabajo(id),
+    FOREIGN KEY (id_rol) REFERENCES empresas.rol(id_rol)
+);
+
 insert into empresas.rol (nombre, descripcion) value ("empresa prueba", "descripcion prueba");
+-- insert into empresas.proyecto (titulo, fecha_inicio, fecha_fin, id_empresa) value ("proyecto prueba", STR_TO_DATE('2023-01-01', '%Y-%m-%d'), STR_TO_DATE('2023-01-01', '%Y-%m-%d'),1);
+-- insert into empresas.ficha_trabajo (nombre, descripcion,id_proyecto, id_empresa) value ("equipo prueba", "descripcion prueba equipo",1,1);
+-- insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (1, 1);
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 1", "blanda");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "tecnica");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda");
