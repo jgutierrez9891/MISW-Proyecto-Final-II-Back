@@ -8,6 +8,8 @@ from vistas.vistas import (VistaAsociarEquipoRol, VistaConsultarFichas, VistaCon
 from vistas.vistas import (VistaActualizarRol, VistaConsultarFichas, VistaCrearProyecto, ping)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
+if sqlpass is None:
+    sqlpass = ''
 test = os.getenv('IF_TEST')
 jwt_secret_key = os.getenv('JWT_SECRET_KEY')
 
