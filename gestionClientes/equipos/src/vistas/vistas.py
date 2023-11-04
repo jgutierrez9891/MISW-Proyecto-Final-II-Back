@@ -183,79 +183,62 @@ class VistaActualizarRol(Resource):
         db.session.commit()
     
         return {"status_code": 200, "Mensaje": "Rol Actualizado con Exito"}, 200
+
 class VistaAsociarEquipoRol(Resource):
-    
+
+    def _get_rol_and_equipo(self, idRol, id_equipo):
+        rol = Rol.query.filter(Rol.id_rol == idRol).first()
+        equipo = Ficha_trabajo.query.filter(Ficha_trabajo.id == id_equipo).first()
+        return rol, equipo
+
+    def _perform_operation(self, idRol, id_equipo, operation):
+        if idRol is None or id_equipo is None:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+
+        rol, equipo = self._get_rol_and_equipo(idRol, id_equipo)
+
+        if rol is None:
+            return {"status_code": 404, "message": "No se encontró el Rol esperado"}, 404
+
+        if equipo is None:
+            return {"status_code": 404, "message": "No se encontró el equipo esperado"}, 404
+
+        rol_ficha = Rol_ficha_trabajo.query.filter(Rol_ficha_trabajo.id_rol == idRol, Rol_ficha_trabajo.id_ficha_trabajo == id_equipo).first()
+
+        if operation == 'add':
+            if rol_ficha is not None:
+                return {"status_code": 409, "message": "Rol ya está asociado a equipo"}, 409
+            try:
+                db.session.add(Rol_ficha_trabajo(id_ficha_trabajo=id_equipo, id_rol=idRol))
+                db.session.commit()
+                return {"status_code": 200, "Mensaje": "Rol asociado con Éxito"}, 200
+            except Exception as err:
+                print("VA A RETORNAR 500 POR ERROR: " + str(err))
+                return {"status_code": 500, "message": "Error asociando el rol al equipo"}, 500
+
+        elif operation == 'delete':
+            if rol_ficha is None:
+                return {"status_code": 404, "message": "No se encontró rol asociado a equipo"}, 404
+            try:
+                db.session.delete(rol_ficha)
+                db.session.commit()
+                return {"status_code": 200, "Mensaje": "Rol desasociado con Éxito"}, 200
+            except Exception as err:
+                print("VA A RETORNAR 500 POR ERROR: " + str(err))
+                return {"status_code": 500, "message": "Error desasociando el rol del equipo"}, 500
+
     @jwt_required()
     def post(self):
-        
         idRol = request.json.get("id_rol")
         id_equipo = request.json.get("id_equipo")
+        return self._perform_operation(idRol, id_equipo, 'add')
 
-
-        if idRol is None or id_equipo is None:
-            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
-        
-        rol = Rol.query.filter(Rol.id_rol == idRol).first()
-        
-        if rol is None:
-            return {"status_code": 404, "message": "No se encontro el Rol Esperado"}, 404
-                
-        equipo = Ficha_trabajo.query.filter(Ficha_trabajo.id == id_equipo).first()
-
-        if equipo is None:
-            return {"status_code": 404, "message": "No se encontro el equipo Esperado"}, 404
-        
-        
-        rol_ficha = Rol_ficha_trabajo.query.filter(Rol_ficha_trabajo.id_rol== idRol, Rol_ficha_trabajo.id_ficha_trabajo== id_equipo).first()
-
-        if rol_ficha is not None:
-            return {"status_code": 409, "message": "rol ya esta sociado a equipo"}, 409
-
-        rol_ficha = Rol_ficha_trabajo(id_ficha_trabajo=id_equipo,
-                                     id_rol=idRol)
-        
-        try:
-            db.session.add(rol_ficha)
-            db.session.commit()
-        except Exception as err:
-            print("VA A RETORNAR 500 POR ERROR: "+str(err))
-            return {"status_code": 500, "message": "Error asociando el rol al equipo"}, 500
-    
-        return {"status_code": 200, "Mensaje": "Rol asociado con Exito"}, 200
-       
+    @jwt_required()
     def delete(self):
-        
         idRol = request.json.get("id_rol")
         id_equipo = request.json.get("id_equipo")
+        return self._perform_operation(idRol, id_equipo, 'delete')
 
-
-        if idRol is None or id_equipo is None:
-            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
-        
-        rol = Rol.query.filter(Rol.id_rol == idRol).first()
-        
-        if rol is None:
-            return {"status_code": 404, "message": "No se encontro el Rol Esperado"}, 404
-                
-        equipo = Ficha_trabajo.query.filter(Ficha_trabajo.id == id_equipo).first()
-
-        if equipo is None:
-            return {"status_code": 404, "message": "No se encontro el equipo Esperado"}, 404
-        
-        
-        rol_ficha = Rol_ficha_trabajo.query.filter(Rol_ficha_trabajo.id_rol== idRol, Rol_ficha_trabajo.id_ficha_trabajo== id_equipo).first()
-
-        if rol_ficha is None:
-            return {"status_code": 404, "message": "No se encontro rol  sociado a equipo"}, 404
-        
-        try:
-            db.session.delete(rol_ficha)
-            db.session.commit()
-        except Exception as err:
-            print("VA A RETORNAR 500 POR ERROR: "+str(err))
-            return {"status_code": 500, "message": "Error asociando el rol al equipo"}, 500
-    
-        return {"status_code": 200, "Mensaje": "Rol desasociado con Exito"}, 200
     
     
 
