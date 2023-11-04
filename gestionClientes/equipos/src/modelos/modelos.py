@@ -44,6 +44,20 @@ class Ficha_trabajo(db.Model):
     id_empresa = db.Column(db.Integer)
     id_proyecto = db.Column(db.Integer, db.ForeignKey('proyecto.id'))
 
+class Empleado(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100))
+    cargo = db.Column(db.String(100))
+
+class Empleado_ficha_trabajo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_ficha_trabajo = db.Column(db.Integer, db.ForeignKey('ficha_trabajo.id'))
+    id_empleado = db.Column(db.Integer, db.ForeignKey('empleado.id'))
+class Rol_ficha_trabajo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_ficha_trabajo = db.Column(db.Integer, db.ForeignKey('ficha_trabajo.id'))
+    id_rol = db.Column(db.Integer, db.ForeignKey('rol.id_rol'))
+
 class Ficha_trabajoSchema(ma.Schema):
     class Meta:
         fields = ('id', 'nombre', 'descripcion', 'id_empresa', 'id_proyecto')
@@ -97,7 +111,6 @@ class Rol(db.Model):
     id_rol = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(60))
     descripcion = db.Column(db.String(250))
-    id_equipo = db.Column(db.Integer)
 
 class RolSchema(ma.SQLAlchemyAutoSchema):
     class Meta:

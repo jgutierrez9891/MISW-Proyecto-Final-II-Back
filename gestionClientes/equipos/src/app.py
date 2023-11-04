@@ -4,7 +4,7 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from modelos.modelos import db
-from vistas.vistas import (VistaConsultarFichas, VistaConsultarProyectos, VistaCrearProyecto, ping)
+from vistas.vistas import (VistaConsultarFichas, VistaConsultarProyectos, VistaConsultarRol, VistaCrearProyecto, ping)
 from vistas.vistas import (VistaActualizarRol, VistaConsultarFichas, VistaCrearProyecto, ping)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
@@ -25,7 +25,7 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['JWT_SECRET_KEY'] = jwt_secret_key
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=5)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=1440)
 
 app_context = app.app_context()
 app_context.push()
@@ -37,6 +37,7 @@ api.add_resource(VistaCrearProyecto, '/proyecto/crear')
 api.add_resource(VistaConsultarFichas, '/equipos/consultar')
 api.add_resource(VistaConsultarProyectos, '/proyectos/consultar')
 api.add_resource(VistaActualizarRol, '/equipos/rol')
+api.add_resource(VistaConsultarRol, '/equipos/rol')
 api.add_resource(ping, '/equipos/ping')
 
 jwt = JWTManager(app)

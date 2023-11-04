@@ -1,3 +1,4 @@
+from datetime import timedelta
 from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
@@ -30,6 +31,7 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['JWT_SECRET_KEY'] = 'frase-secreta'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=1440)
 
 app_context = app.app_context()
 app_context.push()
