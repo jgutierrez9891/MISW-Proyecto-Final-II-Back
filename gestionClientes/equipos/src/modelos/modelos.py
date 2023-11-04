@@ -53,6 +53,7 @@ class Empleado_ficha_trabajo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_ficha_trabajo = db.Column(db.Integer, db.ForeignKey('ficha_trabajo.id'))
     id_empleado = db.Column(db.Integer, db.ForeignKey('empleado.id'))
+    
 class Rol_ficha_trabajo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_ficha_trabajo = db.Column(db.Integer, db.ForeignKey('ficha_trabajo.id'))

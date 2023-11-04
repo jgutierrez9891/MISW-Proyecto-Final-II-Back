@@ -4,7 +4,7 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from modelos.modelos import db
-from vistas.vistas import (VistaConsultarFichas, VistaConsultarProyectos, VistaConsultarRol, VistaCrearProyecto, ping)
+from vistas.vistas import (VistaAsociarEquipoRol, VistaConsultarFichas, VistaConsultarProyectos, VistaConsultarRol, VistaCrearProyecto, ping)
 from vistas.vistas import (VistaActualizarRol, VistaConsultarFichas, VistaCrearProyecto, ping)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
@@ -38,6 +38,7 @@ api.add_resource(VistaConsultarFichas, '/equipos/consultar')
 api.add_resource(VistaConsultarProyectos, '/proyectos/consultar')
 api.add_resource(VistaActualizarRol, '/equipos/rol')
 api.add_resource(VistaConsultarRol, '/equipos/rol')
+api.add_resource(VistaAsociarEquipoRol, '/equipos/rol/asociar')
 api.add_resource(ping, '/equipos/ping')
 
 jwt = JWTManager(app)

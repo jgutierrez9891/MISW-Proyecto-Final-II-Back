@@ -183,6 +183,82 @@ class VistaActualizarRol(Resource):
         db.session.commit()
     
         return {"status_code": 200, "Mensaje": "Rol Actualizado con Exito"}, 200
+class VistaAsociarEquipoRol(Resource):
+    
+    @jwt_required()
+    def post(self):
+        
+        idRol = request.json.get("id_rol")
+        id_equipo = request.json.get("id_equipo")
+
+
+        if idRol is None or id_equipo is None:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+        
+        rol = Rol.query.filter(Rol.id_rol == idRol).first()
+        
+        if rol is None:
+            return {"status_code": 404, "message": "No se encontro el Rol Esperado"}, 404
+                
+        equipo = Ficha_trabajo.query.filter(Ficha_trabajo.id == id_equipo).first()
+
+        if equipo is None:
+            return {"status_code": 404, "message": "No se encontro el equipo Esperado"}, 404
+        
+        
+        rol_ficha = Rol_ficha_trabajo.query.filter(Rol_ficha_trabajo.id_rol== idRol, Rol_ficha_trabajo.id_ficha_trabajo== id_equipo).first()
+
+        if rol_ficha is not None:
+            return {"status_code": 409, "message": "rol ya esta sociado a equipo"}, 409
+
+        rol_ficha = Rol_ficha_trabajo(id_ficha_trabajo=id_equipo,
+                                     id_rol=idRol)
+        
+        try:
+            db.session.add(rol_ficha)
+            db.session.commit()
+        except Exception as err:
+            print("VA A RETORNAR 500 POR ERROR: "+str(err))
+            return {"status_code": 500, "message": "Error asociando el rol al equipo"}, 500
+    
+        return {"status_code": 200, "Mensaje": "Rol asociado con Exito"}, 200
+       
+    def delete(self):
+        
+        idRol = request.json.get("id_rol")
+        id_equipo = request.json.get("id_equipo")
+
+
+        if idRol is None or id_equipo is None:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+        
+        rol = Rol.query.filter(Rol.id_rol == idRol).first()
+        
+        if rol is None:
+            return {"status_code": 404, "message": "No se encontro el Rol Esperado"}, 404
+                
+        equipo = Ficha_trabajo.query.filter(Ficha_trabajo.id == id_equipo).first()
+
+        if equipo is None:
+            return {"status_code": 404, "message": "No se encontro el equipo Esperado"}, 404
+        
+        
+        rol_ficha = Rol_ficha_trabajo.query.filter(Rol_ficha_trabajo.id_rol== idRol, Rol_ficha_trabajo.id_ficha_trabajo== id_equipo).first()
+
+        if rol_ficha is None:
+            return {"status_code": 404, "message": "No se encontro rol  sociado a equipo"}, 404
+        
+        try:
+            db.session.delete(rol_ficha)
+            db.session.commit()
+        except Exception as err:
+            print("VA A RETORNAR 500 POR ERROR: "+str(err))
+            return {"status_code": 500, "message": "Error asociando el rol al equipo"}, 500
+    
+        return {"status_code": 200, "Mensaje": "Rol desasociado con Exito"}, 200
+    
+    
+
         
         
 class ping(Resource):
