@@ -91,6 +91,7 @@ class VistaConsultarFichas(Resource):
             return {"status_code": 200, "fichas": fichas_list}, 200
         else:
             return {"status_code": 204, "message": "No se encontraron fichas de trabajo para la empresa con id "+str(empresa_id)}, 204
+        
 class VistaConsultarRol(Resource):
 
     @jwt_required()
@@ -183,6 +184,24 @@ class VistaActualizarRol(Resource):
         db.session.commit()
     
         return {"status_code": 200, "Mensaje": "Rol Actualizado con Exito"}, 200
+    
+    
+    
+class VistaConsultarHabilidades(Resource):
+    
+    @jwt_required()
+    def get(self):
+        
+        habilidades = Habilidad.query.filter().all()
+        habilidad_list = []
+        for habilidad in habilidades:
+            habilidadTmp = {
+                "id_habilidad":habilidad.id_habilidad,
+                "habilidad":habilidad.habilidad,
+                "tipo":habilidad.tipo
+            }
+            habilidad_list.append(habilidadTmp)
+        return {"status_code": 200, "habilidades": habilidad_list}, 200
         
         
 class ping(Resource):
