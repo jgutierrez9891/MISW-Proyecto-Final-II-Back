@@ -68,6 +68,17 @@ class TestRol(TestCase):
             "lista_habilidades_tecnicas":[1058]
         },headers=self.headers)
         self.assertEqual(post_request.status_code, 404)
+    
+    def test_6_consultar_rol_equipo(self):
+        post_request = self.client.put("/equipos/rol?equipo_id=1", 
+        json={
+            "id_rol":1,
+            "titulo_rol":"rol prueba",
+            "descripcion_rol":"descripcion prueba 1",
+            "lista_habilidades_blandas":[1],
+            "lista_habilidades_tecnicas":[2]
+        },headers=self.headers)
+        self.assertEqual(post_request.status_code, 200)
         
                 
     def tearDown(self) -> None:

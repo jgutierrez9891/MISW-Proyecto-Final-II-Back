@@ -109,6 +109,9 @@ CREATE TABLE empresas.rol_ficha_trabajo (
 );
 
 insert into empresas.rol (nombre, descripcion) value ("empresa prueba", "descripcion prueba");
+insert into empresas.proyecto (titulo, fecha_inicio, fecha_fin) value ("proyecto prueba",datetime.datetime(2023, 1, 1, datetime.datetime(2023, 1, 1);
+insert into empresas.ficha_trabajo (nombre, descripcion, descripcion,id_proyecto) value ("equipo prueba", "descripcion prueba equipo",1);
+insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (1, 1);
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 1", "blanda");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "tecnica");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda");
