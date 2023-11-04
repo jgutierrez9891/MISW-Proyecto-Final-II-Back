@@ -69,7 +69,6 @@ CREATE TABLE rol(
     id_rol int not null AUTO_INCREMENT,
     nombre varchar(60) NOT NULL,
     descripcion varchar(250),
-    id_equipo int,
     PRIMARY KEY(id_rol)
 );
 
@@ -87,7 +86,7 @@ CREATE TABLE rol_habilidad(
     PRIMARY KEY(id_asoc)
 );
 
-insert into empresas.rol (nombre, descripcion, id_equipo) value ("empresa prueba", "descripcion prueba", 1);
+insert into empresas.rol (nombre, descripcion) value ("empresa prueba", "descripcion prueba");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 1", "blanda");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "tecnica");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda");

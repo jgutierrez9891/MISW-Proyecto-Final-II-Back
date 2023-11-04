@@ -1,9 +1,10 @@
 from flask import json, request
 from flask_restful import Resource
-from modelos.modelos import Rol, Habilidad, RolHabilidad, Ficha_trabajoSchema, ProyectoSchema, db, Proyecto, Ficha_trabajo
+from modelos.modelos import Empleado_ficha_trabajo, Rol, Habilidad, Rol_ficha_trabajo, RolHabilidad, Ficha_trabajoSchema, ProyectoSchema, RolSchema, db, Proyecto, Ficha_trabajo
 from flask_jwt_extended import jwt_required
 
 ficha_schema = Ficha_trabajoSchema()
+rol_schema = RolSchema()
 proyectos_schema = ProyectoSchema(many=True)
     
 class VistaCrearProyecto(Resource):
@@ -83,10 +84,37 @@ class VistaConsultarFichas(Resource):
         if fichas is not None and len(fichas) > 0:
             fichas_list = []
             for ficha in fichas:
-                fichas_list.append(ficha_schema.dump(ficha))
+                empleado_count = Empleado_ficha_trabajo.query.filter(Empleado_ficha_trabajo.id_ficha_trabajo == ficha.id).count()
+                ficha_data = ficha_schema.dump(ficha)
+                ficha_data['miembros'] = empleado_count
+                fichas_list.append(ficha_data)
             return {"status_code": 200, "fichas": fichas_list}, 200
         else:
             return {"status_code": 204, "message": "No se encontraron fichas de trabajo para la empresa con id "+str(empresa_id)}, 204
+class VistaConsultarRol(Resource):
+
+    @jwt_required()
+    def get(self):
+        id_equipo = request.args.get("equipo_id")
+
+        if id_equipo is None:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar el id del equipo"}, 400
+        
+        roles_equipo = Rol_ficha_trabajo.query.filter(Rol_ficha_trabajo.id_ficha_trabajo == id_equipo).all()
+
+        roles = Rol.query.all()
+        db.session.commit()
+        
+        if roles is not None and len(roles) > 0:
+            roles_list = []
+            for rol in roles:
+                rol_data = rol_schema.dump(rol)
+                is_included = any(rol.id_rol == r.id_rol for r in roles_equipo)
+                rol_data['is_included'] = is_included
+                roles_list.append(rol_data)
+            return {"status_code": 200, "roles": roles_list}, 200
+        else:
+            return {"status_code": 204, "message": "No se encontraron roles para el equipo con id "+str(id_equipo)}, 204
 
 class VistaConsultarProyectos(Resource):
 
