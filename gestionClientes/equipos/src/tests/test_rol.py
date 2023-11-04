@@ -70,7 +70,7 @@ class TestRol(TestCase):
         self.assertEqual(post_request.status_code, 404)
         
     def test_6_obtener_habilidades(self):
-        post_request = self.client.put("/equipos/habilidad", 
+        post_request = self.client.get("/equipos/habilidad", 
         json={},headers=self.headers)
         self.assertEqual(post_request.status_code, 200)
         
