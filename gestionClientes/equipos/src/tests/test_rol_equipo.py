@@ -47,58 +47,21 @@ class TestRol(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (2, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (3, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 2);"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "insert into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) values (4, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 2);"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (1, 10);"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (1, 20);"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (2, 30);"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "insert into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) values (2, 40);"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
 
-        sql = "insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) values (1,1);"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
+
 
         sql = "insert into empresas.rol (id_rol,nombre, descripcion) values (1,'test rol','test desc');"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
+        
+        sql = "insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) values (1,1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
 
         self.token_de_acceso = create_access_token(identity=123)
         self.headers ={'Content-Type': 'application/json',
