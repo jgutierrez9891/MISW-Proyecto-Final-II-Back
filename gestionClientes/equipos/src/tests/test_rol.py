@@ -12,27 +12,27 @@ class TestRol(TestCase):
         self.client = app.test_client()
         self.data_factory = Faker()
 
-        # if test:
-        #     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
-        #     self.connection = mysql.connector.connect(host='0.0.0.0',
-        #     database='empresas',
-        #     user='root',
-        #     password='root')
-        # else:
-        #     self.connection = mysql.connector.connect(host='34.27.118.190',
-        #     database='empresas',
-        #     user='root',
-        #     password=sqlpass)
+        if test:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
+            self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='empresas',
+            user='root',
+            password='root')
+        else:
+            self.connection = mysql.connector.connect(host='34.27.118.190',
+            database='empresas',
+            user='root',
+            password=sqlpass)
         
-        # sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo=1"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # sql = "insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) values (1,1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
+        sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo=1"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        sql = "insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) values (1,1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
 
         self.token_de_acceso = create_access_token(identity=123)
         self.headers ={'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ class TestRol(TestCase):
     def test_7_asociar_rol_equipo(self):
         post_request = self.client.post("/equipos/rol/asociar", 
         json={
-                "id_rol":2,
+                "id_rol":1,
                 "id_equipo": 1
         },headers=self.headers)
         self.assertEqual(post_request.status_code, 200)
@@ -107,7 +107,7 @@ class TestRol(TestCase):
     def test_8_desasociar_rol_equipo(self):
         post_request = self.client.delete("/equipos/rol/asociar", 
         json={
-                "id_rol":2,
+                "id_rol":1,
                 "id_equipo": 1
         },headers=self.headers)
         self.assertEqual(post_request.status_code, 200)
