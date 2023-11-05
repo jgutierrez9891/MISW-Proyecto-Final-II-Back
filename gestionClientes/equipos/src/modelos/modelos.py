@@ -80,7 +80,7 @@ class Hoja_trabajoSchema(ma.Schema):
 
 class Candidatos_hoja_trabajo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    id_hoja_trabajo = db.Column(db.Integer, db.ForeignKey('Hoja_trabajo.id'))
+    id_hoja_trabajo = db.Column(db.Integer, db.ForeignKey('hoja_trabajo.id'))
     id_candidato = db.Column(db.Integer)
 
 class Candidatos_hoja_trabajoSchema(ma.Schema):
