@@ -68,7 +68,11 @@ class TestRol(TestCase):
             "lista_habilidades_tecnicas":[1058]
         },headers=self.headers)
         self.assertEqual(post_request.status_code, 404)
-        
+       
+    def test_6_obtener_habilidades(self):
+        get_request = self.client.get("/equipos/habilidad", 
+        json={},headers=self.headers)
+        self.assertEqual(get_request.status_code, 200)
                 
     def tearDown(self) -> None:
         return super().tearDown()
