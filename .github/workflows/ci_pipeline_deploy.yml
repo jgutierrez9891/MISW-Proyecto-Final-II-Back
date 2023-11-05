@@ -47,6 +47,8 @@ jobs:
           coverage report --fail-under=80
           coverage html
           coverage xml
+        env:
+            JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}  
       - name: SonarCloud Scan #sonar cloud
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -280,28 +282,29 @@ jobs:
       IF_TEST: "True"
     steps:
       - uses: actions/checkout@v1
-      - name: Install equipo_db
+      - name: Install empresa_db
         working-directory: ./gestionClientes/equipos/database #preparacion 1 para tests
         run: |
           sudo /etc/init.d/mysql start
           mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < database.sql
-      - name: Install autenticacion environment #preparacion 2 para tests
+      - name: Install equipos environment #preparacion 2 para tests
         working-directory: ./gestionClientes/equipos/src
         run: |
           pip3 install -r requirements.txt
-      - name: Run autenticacion unit tests # tests
+      - name: Run equipos unit tests # tests
         working-directory: ./gestionClientes/equipos/src
         run: |
           coverage run --include=./app.py,./tests/tests.py,./vistas/vistas.py -m unittest tests/* -v 
           coverage report --fail-under=80
           coverage html
           coverage xml
+        env:
+            JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}  
       - name: SonarCloud Scan #sonar cloud
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
   #despliegue de equipos
   deploy_equipos:
