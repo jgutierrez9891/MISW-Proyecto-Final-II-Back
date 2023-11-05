@@ -240,6 +240,21 @@ class VistaAsociarEquipoRol(Resource):
         return self._perform_operation(idRol, id_equipo, 'delete')
 
     
+class VistaConsultarHabilidades(Resource):
+    
+    @jwt_required()
+    def get(self):
+        
+        habilidades = Habilidad.query.filter().all()
+        habilidad_list = []
+        for habilidad in habilidades:
+            habilidadTmp = {
+                "id_habilidad":habilidad.id_habilidad,
+                "habilidad":habilidad.habilidad,
+                "tipo":habilidad.tipo
+            }
+            habilidad_list.append(habilidadTmp)
+        return {"status_code": 200, "habilidades": habilidad_list}, 200
     
 
         
