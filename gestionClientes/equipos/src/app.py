@@ -9,10 +9,11 @@ from vistas.vistas import (VistaConsultarFichas, VistaConsultarHabilidades, Vist
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
 if sqlpass is None:
-    sqlpass = ''
+    sqlpass = 'Grupo9Proyecto2'
 test = os.getenv('IF_TEST')
 jwt_secret_key = os.getenv('JWT_SECRET_KEY')
-
+jwt_secret_key="frase-secreta"
+test = True
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000", "https://micro-web-kdbo2knypq-uc.a.run.app", "http://localhost", "https://localhost"])
 
@@ -23,6 +24,7 @@ else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/empresas'
+        
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
@@ -41,7 +43,6 @@ api.add_resource(VistaConsultarProyectos, '/proyectos/consultar')
 api.add_resource(VistaActualizarRol, '/equipos/rol')
 api.add_resource(VistaConsultarRol, '/equipos/rol')
 api.add_resource(VistaAsociarEquipoRol, '/equipos/rol/asociar')
-api.add_resource(VistaConsultarHabilidades, '/equipos/habilidad')
 api.add_resource(ping, '/equipos/ping')
 
 jwt = JWTManager(app)
