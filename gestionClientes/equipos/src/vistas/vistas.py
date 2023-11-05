@@ -201,6 +201,7 @@ class VistaAsociarEquipoRol(Resource):
             return {"status_code": 404, "message": "No se encontró el Rol esperado"}, 404
 
         if equipo is None:
+            
             return {"status_code": 404, "message": "No se encontró el equipo esperado"}, 404
 
         rol_ficha = Rol_ficha_trabajo.query.filter(Rol_ficha_trabajo.id_rol == idRol, Rol_ficha_trabajo.id_ficha_trabajo == id_equipo).first()
@@ -239,7 +240,8 @@ class VistaAsociarEquipoRol(Resource):
         id_equipo = request.json.get("id_equipo")
         return self._perform_operation(idRol, id_equipo, 'delete')
 
-    
+
+
     
 
         
