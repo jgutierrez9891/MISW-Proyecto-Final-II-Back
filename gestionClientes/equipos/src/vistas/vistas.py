@@ -235,8 +235,8 @@ class VistaAsociarEquipoRol(Resource):
 
     @jwt_required()
     def delete(self):
-        idRol = request.json.get("id_rol")
-        id_equipo = request.json.get("id_equipo")
+        idRol = request.args.get("id_rol")
+        id_equipo = request.args.get("id_equipo")
         return self._perform_operation(idRol, id_equipo, 'delete')
 
     
