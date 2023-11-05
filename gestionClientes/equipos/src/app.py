@@ -9,11 +9,10 @@ from vistas.vistas import (VistaConsultarFichas, VistaConsultarHabilidades, Vist
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
 if sqlpass is None:
-    sqlpass = 'Grupo9Proyecto2'
+    sqlpass = ''
 test = os.getenv('IF_TEST')
 jwt_secret_key = os.getenv('JWT_SECRET_KEY')
-jwt_secret_key="frase-secreta"
-test = True
+
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000", "https://micro-web-kdbo2knypq-uc.a.run.app", "http://localhost", "https://localhost"])
 
