@@ -2,9 +2,9 @@ name: Coverage test project CI
 
 on:
   push:
-    branches: [ "dep-1" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "dep-1" ]
+    branches: [ "main" ]
 env:
   PROJECT_ID: ${{secrets.GOOGLE_PROJECT}} 
   GAR_LOCATION: us-central1 
