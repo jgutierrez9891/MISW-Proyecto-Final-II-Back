@@ -1,9 +1,10 @@
+from datetime import timedelta
 from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from modelos.modelos import db
-from vistas.vistas import (VistaLogInCandidato,VistaLogInEmpresa)
+from vistas.vistas import (VistaLogInCandidato,VistaLogInEmpresa,ping)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
 test = os.getenv('IF_TEST')
@@ -30,6 +31,7 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['JWT_SECRET_KEY'] = 'frase-secreta'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=1440)
 
 app_context = app.app_context()
 app_context.push()
@@ -40,6 +42,7 @@ db.init_app(app)
 api = Api(app)
 api.add_resource(VistaLogInCandidato, '/autenticacion/candidatos/login')
 api.add_resource(VistaLogInEmpresa, '/autenticacion/empresas/login')
+api.add_resource(ping, '/autenticacion/ping')
 
 jwt = JWTManager(app)
 
