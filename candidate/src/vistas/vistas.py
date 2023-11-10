@@ -1,8 +1,8 @@
 from http.client import NOT_FOUND
 from flask import request
 from flask_restful import Resource
-from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema
-from servicios import SaveCandidate, SaveInfoTecnica
+from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema, infoLaboral
+from servicios import SaveCandidate, SaveInfoTecnica, save_info_laboral
 from flask_jwt_extended import jwt_required
 import re
 import json
@@ -18,6 +18,10 @@ empresa_schema_single = empresaSchema()
 
 infoTecnica_schema = infoTecnicaSchema(many=True)
 infoTecnica_schema_single = infoTecnicaSchema()
+
+MENSAJE_CREACION_OK = 'Informacion registrada exitosamente'
+MENSAJE_TODOS_DATOS = 'Ingrese todos los campos requeridos'
+MENSAJE_CAMPO_VACIO = 'Campo requerido se encuentra vacío'
     
 class VistaCrearCandidato(Resource):
 
@@ -40,13 +44,13 @@ class VistaCrearCandidato(Resource):
             or telefono is None or email is None or pais is None or ciudad is None or aspiracion_salarial is None\
             or fecha_nacimiento is None or idiomas is None:
             
-            return {"status_code": 400, "message": "Ingrese todos los campos requeridos"}, 400
+            return {"status_code": 400, "message": MENSAJE_TODOS_DATOS}, 400
         
         elif tipo_doc == "" or num_doc == "" or nombre == "" or usuario == "" or "clave" == "" or telefono == "" \
         or email == "" or pais == "" or ciudad == "" or aspiracion_salarial == "" or fecha_nacimiento == "" \
         or idiomas == "":
 
-            return {"status_code": 400, "message": "Campo requerido se encuentra vacío"}, 400
+            return {"status_code": 400, "message": MENSAJE_CAMPO_VACIO}, 400
         
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
         if not(re.fullmatch(regex, email)):
@@ -117,10 +121,10 @@ class VistaInformacionTecnica(Resource):
         id_candidato = request.json.get("id_candidato")
 
         if tipo is None or valor is None or id_candidato is None:
-            return {"status_code": 400, "message": "Ingrese todos los campos requeridos"}, 400
+            return {"status_code": 400, "message": MENSAJE_TODOS_DATOS}, 400
         
         elif tipo == "" or valor == "" or id_candidato == "":
-            return {"status_code": 400, "message": "Campo requerido se encuentra vacío"}, 400
+            return {"status_code": 400, "message": MENSAJE_CAMPO_VACIO}, 400
         
         candidato_id = candidato.query.filter(candidato.id == id_candidato).first()
         db.session.commit()
@@ -134,7 +138,7 @@ class VistaInformacionTecnica(Resource):
             data['valor'],
             data['id_candidato'],
             )
-        return {"id":response.id, "status_code": 201, "message": "Informacion registrada exitosamente"}, 201
+        return {"id":response.id, "status_code": 201, "message": MENSAJE_CREACION_OK}, 201
     
     @jwt_required()
     def get(self):
@@ -192,7 +196,59 @@ class VistaConsultarCandidatosDisponibles(Resource):
         else:
             return {"status_code": 404, "message": "No se encontraron candidatos disponibles"}, 404
 
-   
+
+class VistaInformacionLaboral(Resource):
+
+    @jwt_required()
+    def post(self):
+
+        cargo = request.json.get("cargo")
+        ano_inicio = request.json.get("ano_inicio")
+        ano_fin = request.json.get("ano_fin")
+        empresa = request.json.get("empresa")
+        descripcion = request.json.get("descripcion")
+        id_candidato = request.json.get("id_candidato")
+
+        if cargo is None or ano_inicio is None or ano_inicio is None or ano_fin is empresa or id_candidato is None:
+            return {"status_code": 400, "message": MENSAJE_TODOS_DATOS}, 400
+        
+        elif cargo == "" or ano_inicio == "" or ano_fin == "" or empresa == "" or id_candidato == "":
+            return {"status_code": 400, "message": MENSAJE_CAMPO_VACIO}, 400
+        
+        candidato_id = candidato.query.filter(candidato.id == id_candidato).first()
+        db.session.commit()
+
+        if candidato_id is None:
+            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+
+        response = save_info_laboral(
+            cargo,
+            ano_inicio,
+            ano_fin,
+            empresa,
+            descripcion if descripcion is not None else "",
+            id_candidato
+            )
+        return {"id":response.id, "status_code": 201, "message": MENSAJE_CREACION_OK}, 201
+    
+    @jwt_required()
+    def get(self):
+
+        info_laboral_candidato = infoLaboral.query.filter(infoLaboral.id_candidato == request.args.get("id_candidato")).all()
+        db.session.commit()
+
+        if info_laboral_candidato is None or len(info_laboral_candidato) == 0:
+            return {"status_code": 404, "message": "No se encontró información laboral para el candidato"}, 404
+
+        list_of_items = []
+        
+        for info_laboral_item in info_laboral_candidato:
+            info_laboral_format = {"cargo":info_laboral_item.cargo, "ano_inicio":info_laboral_item.ano_inicio, "ano_fin":info_laboral_item.ano_fin, "empresa":info_laboral_item.empresa, "descripcion":info_laboral_item.descripcion}
+            list_of_items.append(info_laboral_format)
+
+        return {"response":list_of_items, "status_code": 200}
+
+
 class ping(Resource):
     
     def get(self):

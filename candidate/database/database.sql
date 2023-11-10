@@ -55,6 +55,19 @@ CREATE TABLE info_academica (
   CONSTRAINT info_academica_ibfk_1 FOREIGN KEY (id_candidato) REFERENCES candidato (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 
+CREATE TABLE info_laboral (
+  id int NOT NULL AUTO_INCREMENT,
+  cargo varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  ano_inicio int NOT NULL,
+  ano_fin int NOT NULL,
+  empresa varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  descripcion varchar(4000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  id_candidato int DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY info_laboral_candidato_idx (id_candidato),
+  CONSTRAINT info_laboral_candidato FOREIGN KEY (id_candidato) REFERENCES candidato (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 CREATE DATABASE empresas;
 use empresas;
