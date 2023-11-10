@@ -88,6 +88,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+            projectBaseDir: autenticacion/src
+            args: >
+              -Dsonar.test.exclusions=tests/**
 
   #EMPRESA
   #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
@@ -125,6 +129,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+            projectBaseDir: gestionClientes/empresa/src
+            args: >
+              -Dsonar.test.exclusions=tests/**
 
 
   #EQUIPOS
@@ -164,3 +172,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+            projectBaseDir: gestionClientes/equipos/src
+            args: >
+              -Dsonar.test.exclusions=tests/**
