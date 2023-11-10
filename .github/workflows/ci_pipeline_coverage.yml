@@ -51,7 +51,7 @@ jobs:
           projectBaseDir: candidate/src 
           args: >
             -Dsonar.test.exclusions=tests/**
-            -Dsonar.projectKey=MISW-Proyecto-Final-II-Back
+            -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
             -Dsonar.organization=jgutierrez9891
       
 
