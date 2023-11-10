@@ -47,6 +47,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: candidate/src 
+          args: >
+            -Dsonar.test.exclusions=tests/**
 
   #AUTENTICACION
   #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
