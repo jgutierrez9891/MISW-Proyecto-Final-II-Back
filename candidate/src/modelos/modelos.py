@@ -9,6 +9,7 @@ db = SQLAlchemy()
 ma = Marshmallow()
 
 LLAVE_CANDIDATO='candidato.id'
+RELACION_CASCADE='all, delete, delete-orphan'
 
 class tipoHabilidad(str, Enum):
     TECNOLOGIA = "Tecnologia"
@@ -72,9 +73,9 @@ class candidato(db.Model):
     fecha_ultima_evaluacion = db.Column(db.DateTime)
     promedio_evaluaciones = db.Column(db.Float)
     estado = db.Column(db.String(50))
-    habilidades_tecnicas = db.relationship('infoTecnica', cascade='all, delete, delete-orphan')
-    info_academica = db.relationship('infoAcademica', cascade='all, delete, delete-orphan')
-    info_laboral = db.relationship('infoLaboral', cascade='all, delete, delete-orphan')
+    habilidades_tecnicas = db.relationship('infoTecnica', cascade=RELACION_CASCADE)
+    info_academica = db.relationship('infoAcademica', cascade=RELACION_CASCADE)
+    info_laboral = db.relationship('infoLaboral', cascade=RELACION_CASCADE)
 
 class candidatoSchema(ma.Schema):
     class Meta:

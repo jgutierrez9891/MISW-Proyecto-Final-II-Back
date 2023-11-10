@@ -48,7 +48,7 @@ def SaveInfoTecnica(
     db.session.commit()
     return new_infoTecnica
 
-def SaveInfoLaboral(
+def save_info_laboral(
         cargo,
         ano_inicio,
         ano_fin,
@@ -56,7 +56,7 @@ def SaveInfoLaboral(
         descripcion,
         id_candidato
         ):
-    new_infoLaboral = infoLaboral(
+    new_info_laboral = infoLaboral(
         cargo=cargo,
         ano_inicio=ano_inicio,
         ano_fin=ano_fin,
@@ -64,6 +64,6 @@ def SaveInfoLaboral(
         descripcion=descripcion,
         id_candidato=id_candidato
     )
-    db.session.add(new_infoLaboral)
+    db.session.add(new_info_laboral)
     db.session.commit()
-    return new_infoLaboral
+    return new_info_laboral
