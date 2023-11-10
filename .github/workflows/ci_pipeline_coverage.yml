@@ -52,7 +52,7 @@ jobs:
           args: >
             -Dsonar.test.exclusions=tests/**
             -Dsonar.projectKey=MISW-Proyecto-Final-II-Back
-            -Dsonar.organization=charlymoraua
+            -Dsonar.organization=jgutierrez9891
       
 
   #AUTENTICACION
