@@ -83,7 +83,7 @@ jobs:
       - name: Run autenticacion unit tests # tests
         working-directory: ./autenticacion/src
         run: |
-          coverage run --include=./app.py,./tests/tests.py,./vistas/vistas.py -m unittest tests/* -v 
+          coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
           coverage report --fail-under=80
           coverage html
           coverage xml
@@ -95,7 +95,10 @@ jobs:
         with:
             projectBaseDir: autenticacion/src
             args: >
-              -Dsonar.test.exclusions=tests/**
+              -Dsonar.exclusions=tests/**
+              -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
+              -Dsonar.organization=jgutierrez9891
+              -Dsonar.python.coverage.reportPaths=coverage.xml
 
   #EMPRESA
   #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
@@ -124,7 +127,7 @@ jobs:
       - name: Run empresa unit tests # tests
         working-directory: ./gestionClientes/empresa/src
         run: |
-          coverage run --include=./app.py,./tests/tests.py,./vistas/vistas.py -m unittest tests/* -v 
+          coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
           coverage report --fail-under=80
           coverage html
           coverage xml
@@ -136,7 +139,10 @@ jobs:
         with:
             projectBaseDir: gestionClientes/empresa/src
             args: >
-              -Dsonar.test.exclusions=tests/**
+              -Dsonar.exclusions=tests/**
+              -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
+              -Dsonar.organization=jgutierrez9891
+              -Dsonar.python.coverage.reportPaths=coverage.xml
 
 
   #EQUIPOS
@@ -165,7 +171,7 @@ jobs:
       - name: Run equipos unit tests # tests
         working-directory: ./gestionClientes/equipos/src
         run: |
-          coverage run --include=./app.py,./tests/tests.py,./vistas/vistas.py -m unittest tests/* -v 
+          coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
           coverage report --fail-under=80
           coverage html
           coverage xml
@@ -179,4 +185,7 @@ jobs:
         with:
             projectBaseDir: gestionClientes/equipos/src
             args: >
-              -Dsonar.test.exclusions=tests/**
+              -Dsonar.exclusions=tests/**
+              -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
+              -Dsonar.organization=jgutierrez9891
+              -Dsonar.python.coverage.reportPaths=coverage.xml
