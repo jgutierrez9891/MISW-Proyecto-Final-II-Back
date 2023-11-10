@@ -2,7 +2,8 @@ from flask import Flask
 from flask_restful import Api
 from modelos import db
 from vistas import (VistaCrearCandidato, VistaHistorialEntrevistas, VistaInformacionTecnica, 
-                    VistaConsultarCandidato, VistaConsultarCandidatosDisponibles, ping)
+                    VistaConsultarCandidato, VistaConsultarCandidatosDisponibles, 
+                    VistaInformacionLaboral, ping)
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
@@ -47,6 +48,7 @@ api.add_resource(VistaHistorialEntrevistas, '/candidato/historialEntrevistas')
 api.add_resource(VistaInformacionTecnica, '/candidato/infoTecnica')
 api.add_resource(VistaConsultarCandidato, '/candidato/detalle')
 api.add_resource(VistaConsultarCandidatosDisponibles, '/candidatos/disponibles')
+api.add_resource(VistaInformacionLaboral, '/candidato/infoLaboral')
 api.add_resource(ping, '/candidato/ping')
 
 jwt = JWTManager(app)

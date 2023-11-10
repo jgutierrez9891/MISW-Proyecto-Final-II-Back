@@ -38,6 +38,21 @@ class infoAcademicaSchema(ma.Schema):
         include_relationships = True
         load_instance = True
 
+class infoLaboral(db.Model): 
+    id = db.Column(db.Integer, primary_key=True)
+    cargo = db.Column(db.String(50))
+    ano_inicio = db.Column(db.Integer)
+    ano_fin = db.Column(db.Integer)
+    empresa = db.Column(db.String(50))
+    descripcion = db.Column(db.String(5000))
+    id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id'))
+
+class infoLaboralSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "cargo", "ano_inicio", "ano_fin", "empresa", "descripcion", "id_candidato")
+        include_relationships = True
+        load_instance = True
+
 class candidato(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tipo_doc = db.Column(db.String(50))
@@ -57,6 +72,7 @@ class candidato(db.Model):
     estado = db.Column(db.String(50))
     habilidades_tecnicas = db.relationship('infoTecnica', cascade='all, delete, delete-orphan')
     info_academica = db.relationship('infoAcademica', cascade='all, delete, delete-orphan')
+    info_laboral = db.relationship('infoLaboral', cascade='all, delete, delete-orphan')
 
 class candidatoSchema(ma.Schema):
     class Meta:
@@ -65,6 +81,7 @@ class candidatoSchema(ma.Schema):
         load_instance = True
     habilidades_tecnicas = fields.List(fields.Nested(infoTecnicaSchema()))
     info_academica = fields.List(fields.Nested(infoAcademicaSchema()))
+    info_laboral = fields.List(fields.Nested(infoLaboralSchema()))
 
 class entrevista(db.Model):
     id = db.Column(db.Integer, primary_key=True)

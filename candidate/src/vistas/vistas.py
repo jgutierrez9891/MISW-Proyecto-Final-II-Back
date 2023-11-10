@@ -1,8 +1,8 @@
 from http.client import NOT_FOUND
 from flask import request
 from flask_restful import Resource
-from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema
-from servicios import SaveCandidate, SaveInfoTecnica
+from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema, infoLaboral
+from servicios import SaveCandidate, SaveInfoTecnica, SaveInfoLaboral
 from flask_jwt_extended import jwt_required
 import re
 import json
@@ -192,7 +192,59 @@ class VistaConsultarCandidatosDisponibles(Resource):
         else:
             return {"status_code": 404, "message": "No se encontraron candidatos disponibles"}, 404
 
-   
+
+class VistaInformacionLaboral(Resource):
+
+    @jwt_required()
+    def post(self):
+
+        cargo = request.json.get("cargo")
+        ano_inicio = request.json.get("ano_inicio")
+        ano_fin = request.json.get("ano_fin")
+        empresa = request.json.get("empresa")
+        descripcion = request.json.get("descripcion")
+        id_candidato = request.json.get("id_candidato")
+
+        if cargo is None or ano_inicio is None or ano_inicio is None or ano_fin is empresa or id_candidato is None:
+            return {"status_code": 400, "message": "Ingrese todos los campos requeridos"}, 400
+        
+        elif cargo == "" or ano_inicio == "" or ano_fin == "" or empresa == "" or id_candidato == "":
+            return {"status_code": 400, "message": "Campo requerido se encuentra vacío"}, 400
+        
+        candidato_id = candidato.query.filter(candidato.id == id_candidato).first()
+        db.session.commit()
+
+        if candidato_id is None:
+            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+
+        response = SaveInfoLaboral(
+            cargo,
+            ano_inicio,
+            ano_fin,
+            empresa,
+            descripcion if descripcion is not None else "",
+            id_candidato
+            )
+        return {"id":response.id, "status_code": 201, "message": "Informacion registrada exitosamente"}, 201
+    
+    @jwt_required()
+    def get(self):
+
+        info_laboral_candidato = infoLaboral.query.filter(infoLaboral.id_candidato == request.args.get("id_candidato")).all()
+        db.session.commit()
+
+        if info_laboral_candidato is None or len(info_laboral_candidato) == 0:
+            return {"status_code": 404, "message": "No se encontró información laboral para el candidato"}, 404
+
+        listOfItems = []
+        
+        for infoLaboral_item in info_laboral_candidato:
+            infoLaboralFormat = {"cargo":infoLaboral_item.cargo, "ano_inicio":infoLaboral_item.ano_inicio, "ano_fin":infoLaboral_item.ano_fin, "empresa":infoLaboral_item.empresa, "descripcion":infoLaboral_item.descripcion}
+            listOfItems.append(infoLaboralFormat)
+
+        return {"response":listOfItems, "status_code": 200}
+
+
 class ping(Resource):
     
     def get(self):
