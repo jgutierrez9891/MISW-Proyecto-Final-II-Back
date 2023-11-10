@@ -51,6 +51,9 @@ jobs:
           projectBaseDir: candidate/src 
           args: >
             -Dsonar.test.exclusions=tests/**
+            -Dsonar.projectKey=MISW-Proyecto-Final-II-Back
+            -Dsonar.organization=charlymoraua
+      
 
   #AUTENTICACION
   #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
