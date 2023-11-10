@@ -36,7 +36,7 @@ jobs:
       - name: Run candidate unit tests # tests
         working-directory: ./candidate/src
         run: |
-          coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py --omit '/home/*,/usr/*' -m unittest tests/* -v 
+          coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
           coverage report --fail-under=80
           coverage html
           coverage xml
