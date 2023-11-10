@@ -16,10 +16,20 @@ class TestLogin(TestCase):
             database='candidatos',
             user='root',
             password='root')
+            
+            self.connection_emp = mysql.connector.connect(host='0.0.0.0',
+            database='empresas',
+            user='root',
+            password='root')
 
         else:
             self.connection = mysql.connector.connect(host='34.27.118.190',
             database='candidatos',
+            user='root',
+            password=sqlpass)
+            
+            self.connection_emp = mysql.connector.connect(host='34.27.118.190',
+            database='empresas',
             user='root',
             password=sqlpass)
 
@@ -48,24 +58,49 @@ class TestLogin(TestCase):
         cursor.execute(sql, val)
         self.connection.commit()
         cursor.close()
+
+        
+        sql2 = "INSERT INTO candidatos.candidato (tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val2 = ("CC", "10154377744","daniel chala", "daachalabu", "123", "3002291914","edelcozgran@hotmail.com","Colombia","Bogotá",5000000,"1989-03-02","Ingles")
+
+        cursor2 = self.connection.cursor()
+        cursor2.execute(sql2, val2)
+        self.connection.commit()
+        cursor2.close()
+
+        sql3 = "INSERT into empresas.empresa (tipo_doc, num_doc, email, telefono, nombre) VALUES (%s, %s, %s, %s, %s)"
+        val3 = ("NITs","1010999-10","daachalabu@unal.edu.co", 300229,"empresa Prueba")
+
+        cursor3 = self.connection_emp.cursor()
+        cursor3.execute(sql3, val3)
+        self.connection_emp.commit()
+        cursor3.close()
+        
+        sql4 = "INSERT into empresas.representante (tipo_doc, num_doc, nombre, email, telefono, usuario, clave, id_empresa)  VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        val4 = ("CC","1023456789","Mauricio Peña", "daachalabu@unal.edu.co", 3123456789,"maupena", "miclave123", 1)
+
+        cursor4 = self.connection_emp.cursor()
+        cursor4.execute(sql4, val4)
+        self.connection_emp.commit()
+        cursor4.close()
         
         
     #PRUEBAS AUTENTIACION COMO EMPRESA
-    def test_1_login_empresa_OK(self):
+    def test_01_login_empresa_OK(self):
         post_request = self.client.post("/autenticacion/empresas/login", json={"usuario":"maupena","clave":"miclave123"})
         self.assertEqual(post_request.status_code, 200)
 
-    def test_2_login_empresa_404(self):
+    def test_02_login_empresa_404(self):
         post_request = self.client.post("/autenticacion/empresas/login", json={"usuario" : "mauspena", "clave" : "miclave123s"})
         self.assertEqual(post_request.status_code, 404)
         
-    def test_3_login_empresa_400(self):
+    def test_03_login_empresa_400(self):
         post_request = self.client.post("/autenticacion/empresas/login", json={"usuarios" : "maupena", "clave" : "miclave123"})
         self.assertEqual(post_request.status_code, 400)
 
 
     #PRUEBAS AUTENTIACION COMO CANDIDATO
-    def test_4_login_candidato_OK(self):
+    def test_04_login_candidato_OK(self):
         solicitud_login = self.client.post("/autenticacion/candidatos/login",
                             data=json.dumps(self.datos_login),
                             headers={'Content-Type': 'application/json'})
@@ -73,7 +108,7 @@ class TestLogin(TestCase):
         self.assertEqual(solicitud_login.status_code, 200)
         self.assertIsNotNone(respuesta_login["token"])
 
-    def test_5_login_candidato_ERROR(self):
+    def test_05_login_candidato_ERROR(self):
         datos_login_error = {"usuario": self.usuario, 
                     "clave": "OTRA_CLAVE"}
         solicitud_login = self.client.post("/autenticacion/candidatos/login",
@@ -81,31 +116,23 @@ class TestLogin(TestCase):
                             headers={'Content-Type': 'application/json'})
         self.assertEqual(solicitud_login.status_code, 404)    
         
-        
-        #PRUEBAS AUTENTIACION COMO EMPRESA
-    def test_6_Cambio_contraseña_Representante_200(self):
-        post_request = self.client.post("/autenticacion/passwordChange", json={
-            "email":"daachalabu@unal.edu.co"
-        })
-        self.assertEqual(post_request.status_code, 200)
-
-    def test_7_Cambio_contraseña_Candidato_200(self):
+    def test_06_Cambio_contraseña_Candidato_200(self):
         post_request = self.client.post("/autenticacion/passwordChange", json={
             "email":"edelcozgran@hotmail.com"
         })
         self.assertEqual(post_request.status_code, 200)
         
-    def test_8_Cambio_contraseña_sin_body_400(self):
+    def test_07_Cambio_contraseña_sin_body_400(self):
         post_request = self.client.post("/autenticacion/passwordChange", json={})
         self.assertEqual(post_request.status_code, 400)   
         
-    def test_9_Cambio_contraseña_bad_request_400(self):
+    def test_08_Cambio_contraseña_bad_request_400(self):
         post_request = self.client.post("/autenticacion/passwordChange", json={
             "badinput":"bad"
         })
         self.assertEqual(post_request.status_code, 400)   
         
-    def test_10_Cambio_contraseña_correo_no_existe_404(self):
+    def test_09_Cambio_contraseña_correo_no_existe_404(self):
         post_request = self.client.post("/autenticacion/passwordChange", json={
             "email":"daachalabu@hotmail.com"
         })

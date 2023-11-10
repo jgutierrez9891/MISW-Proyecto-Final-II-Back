@@ -33,7 +33,6 @@ class VistaLogInEmpresa(Resource):
         
         representante = Representante.query.filter(Representante.usuario == request.json["usuario"],
                                                    Representante.clave == request.json["clave"]).first()
-        
         if representante is None:
             return {"mensaje": "Autenticación fallida"}, 404
         else:
@@ -74,7 +73,7 @@ class CambioContraseña(Resource):
                 try:
                     request_response = requests.post("https://api.mailgun.net/v3/sandbox430d3da59f4642aab1e69fa5e3b1aa46.mailgun.org/messages",
                     auth=("api",base64.b64decode("MmU2YzkwNWI1ZmE0MzIzYzE1ZTQ2MjU3ZjEzOTE1ZmMtOGM5ZTgyZWMtMjdmZjViZjM=").decode('utf-8')),
-                    data={"from":"danielmailguntest@gmail.com","to":representante.email,"subject":"Cambio de contraseña","text":"Su contraseña fue cambiada exitosamente."})
+                    data={"from":"danielmailguntest@gmail.com","to":request.json["email"],"subject":"Cambio de contraseña","text":"Su contraseña fue cambiada exitosamente."})
                     return {"status_code": 200,"mensaje": "Correo enviado Exitosamente"},200
                 except Exception as e:
                     return {"status_code": 500, "message": "No se pudo enviar el correo"}, 500
@@ -82,7 +81,7 @@ class CambioContraseña(Resource):
             try:
                 request_response = requests.post("https://api.mailgun.net/v3/sandbox430d3da59f4642aab1e69fa5e3b1aa46.mailgun.org/messages",
                 auth=("api",base64.b64decode("MmU2YzkwNWI1ZmE0MzIzYzE1ZTQ2MjU3ZjEzOTE1ZmMtOGM5ZTgyZWMtMjdmZjViZjM=").decode('utf-8')),
-                data={"from":"danielmailguntest@gmail.com","to":representante.email,"subject":"Cambio de contraseña","text":"Su contraseña fue cambiada exitosamente."})
+                data={"from":"danielmailguntest@gmail.com","to":request.json["email"],"subject":"Cambio de contraseña","text":"Su contraseña fue cambiada exitosamente."})
                 return {"status_code": 200,"mensaje": "Correo enviado Exitosamente"},200
             except Exception as e:
                 return {"status_code": 500, "message": "No se pudo enviar el correo"}, 500

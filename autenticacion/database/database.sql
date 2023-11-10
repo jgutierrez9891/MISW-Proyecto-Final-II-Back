@@ -20,8 +20,6 @@ CREATE TABLE candidato(
     PRIMARY KEY(id)
 );
 
-INSERT INTO candidatos.candidato (tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas) VALUES ("CC", "10154377744","daniel chala", "daachalabu", "123", "3002291914","edelcozgran@hotmail.com","Colombia","Bogotá",5000000,"1989-03-02","Ingles");
-
 CREATE DATABASE empresas;
 use empresas;
 
@@ -37,8 +35,6 @@ CREATE TABLE empresa(
     PRIMARY KEY(id)
 );
 
-insert into empresas.empresa (tipo_doc, num_doc, email, telefono, nombre) values ("NITs","1010999-10","daachalabu@unal.edu.co", 300229,"empresa Prueba");
-
 
 CREATE TABLE representante(
     id int not null AUTO_INCREMENT,
@@ -53,4 +49,3 @@ CREATE TABLE representante(
     PRIMARY KEY(id)
 );
 
-insert into empresas.representante (tipo_doc, num_doc, nombre, email, telefono, usuario, clave, id_empresa) values ("CC","1023456789","Mauricio Peña", "daachalabu@unal.edu.co", 3123456789,"maupena", "miclave123", 1);
