@@ -8,6 +8,8 @@ from enum import Enum
 db = SQLAlchemy()
 ma = Marshmallow()
 
+LLAVE_CANDIDATO='candidato.id'
+
 class tipoHabilidad(str, Enum):
     TECNOLOGIA = "Tecnologia"
     LENGUAJE = "Lenguaje"
@@ -17,7 +19,7 @@ class infoTecnica(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tipo = db.Column(db.Enum(tipoHabilidad))
     valor = db.Column(db.String(50))
-    id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id'))
+    id_candidato = db.Column(db.Integer, db.ForeignKey(LLAVE_CANDIDATO))
 
 class infoTecnicaSchema(ma.Schema):
     class Meta:
@@ -30,7 +32,7 @@ class infoAcademica(db.Model):
     tipo = db.Column(db.String(50))
     valor = db.Column(db.String(50))
     ano_finalizacion = db.Column(db.String(4))
-    id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id'))
+    id_candidato = db.Column(db.Integer, db.ForeignKey(LLAVE_CANDIDATO))
 
 class infoAcademicaSchema(ma.Schema):
     class Meta:
@@ -45,7 +47,7 @@ class infoLaboral(db.Model):
     ano_fin = db.Column(db.Integer)
     empresa = db.Column(db.String(50))
     descripcion = db.Column(db.String(5000))
-    id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id'))
+    id_candidato = db.Column(db.Integer, db.ForeignKey(LLAVE_CANDIDATO))
 
 class infoLaboralSchema(ma.Schema):
     class Meta:
