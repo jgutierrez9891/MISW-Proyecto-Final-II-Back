@@ -79,7 +79,37 @@ class TestLogin(TestCase):
         solicitud_login = self.client.post("/autenticacion/candidatos/login",
                             data=json.dumps(datos_login_error),
                             headers={'Content-Type': 'application/json'})
-        self.assertEqual(solicitud_login.status_code, 404)       
+        self.assertEqual(solicitud_login.status_code, 404)    
+        
+        
+        #PRUEBAS AUTENTIACION COMO EMPRESA
+    def test_6_Cambio_contraseña_Representante_200(self):
+        post_request = self.client.post("/autenticacion/passwordChange", json={
+            "email":"daachalabu@unal.edu.co"
+        })
+        self.assertEqual(post_request.status_code, 200)
+
+    def test_7_Cambio_contraseña_Candidato_200(self):
+        post_request = self.client.post("/autenticacion/passwordChange", json={
+            "email":"edelcozgran@hotmail.com"
+        })
+        self.assertEqual(post_request.status_code, 200)
+        
+    def test_8_Cambio_contraseña_sin_body_400(self):
+        post_request = self.client.post("/autenticacion/passwordChange", json={})
+        self.assertEqual(post_request.status_code, 400)   
+        
+    def test_9_Cambio_contraseña_bad_request_400(self):
+        post_request = self.client.post("/autenticacion/passwordChange", json={
+            "badinput":"bad"
+        })
+        self.assertEqual(post_request.status_code, 400)   
+        
+    def test_10_Cambio_contraseña_correo_no_existe_404(self):
+        post_request = self.client.post("/autenticacion/passwordChange", json={
+            "email":"daachalabu@hotmail.com"
+        })
+        self.assertEqual(post_request.status_code, 404)   
         
     #TEARDOWN
     def tearDown(self) -> None:

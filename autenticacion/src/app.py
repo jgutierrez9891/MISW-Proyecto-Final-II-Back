@@ -4,11 +4,12 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from modelos.modelos import db
-from vistas.vistas import (VistaLogInCandidato,VistaLogInEmpresa,ping)
+from vistas.vistas import (VistaLogInCandidato,VistaLogInEmpresa,CambioContraseña,ping)
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
 test = os.getenv('IF_TEST')
 app = Flask(__name__)
+sqlpass ="Grupo9Proyecto2"
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000", "https://micro-web-kdbo2knypq-uc.a.run.app", "http://localhost", "https://localhost"])
 
 if(os.path.isdir('/cloudsql/')):
@@ -42,6 +43,7 @@ db.init_app(app)
 api = Api(app)
 api.add_resource(VistaLogInCandidato, '/autenticacion/candidatos/login')
 api.add_resource(VistaLogInEmpresa, '/autenticacion/empresas/login')
+api.add_resource(CambioContraseña, '/autenticacion/passwordChange')
 api.add_resource(ping, '/autenticacion/ping')
 
 jwt = JWTManager(app)
