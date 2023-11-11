@@ -1,6 +1,6 @@
 from flask import json, request
 from flask_restful import Resource
-from modelos.modelos import Empleado_ficha_trabajo, Rol, Habilidad, Rol_ficha_trabajo, RolHabilidad, Ficha_trabajoSchema, ProyectoSchema, RolSchema, db, Proyecto, Ficha_trabajo
+from modelos.modelos import Empleado_ficha_trabajo, Hoja_trabajo, Rol, Habilidad, Rol_ficha_trabajo, RolHabilidad, Ficha_trabajoSchema, ProyectoSchema, RolSchema, db, Proyecto, Ficha_trabajo
 from flask_jwt_extended import jwt_required
 
 ficha_schema = Ficha_trabajoSchema()
@@ -255,6 +255,26 @@ class VistaConsultarHabilidades(Resource):
             }
             habilidad_list.append(habilidadTmp)
         return {"status_code": 200, "habilidades": habilidad_list}, 200
+
+class VistaHojasTrabajo(Resource):
+
+    @jwt_required()
+    def get(self, id_proyecto):
+        # validate existing project
+        print('id_proyecto')
+        print(id_proyecto)
+        proyecto = Proyecto.query.filter(Proyecto.id == id_proyecto).first()
+        if proyecto is None:
+            return {"status_code": 404, "message": "No se encontró el proyecto"}, 404
+        hojasDetrabajo = Hoja_trabajo.query.filter(Hoja_trabajo.id_proyecto== id_proyecto).all()
+        hojasTmp =[]
+        for hoja in hojasDetrabajo:
+            hojadTmp = {
+                "nombre_trabajo":hoja.nombre_trabajo,
+                "descripcion_candidato_ideal":hoja.descripcion_candidato_ideal
+            }
+            hojasTmp.append(hojadTmp)
+        return {"status_code": 200, "hojasDetrabajo": hojasTmp}, 200
     
 
         

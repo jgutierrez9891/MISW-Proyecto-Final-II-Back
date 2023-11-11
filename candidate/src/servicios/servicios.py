@@ -1,5 +1,5 @@
 
-from modelos import candidato, infoTecnica, db
+from modelos import candidato, infoTecnica, infoLaboral, db
 
 
 def SaveCandidate(
@@ -47,3 +47,23 @@ def SaveInfoTecnica(
     db.session.add(new_infoTecnica)
     db.session.commit()
     return new_infoTecnica
+
+def save_info_laboral(
+        cargo,
+        ano_inicio,
+        ano_fin,
+        empresa,
+        descripcion,
+        id_candidato
+        ):
+    new_info_laboral = infoLaboral(
+        cargo=cargo,
+        ano_inicio=ano_inicio,
+        ano_fin=ano_fin,
+        empresa=empresa,
+        descripcion=descripcion,
+        id_candidato=id_candidato
+    )
+    db.session.add(new_info_laboral)
+    db.session.commit()
+    return new_info_laboral
