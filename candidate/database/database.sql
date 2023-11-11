@@ -28,11 +28,13 @@ CREATE TABLE entrevista(
     id_candidato int NOT NULL,
     fecha varchar(50) NOT NULL,
     estado varchar(100) NOT NULL,
+    nombre_entrevista varchar(100) NULL,
+    resultado int NULL,
     id_empresa int NOT NULL,
     PRIMARY KEY(id)
 );
 
-insert into candidatos.entrevista (id_candidato, fecha, estado, id_empresa) values (1,"2023-09-05","finalizado",1);
+insert into candidatos.entrevista (id_candidato, fecha, estado, nombre_entrevista, resultado, id_empresa) values (1,"2023-09-05","finalizado", "inglés", 85, 1);
 
 CREATE TABLE info_tecnica (
   id int NOT NULL AUTO_INCREMENT,

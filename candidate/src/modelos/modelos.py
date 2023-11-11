@@ -71,6 +71,8 @@ class entrevista(db.Model):
     id_candidato = db.Column(db.String(50))
     fecha = db.Column(db.String(50))
     estado = db.Column(db.String(50))
+    nombre_entrevista = db.Column(db.String(50))
+    resultado = db.Column(db.Integer)
     id_empresa = db.Column(db.Integer)
 
 class entrevistaSchema(ma.SQLAlchemyAutoSchema):
