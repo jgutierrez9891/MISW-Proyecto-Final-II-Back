@@ -63,20 +63,10 @@ class CambioContraseña(Resource):
         if request.json.get('email') is None:
             return {"status_code": 400, "message": "Debe ingresar todos los campos"}, 400
         
-        representante = Representante.query.filter(Representante.email == request.json["email"]).first()
-        
-        if representante is None:
-            candidato = Candidato.query.filter(Candidato.email == request.json["email"]).first()
-            if candidato is None:
-                return {"status_code": 404, "message": "No se encontro el correo"}, 404
-            else:
-                try:
-                    request_response = requests.post("https://api.mailgun.net/v3/sandbox430d3da59f4642aab1e69fa5e3b1aa46.mailgun.org/messages",
-                    auth=("api",base64.b64decode("MmU2YzkwNWI1ZmE0MzIzYzE1ZTQ2MjU3ZjEzOTE1ZmMtOGM5ZTgyZWMtMjdmZjViZjM=").decode('utf-8')),
-                    data={"from":"danielmailguntest@gmail.com","to":request.json["email"],"subject":"Cambio de contraseña","text":"Su contraseña fue cambiada exitosamente."})
-                    return {"status_code": 200,"mensaje": "Correo enviado Exitosamente"},200
-                except Exception as e:
-                    return {"status_code": 500, "message": "No se pudo enviar el correo"}, 500
+
+        candidato = Candidato.query.filter(Candidato.email == request.json["email"]).first()
+        if candidato is None:
+            return {"status_code": 404, "message": "No se encontro el correo"}, 404
         else:
             try:
                 request_response = requests.post("https://api.mailgun.net/v3/sandbox430d3da59f4642aab1e69fa5e3b1aa46.mailgun.org/messages",
@@ -85,6 +75,7 @@ class CambioContraseña(Resource):
                 return {"status_code": 200,"mensaje": "Correo enviado Exitosamente"},200
             except Exception as e:
                 return {"status_code": 500, "message": "No se pudo enviar el correo"}, 500
+
 
 class ping(Resource):
     
