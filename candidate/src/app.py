@@ -29,7 +29,7 @@ else:
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:{sqlpass}@34.27.118.190:3306/candidatos'
         app.config['SQLALCHEMY_BINDS'] = {
-        "empresas": "mysql+pymysql://root:"+sqlpass+"@34.27.118.190:3306/empresas"
+        "empresas": "mysql+pymysql://root:{sqlpass}@34.27.118.190:3306/empresas"
     }
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
