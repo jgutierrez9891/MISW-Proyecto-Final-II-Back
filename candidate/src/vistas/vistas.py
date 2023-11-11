@@ -196,6 +196,43 @@ class VistaConsultarCandidatosDisponibles(Resource):
         else:
             return {"status_code": 404, "message": "No se encontraron candidatos disponibles"}, 404
 
+class VistaResultadosEntrevistas(Resource):
+
+    @jwt_required()
+    def get(self):
+        #Check for required values not be empty
+        if request.args.get('tipo_doc') is None:
+            return {"status_code": 400, "message": "Debe ingresar el tipo de doc del candidato"}, 400
+        elif request.args.get('num_doc') is None:
+            return {"status_code": 400, "message": "Debe ingresar el doc del candidato"}, 400
+        elif request.args.get('id_empresa') is None:
+            return {"status_code": 400, "message": "Debe ingresar el id de la empresa"}, 400
+        
+        #Get id from params
+        entrevistas_candidato = entrevista.query.filter(candidato.tipo_doc == request.args.get("tipo_doc"), candidato.num_doc == request.args.get("num_doc")).all()
+        db.session.commit()
+
+        if entrevistas_candidato == []:
+            return {"status_code": 409, "message": "No existen datos para el documento ingresado"}, 409
+        
+        nombre_candidato = candidato.query.filter(candidato.tipo_doc == request.args.get("tipo_doc")
+                                                          and candidato.num_doc == request.args.get("num_doc")).first()
+        
+
+        listOfItems = []
+
+        for infoEntrevista_item in entrevistas_candidato:
+                if str(infoEntrevista_item.id_empresa) == request.args.get("id_empresa") and infoEntrevista_item.estado.lower() == "finalizada":
+                    infoEntrevista = {"id_entrevista":infoEntrevista_item.id, "nombre_entrevista":infoEntrevista_item.nombre_entrevista,
+                                      "fecha":infoEntrevista_item.fecha, "nombre_candidato":nombre_candidato.nombre, "resultado":infoEntrevista_item.resultado}
+                    listOfItems.append(infoEntrevista)
+
+        if listOfItems == []:
+            return {"status_code": 200, "message":"El candidato seleccionado no tiene entrevistas finalizadas"}, 200
+        
+        else:
+            return {"message":listOfItems, "status_code": 200}        
+   
 
 class VistaInformacionLaboral(Resource):
 
