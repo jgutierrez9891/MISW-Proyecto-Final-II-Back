@@ -45,9 +45,65 @@ class Ficha_trabajo(db.Model):
     id_proyecto = db.Column(db.Integer, db.ForeignKey('proyecto.id'))
 
 class Empleado(db.Model):
+    __bind_key__ = "empleados"
     id = db.Column(db.Integer, primary_key=True)
+    tipo_doc = db.Column(db.String(50))
+    num_doc = db.Column(db.String(50))
     nombre = db.Column(db.String(100))
-    cargo = db.Column(db.String(100))
+    usuario = db.Column(db.String(50))
+    telefono = db.Column(db.String(30))
+    email = db.Column(db.String(100))
+    pais = db.Column(db.String(100))
+    ciudad = db.Column(db.String(50))
+    fecha_nacimiento= db.Column(db.Date)
+    idiomas = db.Column(db.String(200))
+    estado = db.Column(db.String(50))
+    fecha_evaluacion = db.Column(db.Date)
+    evaluaciones = db.Column(db.Integer)
+    habilidades = db.relationship('EmpleadoHabilidad', back_populates='empleado')
+
+class EmpleadoSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 
+                  'tipo_doc', 
+                  'num_doc', 
+                  'nombre',
+                  'usuario',
+                  'telefono',
+                  'email',
+                  'pais',
+                  'ciudad',
+                  'fecha_nacimiento',
+                  'idiomas',
+                  'fecha_evaluacion',
+                  'evaluaciones',
+                  'habilidades'
+                  )
+        include_relationships = True
+        load_instance = True
+
+    # habilidades = fields.List(fields.Nested(HabilidadesempSchema()))
+
+class Habilidadesemp(db.Model):
+    __bind_key__ = "empleados"
+    id = db.Column(db.Integer, primary_key=True)
+    habilidad = db.Column(db.String(50), nullable=False, unique=True)
+    empleados = db.relationship('EmpleadoHabilidad', back_populates='habilidad')
+
+class EmpleadoHabilidad(db.Model):
+    __bind_key__ = "empleados"
+    id = db.Column(db.Integer, primary_key=True)
+    empleado_id = db.Column(db.Integer, db.ForeignKey('empleado.id'), nullable=False)
+    habilidad_id = db.Column(db.Integer, db.ForeignKey('habilidadesemp.id'), nullable=False)
+
+    empleado = db.relationship('Empleado', back_populates='habilidades')
+    habilidad = db.relationship('Habilidadesemp', back_populates='empleados')
+
+    def to_dict(self):
+        return {
+            'id': self.habilidad.id,
+            'habilidad': self.habilidad.habilidad, 
+        }
 
 class Empleado_ficha_trabajo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,6 +127,13 @@ class Hoja_trabajo(db.Model):
     nombre_trabajo = db.Column(db.String(100))
     descripcion_candidato_ideal = db.Column(db.String(5000))
     id_proyecto = db.Column(db.Integer, db.ForeignKey('proyecto.id'))
+
+class Empleado_evaluacion(db.Model):
+    __bind_key__ = "empleados"
+    id = db.Column(db.Integer, primary_key=True)
+    evaluacion = db.Column(db.String(1000))
+    puntaje = db.Column(db.Integer)
+    empleado_id = db.Column(db.Integer, db.ForeignKey('empleado.id'))
 
 class Hoja_trabajoSchema(ma.Schema):
     class Meta:

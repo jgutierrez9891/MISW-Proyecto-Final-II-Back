@@ -56,4 +56,3 @@ class TestVistaHojasTrabajo(TestCase):
         self.assertEqual(data['status_code'], 404)
         self.assertEqual(data['message'], 'No se encontró el proyecto')
 
-    # Add more test cases as needed
