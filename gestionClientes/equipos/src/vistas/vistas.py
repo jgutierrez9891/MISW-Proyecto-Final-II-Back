@@ -1,9 +1,10 @@
 from flask import json, request
 from flask_restful import Resource
-from modelos.modelos import Empleado_ficha_trabajo, Hoja_trabajo, Rol, Habilidad, Rol_ficha_trabajo, RolHabilidad, Ficha_trabajoSchema, ProyectoSchema, RolSchema, db, Proyecto, Ficha_trabajo
+from modelos.modelos import Candidatos_hoja_trabajo, Empleado, Empleado_evaluacion, Empleado_ficha_trabajo, EmpleadoSchema, Hoja_trabajo, Rol, Habilidad, Rol_ficha_trabajo, RolHabilidad, Ficha_trabajoSchema, ProyectoSchema, RolSchema, db, Proyecto, Ficha_trabajo
 from flask_jwt_extended import jwt_required
 
 ficha_schema = Ficha_trabajoSchema()
+empleado_schema = EmpleadoSchema()
 rol_schema = RolSchema()
 proyectos_schema = ProyectoSchema(many=True)
     
@@ -270,11 +271,60 @@ class VistaHojasTrabajo(Resource):
         hojasTmp =[]
         for hoja in hojasDetrabajo:
             hojadTmp = {
+                "id":hoja.id,
                 "nombre_trabajo":hoja.nombre_trabajo,
                 "descripcion_candidato_ideal":hoja.descripcion_candidato_ideal
             }
             hojasTmp.append(hojadTmp)
         return {"status_code": 200, "hojasDetrabajo": hojasTmp}, 200
+class VistaCandidatosHojas(Resource):
+
+    @jwt_required()
+    def get(self, id_proyecto, id_hoja):
+        print('id_hoja')
+        print(id_hoja)
+        hoja = Hoja_trabajo.query.filter(Hoja_trabajo.id == id_hoja).first()
+        if hoja is None:
+            return {"status_code": 404, "message": "No se encontró la hoja de trabajo"}, 404
+
+        candidatos_hoja = Candidatos_hoja_trabajo.query.filter(Candidatos_hoja_trabajo.id_hoja_trabajo == id_hoja).all()
+        candidatosTmp = []
+
+        for ch in candidatos_hoja:
+            candidato = Empleado.query.filter(Empleado.id == ch.id_candidato).first()
+            if candidato is not None:
+                habilidades_list = [h.to_dict() for h in candidato.habilidades]
+                
+                candTmp = empleado_schema.dump(candidato)
+                candTmp["habilidades"] = habilidades_list
+                candidatosTmp.append(candTmp)
+
+        return {"status_code": 200, "candidatos": candidatosTmp}, 200
+    
+class VistaEvaluarCandidato(Resource):
+
+    @jwt_required()
+    def post(self, id_candidato):
+        print('id_candidato')
+        print(id_candidato)
+        candidato = Empleado.query.filter(Empleado.id == id_candidato).first()
+        if candidato is None:
+            return {"status_code": 404, "message": "No se encontró el candidato"}, 404
+
+        evaluaciontext = request.json.get("evaluacion")
+        puntajejson = request.json.get("puntaje")
+        evaluacion = Empleado_evaluacion( evaluacion= evaluaciontext,
+                                         puntaje = puntajejson,
+                                         empleado_id= id_candidato
+                                         )
+        print("json content")
+        print(evaluacion)
+        print(puntajejson)
+
+        db.session.add(evaluacion)
+        db.session.commit()
+        return {"status_code": 201, "candidatos": id_candidato}, 201
+
     
 
         
