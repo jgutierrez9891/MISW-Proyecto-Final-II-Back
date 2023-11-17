@@ -347,7 +347,7 @@ class VistaAsociarCandidatosAEquipo(Resource):
                 return {"status_code": 404, "message": "No se encontró el candidato con id: "+str(recurso["id_candidato"])}, 404
             empleado_in = Empleado.query.filter(Empleado.tipo_doc == candidato_in.tipo_doc, Empleado.num_doc == candidato_in.num_doc).first()
             if empleado_in is not None:
-                empleado_equipo = Empleado_ficha_trabajo.query.filter(Empleado_ficha_trabajo.id_ficha_trabajo == id_equipo, Empleado_ficha_trabajo.id_empleado == empleadoIn.id).first()
+                empleado_equipo = Empleado_ficha_trabajo.query.filter(Empleado_ficha_trabajo.id_ficha_trabajo == id_equipo, Empleado_ficha_trabajo.id_empleado == empleado_in.id).first()
                 if empleado_equipo is not None:
                     return {"status_code": 409, "message": "Candidato con id "+str(recurso["id_candidato"])+" ya existe en el equipo"}, 404
             
