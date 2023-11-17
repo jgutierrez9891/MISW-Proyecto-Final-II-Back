@@ -92,7 +92,7 @@ class TestProyecto(TestCase):
 
         
     def tearDown(self) -> None:
-        sql = "DELETE FROM empresas.ficha_trabajo"
+        sql = "DELETE FROM empresas.ficha_trabajo where id in(1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()

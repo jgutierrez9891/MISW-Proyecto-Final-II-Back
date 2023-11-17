@@ -86,18 +86,11 @@ CREATE TABLE rol_habilidad(
     PRIMARY KEY(id_asoc)
 );
 
-CREATE TABLE empresas.empleado (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50),
-    cargo VARCHAR(50)
-);
-
 CREATE TABLE empresas.empleado_ficha_trabajo (
 id INT AUTO_INCREMENT PRIMARY KEY,
     id_ficha_trabajo INT,
     id_empleado INT,
-    FOREIGN KEY (id_ficha_trabajo) REFERENCES empresas.ficha_trabajo(id),
-    FOREIGN KEY (id_empleado) REFERENCES empresas.empleado(id)
+    FOREIGN KEY (id_ficha_trabajo) REFERENCES empresas.ficha_trabajo(id)
 );
 
 CREATE TABLE empresas.rol_ficha_trabajo (
@@ -108,6 +101,8 @@ CREATE TABLE empresas.rol_ficha_trabajo (
     FOREIGN KEY (id_rol) REFERENCES empresas.rol(id_rol)
 );
 
+CREATE TABLE equipo_
+
 insert into empresas.rol (nombre, descripcion) value ("empresa prueba", "descripcion prueba");
 -- insert into empresas.proyecto (titulo, fecha_inicio, fecha_fin, id_empresa) value ("proyecto prueba", STR_TO_DATE('2023-01-01', '%Y-%m-%d'), STR_TO_DATE('2023-01-01', '%Y-%m-%d'),1);
 -- insert into empresas.ficha_trabajo (nombre, descripcion,id_proyecto, id_empresa) value ("equipo prueba", "descripcion prueba equipo",1,1);
@@ -117,3 +112,55 @@ insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "t
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda");
 insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,1);
 insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,2);
+
+
+CREATE DATABASE candidatos;
+use candidatos;
+
+ALTER DATABASE candidatos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE candidato(
+    id int not null AUTO_INCREMENT,
+    tipo_doc varchar(10) NOT NULL,
+    num_doc varchar(50) NOT NULL,
+    nombre varchar(100) NOT NULL,
+    usuario varchar(50) NOT NULL,
+    clave varchar(50) NOT NULL,
+    telefono bigint NOT NULL,
+    email varchar(100) NOT NULL,
+    pais varchar(100) NOT NULL,
+    ciudad varchar(50) NOT NULL,
+    aspiracion_salarial bigint NOT NULL,
+    fecha_nacimiento datetime NOT NULL,
+    idiomas varchar(200) NOT NULL,
+    fecha_ultima_evaluacion datetime DEFAULT NULL,
+    promedio_evaluaciones float DEFAULT NULL,
+    estado varchar(50) DEFAULT NULL,
+    PRIMARY KEY(id)
+);
+
+
+CREATE DATABASE empleados;
+use empleados;
+
+ALTER DATABASE empleados CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE empleado (
+  id int NOT NULL AUTO_INCREMENT,
+  tipo_doc varchar(50) DEFAULT NULL,
+  num_doc varchar(50) DEFAULT NULL,
+  nombre varchar(100) DEFAULT NULL,
+  usuario varchar(50) DEFAULT NULL,
+  telefono varchar(30) DEFAULT NULL,
+  email varchar(100) DEFAULT NULL,
+  pais varchar(100) DEFAULT NULL,
+  ciudad varchar(50) DEFAULT NULL,
+  fecha_nacimiento date DEFAULT NULL,
+  idiomas varchar(200) DEFAULT NULL,
+  estado varchar(50) DEFAULT NULL,
+  fecha_evaluacion date DEFAULT NULL,
+  evaluaciones int DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+

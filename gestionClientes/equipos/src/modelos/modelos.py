@@ -108,7 +108,7 @@ class EmpleadoHabilidad(db.Model):
 class Empleado_ficha_trabajo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_ficha_trabajo = db.Column(db.Integer, db.ForeignKey('ficha_trabajo.id'))
-    id_empleado = db.Column(db.Integer, db.ForeignKey('empleado.id'))
+    id_empleado = db.Column(db.Integer)
     
 class Rol_ficha_trabajo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -206,5 +206,30 @@ class RolHabilidad(db.Model):
 class RolHabilidadSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = RolHabilidad
+        include_relationships = False
+        load_instance = True
+
+class candidato(db.Model):
+    __bind_key__ = "candidatos"
+    id = db.Column(db.Integer, primary_key=True)
+    tipo_doc = db.Column(db.String(50))
+    num_doc = db.Column(db.String(50))
+    nombre = db.Column(db.String(100))
+    usuario = db.Column(db.String(50))
+    clave = db.Column(db.String(50))
+    telefono = db.Column(db.Integer)
+    email = db.Column(db.String(100))
+    pais = db.Column(db.String(100))
+    ciudad = db.Column(db.String(50))
+    aspiracion_salarial = db.Column(db.Integer)
+    fecha_nacimiento = db.Column(db.DateTime)
+    idiomas = db.Column(db.String(200))
+    fecha_ultima_evaluacion = db.Column(db.DateTime)
+    promedio_evaluaciones = db.Column(db.Float)
+    estado = db.Column(db.String(50))
+
+class candidato_schema(ma.Schema):
+    class Meta:
+        fields = ("id", "tipo_doc", "num_doc", "nombre", "usuario", "clave", "telefono", "email", "pais", "ciudad", "aspiracion_salarial", "fecha_nacimiento", "idiomas", "fecha_ultima_evaluacion", "promedio_evaluaciones", "estado")
         include_relationships = False
         load_instance = True

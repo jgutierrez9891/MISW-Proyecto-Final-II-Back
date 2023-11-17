@@ -32,19 +32,38 @@ class TestFichas(TestCase):
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
+        sql = "insert into empresas.empleado_ficha_trabajo (id_ficha_trabajo, id_empleado) values (1, 1);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        sql = "insert into empresas.empleado_ficha_trabajo (id_ficha_trabajo, id_empleado) values (2, 2);"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
         cursor.close()
         self.token_de_acceso = create_access_token(identity=123)
 
         
     def tearDown(self) -> None:
-        sql = "DELETE FROM empresas.ficha_trabajo"
+        sql = "DELETE FROM empresas.empleado_ficha_trabajo where id_ficha_trabajo in(1,2)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.ficha_trabajo where id in(1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
         return super().tearDown()
     
-    def test_1_obtener_fichas_con_datos_OK(self):
+    def test_1_obtener_fichas_sin_datosOK(self):
+        solicitud_consulta = self.client.get("/equipos/consultar?id_empresa=2",
+                                        headers={'Content-Type': 'application/json',
+                                                 "Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(solicitud_consulta.status_code, 204)
+    
+    def test_2_obtener_fichas_con_datos_OK(self):
         solicitud_consulta = self.client.get("/equipos/consultar?id_empresa=1",
                                         headers={'Content-Type': 'application/json',
                                                  "Authorization" : "Bearer "+str(self.token_de_acceso)})
@@ -52,12 +71,6 @@ class TestFichas(TestCase):
         self.assertEqual(solicitud_consulta.status_code, 200)
         self.assertIsNotNone(respuesta_consulta["fichas"])
         self.assertEqual(len(respuesta_consulta["fichas"]), 2)
-    
-    def test_2_obtener_fichas_sin_datosOK(self):
-        solicitud_consulta = self.client.get("/equipos/consultar?id_empresa=2",
-                                        headers={'Content-Type': 'application/json',
-                                                 "Authorization" : "Bearer "+str(self.token_de_acceso)})
-        self.assertEqual(solicitud_consulta.status_code, 204)
     
     def test_3_obtener_fichas_ERROR_no_idempresa(self):
         solicitud_consulta = self.client.get("/equipos/consultar",
