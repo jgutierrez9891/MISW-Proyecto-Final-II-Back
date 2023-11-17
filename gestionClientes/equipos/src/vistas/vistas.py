@@ -371,6 +371,9 @@ class VistaAsociarCandidatosAEquipo(Resource):
                                                             id_empleado = empleado_nuevo.id)
             db.session.add(empleado_ficha_trabajo)
             db.session.commit()
+
+            candidato_in.estado = "CONTRATADO"
+            db.session.commit()
         
         return {"status_code": 200, "message": "Candidatos asociados con éxito"}, 200
         
