@@ -349,7 +349,7 @@ class VistaAsociarCandidatosAEquipo(Resource):
             if empleado_in is not None:
                 empleado_equipo = Empleado_ficha_trabajo.query.filter(Empleado_ficha_trabajo.id_ficha_trabajo == id_equipo, Empleado_ficha_trabajo.id_empleado == empleado_in.id).first()
                 if empleado_equipo is not None:
-                    return {"status_code": 409, "message": "Candidato con id "+str(recurso["id_candidato"])+" ya existe en el equipo"}, 404
+                    return {"status_code": 409, "message": "Candidato con id "+str(recurso["id_candidato"])+" ya existe en el equipo"}, 409
             
         for recurso in recursos:
             candidato_in = candidato.query.filter(candidato.id == recurso["id_candidato"]).first()
