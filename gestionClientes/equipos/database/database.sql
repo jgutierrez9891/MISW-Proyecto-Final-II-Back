@@ -101,7 +101,7 @@ CREATE TABLE empresas.rol_ficha_trabajo (
     FOREIGN KEY (id_rol) REFERENCES empresas.rol(id_rol)
 );
 
-CREATE TABLE equipo_
+-- CREATE TABLE equipo_
 
 insert into empresas.rol (nombre, descripcion) value ("empresa prueba", "descripcion prueba");
 -- insert into empresas.proyecto (titulo, fecha_inicio, fecha_fin, id_empresa) value ("proyecto prueba", STR_TO_DATE('2023-01-01', '%Y-%m-%d'), STR_TO_DATE('2023-01-01', '%Y-%m-%d'),1);
