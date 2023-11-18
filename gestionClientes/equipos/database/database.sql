@@ -13,7 +13,7 @@ CREATE TABLE empresa(
     PRIMARY KEY(id)
 );
 
-INSERT into empresas.empresa (id, tipo_doc, num_doc,nombre, email,telefono) value (1, "Test", "Test", "Test", "Test");
+INSERT into empresas.empresa (id, tipo_doc, num_doc, nombre, email, telefono) value (1, "Test", "Test", "Test", "Test", "Test");
 CREATE TABLE representante(
     id int not null AUTO_INCREMENT,
     tipo_doc varchar(10) NOT NULL,

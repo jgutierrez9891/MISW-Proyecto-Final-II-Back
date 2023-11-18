@@ -7,9 +7,9 @@ from modelos.modelos import db
 from vistas.vistas import (VistaAsociarEquipoRol, VistaActualizarRol, VistaCandidatosHojas, VistaConsultarFichas, VistaConsultarProyectos, VistaConsultarRol, VistaCrearProyecto, VistaConsultarHabilidades, VistaEvaluarCandidato, VistaHojasTrabajo, ping)
 
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 sqlpass = os.getenv("SQL_PASSWORD")
 if sqlpass is None:
     sqlpass = ''
