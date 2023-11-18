@@ -38,6 +38,7 @@ CREATE TABLE proyecto(
 );
 
 INSERT into empresas.proyecto (id, titulo, id_empresa) value (7, "Test", 1);
+INSERT into empresas.proyecto (id, titulo, id_empresa) value (700, "Test 2", 1);
 
 CREATE TABLE ficha_trabajo (
   id int NOT NULL AUTO_INCREMENT,

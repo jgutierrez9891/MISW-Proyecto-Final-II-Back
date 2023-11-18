@@ -44,7 +44,7 @@ class TestVistaHojasTrabajo(TestCase):
         cursor.execute(sql)
         self.connection.commit()
 
-        sql_crear = "insert INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
+        sql_crear = "REPLACE INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
         val = (700, 'Test', 100)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
