@@ -1,56 +1,51 @@
 from datetime import datetime
 import json
 from unittest import TestCase
-from flask import Flask
-from flask_jwt_extended import JWTManager, create_access_token
-from app import VistaEvaluarCandidato, db, app
-from modelos.modelos import Empleado, Empleado_evaluacion
+from flask_jwt_extended import create_access_token
+from app import app, sqlpass, test
+import mysql.connector
 
 class TestVistaEvaluarCandidato(TestCase):
 
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-        app.config['SQLALCHEMY_BINDS'] = {
-            "empleados": 'sqlite:///:memory:'
-        }
-        app.config['JWT_SECRET_KEY'] = 'secret'
-        self.app = app.test_client()
-        self.jwt = JWTManager(app)
+        if test:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
+            self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='candidatos',
+            user='root',
+            password='root')
 
-        db.session.remove()
-        db.drop_all()
-        db.create_all()
-
-        self.empleado = Empleado(id=1, nombre='Test Employee')
-        db.session.add(self.empleado)
-        db.session.commit()
-
+        else:
+            self.connection = mysql.connector.connect(host='34.27.118.190',
+            database='candidatos',
+            user='root',
+            password=sqlpass)
+    
+        self.client = app.test_client()
         self.token_de_acceso = create_access_token(identity=123)
-        self.headers = {'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + str(self.token_de_acceso)}
+        self.headers ={'Content-Type': 'application/json',
+                       "Authorization" : "Bearer "+str(self.token_de_acceso)}
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
+    # def tearDown(self):
+
 
     def test_post_evaluar_candidato_success(self):
         data = {
             "evaluacion": "Good",
             "puntaje": 90
         }
-        response = self.app.post('/proyectos/evaluacion/1', data=json.dumps(data), headers=self.headers)
+        response = self.client.post('/proyectos/evaluacion/31', data=json.dumps(data), headers=self.headers)
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.data)
         self.assertEqual(data['status_code'], 201)
-        self.assertEqual(data['candidatos'], 1)
+        self.assertEqual(data['candidatos'], 31)
 
     def test_post_evaluar_candidato_candidato_not_found(self):
         data = {
             "evaluacion": "Good",
             "puntaje": 90
         }
-        response = self.app.post('/proyectos/evaluacion/2', data=json.dumps(data), headers=self.headers)
+        response = self.client.post('/proyectos/evaluacion/200004', data=json.dumps(data), headers=self.headers)
         self.assertEqual(response.status_code, 404)
         data = json.loads(response.data)
         self.assertEqual(data['status_code'], 404)
