@@ -39,6 +39,7 @@ CREATE TABLE proyecto(
 
 INSERT into empresas.proyecto (id, titulo, id_empresa) value (7, "Test", 1);
 INSERT into empresas.proyecto (id, titulo, id_empresa) value (700, "Test 2", 1);
+INSERT into empresas.proyecto (id, titulo, id_empresa) value (770, "Test 3", 1);
 
 CREATE TABLE ficha_trabajo (
   id int NOT NULL AUTO_INCREMENT,
@@ -63,7 +64,7 @@ CREATE TABLE hoja_trabajo (
 
 INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (7010,'Test Job 1', 'Description 1', 700);
 INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (7011, 'Test Job 2', 'Description 2', 700);
-INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (7011, 'Test Job 2', 'Description 2', 701);
+INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (701, 'Test Job 2', 'Description 2', 770);
 
 CREATE TABLE candidatos_hoja_trabajo (
   id int NOT NULL AUTO_INCREMENT,
@@ -221,7 +222,7 @@ CREATE TABLE empleado (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
 insert into candidatos.empleado (id, nombre) values (10,"name 1");
-insert into candidatos.empleado (id, nombre) values (11,"name 2");
+insert into candidatos.empleado (id, nombre) values (20,"name 2");
 
 CREATE TABLE empleado_evaluacion (
   id int NOT NULL AUTO_INCREMENT,
