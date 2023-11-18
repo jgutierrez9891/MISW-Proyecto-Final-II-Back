@@ -38,6 +38,7 @@ CREATE TABLE proyecto(
 );
 
 INSERT into empresas.proyecto (id, titulo, id_empresa) value (1, "Test 0", 1);
+INSERT into empresas.proyecto (id, titulo, id_empresa) value (1, "Test 0.2", 2);
 INSERT into empresas.proyecto (id, titulo, id_empresa) value (7, "Test", 1);
 INSERT into empresas.proyecto (id, titulo, id_empresa) value (700, "Test 2", 1);
 INSERT into empresas.proyecto (id, titulo, id_empresa) value (770, "Test 3", 1);
