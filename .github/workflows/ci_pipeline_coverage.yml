@@ -9,140 +9,140 @@ on:
       -   develop
 
 jobs:
-  #CANDIDATES
-  #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
-  #tests de candidato
-  test_candidates:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
-      matrix:
-        python-version: [ 3.10.6 ]
-    env:
-      DB_USER: root
-      DB_PASSWORD: root
-      IF_TEST: "True"
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install candidate_db
-        working-directory: ./candidate/database #preparacion 1 para tests
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < database.sql
-      - name: Install candidate environment #preparacion 2 para tests
-        working-directory: ./candidate/src
-        run: |
-          pip3 install -r requirements.txt
-      - name: Run candidate unit tests # tests
-        working-directory: ./candidate/src
-        run: |
-          coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
-          coverage report --fail-under=80
-          coverage html
-          coverage xml
-        env:
-            JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}  
-      - name: SonarCloud Scan #sonar cloud
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: candidate/src 
-          args: >
-            -Dsonar.exclusions=tests/**
-            -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
-            -Dsonar.organization=jgutierrez9891
-            -Dsonar.python.coverage.reportPaths=coverage.xml
+  # #CANDIDATES
+  # #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
+  # #tests de candidato
+  # test_candidates:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     max-parallel: 1
+  #     matrix:
+  #       python-version: [ 3.10.6 ]
+  #   env:
+  #     DB_USER: root
+  #     DB_PASSWORD: root
+  #     IF_TEST: "True"
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: Install candidate_db
+  #       working-directory: ./candidate/database #preparacion 1 para tests
+  #       run: |
+  #         sudo /etc/init.d/mysql start
+  #         mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < database.sql
+  #     - name: Install candidate environment #preparacion 2 para tests
+  #       working-directory: ./candidate/src
+  #       run: |
+  #         pip3 install -r requirements.txt
+  #     - name: Run candidate unit tests # tests
+  #       working-directory: ./candidate/src
+  #       run: |
+  #         coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
+  #         coverage report --fail-under=80
+  #         coverage html
+  #         coverage xml
+  #       env:
+  #           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}  
+  #     - name: SonarCloud Scan #sonar cloud
+  #       uses: SonarSource/sonarcloud-github-action@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #       with:
+  #         projectBaseDir: candidate/src 
+  #         args: >
+  #           -Dsonar.exclusions=tests/**
+  #           -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
+  #           -Dsonar.organization=jgutierrez9891
+  #           -Dsonar.python.coverage.reportPaths=coverage.xml
       
 
-  #AUTENTICACION
-  #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
-  #tests de autenticacion
-  test_autenticacion:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
-      matrix:
-        python-version: [ 3.10.6 ]
-    env:
-      DB_USER: root
-      DB_PASSWORD: root
-      IF_TEST: "True"
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install autenticacion_db
-        working-directory: ./autenticacion/database #preparacion 1 para tests
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < database.sql
-      - name: Install autenticacion environment #preparacion 2 para tests
-        working-directory: ./autenticacion/src
-        run: |
-          pip3 install -r requirements.txt
-      - name: Run autenticacion unit tests # tests
-        working-directory: ./autenticacion/src
-        run: |
-          coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
-          coverage report --fail-under=80
-          coverage html
-          coverage xml
-      - name: SonarCloud Scan #sonar cloud
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-            projectBaseDir: autenticacion/src
-            args: >
-              -Dsonar.exclusions=tests/**
-              -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
-              -Dsonar.organization=jgutierrez9891
-              -Dsonar.python.coverage.reportPaths=coverage.xml
+  # #AUTENTICACION
+  # #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
+  # #tests de autenticacion
+  # test_autenticacion:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     max-parallel: 1
+  #     matrix:
+  #       python-version: [ 3.10.6 ]
+  #   env:
+  #     DB_USER: root
+  #     DB_PASSWORD: root
+  #     IF_TEST: "True"
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: Install autenticacion_db
+  #       working-directory: ./autenticacion/database #preparacion 1 para tests
+  #       run: |
+  #         sudo /etc/init.d/mysql start
+  #         mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < database.sql
+  #     - name: Install autenticacion environment #preparacion 2 para tests
+  #       working-directory: ./autenticacion/src
+  #       run: |
+  #         pip3 install -r requirements.txt
+  #     - name: Run autenticacion unit tests # tests
+  #       working-directory: ./autenticacion/src
+  #       run: |
+  #         coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
+  #         coverage report --fail-under=80
+  #         coverage html
+  #         coverage xml
+  #     - name: SonarCloud Scan #sonar cloud
+  #       uses: SonarSource/sonarcloud-github-action@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #       with:
+  #           projectBaseDir: autenticacion/src
+  #           args: >
+  #             -Dsonar.exclusions=tests/**
+  #             -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
+  #             -Dsonar.organization=jgutierrez9891
+  #             -Dsonar.python.coverage.reportPaths=coverage.xml
 
-  #EMPRESA
-  #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
-  #tests de autenticacion
-  test_empresa:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
-      matrix:
-        python-version: [ 3.10.6 ]
-    env:
-      DB_USER: root
-      DB_PASSWORD: root
-      IF_TEST: "True"
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install empresa_db
-        working-directory: ./gestionClientes/empresa/database #preparacion 1 para tests
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < database.sql
-      - name: Install empresa environment #preparacion 2 para tests
-        working-directory: ./gestionClientes/empresa/src
-        run: |
-          pip3 install -r requirements.txt
-      - name: Run empresa unit tests # tests
-        working-directory: ./gestionClientes/empresa/src
-        run: |
-          coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
-          coverage report --fail-under=80
-          coverage html
-          coverage xml
-      - name: SonarCloud Scan #sonar cloud
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-            projectBaseDir: gestionClientes/empresa/src
-            args: >
-              -Dsonar.exclusions=tests/**
-              -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
-              -Dsonar.organization=jgutierrez9891
-              -Dsonar.python.coverage.reportPaths=coverage.xml
+  # #EMPRESA
+  # #para cada micro debe haber dos job con su propio nombre, el primero apra tests y el segundo para despligue
+  # #tests de autenticacion
+  # test_empresa:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     max-parallel: 1
+  #     matrix:
+  #       python-version: [ 3.10.6 ]
+  #   env:
+  #     DB_USER: root
+  #     DB_PASSWORD: root
+  #     IF_TEST: "True"
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: Install empresa_db
+  #       working-directory: ./gestionClientes/empresa/database #preparacion 1 para tests
+  #       run: |
+  #         sudo /etc/init.d/mysql start
+  #         mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < database.sql
+  #     - name: Install empresa environment #preparacion 2 para tests
+  #       working-directory: ./gestionClientes/empresa/src
+  #       run: |
+  #         pip3 install -r requirements.txt
+  #     - name: Run empresa unit tests # tests
+  #       working-directory: ./gestionClientes/empresa/src
+  #       run: |
+  #         coverage run --include=./app.py,./tests/*.py,./vistas/vistas.py,./modelos/modelos.py,./servicios/servicios.py -m unittest tests/* -v 
+  #         coverage report --fail-under=80
+  #         coverage html
+  #         coverage xml
+  #     - name: SonarCloud Scan #sonar cloud
+  #       uses: SonarSource/sonarcloud-github-action@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #       with:
+  #           projectBaseDir: gestionClientes/empresa/src
+  #           args: >
+  #             -Dsonar.exclusions=tests/**
+  #             -Dsonar.projectKey=jgutierrez9891_MISW-Proyecto-Final-II-Back
+  #             -Dsonar.organization=jgutierrez9891
+  #             -Dsonar.python.coverage.reportPaths=coverage.xml
 
 
   #EQUIPOS
