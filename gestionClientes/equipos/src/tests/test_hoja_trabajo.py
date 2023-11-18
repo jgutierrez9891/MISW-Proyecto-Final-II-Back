@@ -45,13 +45,18 @@ class TestVistaHojasTrabajo(TestCase):
         cursor.execute(sql_crear, val)
         self.connection.commit()
 
-        sql_crear = "REPLACE INTO empresas.hoja_trabajo ( nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s)"
+        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto=7"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+
+        sql_crear = "INSERT INTO empresas.hoja_trabajo ( nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s)"
         val = ('Test Job 1', 'Description 1', 7)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
         
-        sql_crear = "REPLACE INTO empresas.hoja_trabajo ( nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s)"
+        sql_crear = "INSERT INTO empresas.hoja_trabajo ( nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s)"
         val = ('Test Job 2', 'Description 2', 7)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
