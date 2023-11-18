@@ -90,16 +90,16 @@ CREATE TABLE rol_habilidad(
     PRIMARY KEY(id_asoc)
 );
 
-
 CREATE TABLE empleado_ficha_trabajo (
-id INT AUTO_INCREMENT PRIMARY KEY,
-    id_ficha_trabajo INT,
-    id_empleado INT,
-    FOREIGN KEY (id_ficha_trabajo) REFERENCES empresas.ficha_trabajo(id),
-    FOREIGN KEY (id_empleado) REFERENCES empresas.empleado(id)
-);
+  id int NOT NULL AUTO_INCREMENT,
+  id_ficha_trabajo int DEFAULT NULL,
+  id_empleado int DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY id_ficha_trabajo (id_ficha_trabajo),
+  CONSTRAINT empleado_ficha_trabajo_ibfk_1 FOREIGN KEY (id_ficha_trabajo) REFERENCES ficha_trabajo (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE rol_ficha_trabajo (
+CREATE TABLE empresas.rol_ficha_trabajo (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     id_ficha_trabajo INT,
     id_rol INT,
