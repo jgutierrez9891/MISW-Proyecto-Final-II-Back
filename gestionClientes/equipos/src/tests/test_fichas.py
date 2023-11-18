@@ -24,6 +24,16 @@ class TestFichas(TestCase):
             user='root',
             password=sqlpass)
 
+        sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo in (1,2)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.ficha_trabajo WHERE id in (1,2)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
         sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
         cursor = self.connection.cursor()
         cursor.execute(sql)
@@ -37,7 +47,12 @@ class TestFichas(TestCase):
 
         
     def tearDown(self) -> None:
-        sql = "DELETE FROM empresas.ficha_trabajo"
+        sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo in(1,2)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.ficha_trabajo WHERE id in (1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
