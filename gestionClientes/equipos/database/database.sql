@@ -223,6 +223,7 @@ CREATE TABLE empleado (
 
 insert into empleados.empleado (id, nombre) values (10,"name 1");
 insert into empleados.empleado (id, nombre) values (20,"name 2");
+insert into empleados.empleado (id, nombre) values (301,"name 2");
 
 CREATE TABLE empleado_evaluacion (
   id int NOT NULL AUTO_INCREMENT,

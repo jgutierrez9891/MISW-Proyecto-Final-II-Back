@@ -33,6 +33,28 @@ class TestVistaEvaluarCandidato(TestCase):
         self.token_de_acceso = create_access_token(identity=123)
         self.headers ={'Content-Type': 'application/json',
                        "Authorization" : "Bearer "+str(self.token_de_acceso)}
+        
+        sql_parent = "DELETE FROM empleados.empleado_evaluacion WHERE empleado_id = 301"
+        cursor_parent = self.connection.cursor()
+        cursor_parent.execute(sql_parent)
+        self.connection.commit()
+        cursor_parent.close()
+        sql_parent = "DELETE FROM empleados.empleado_habilidad WHERE empleado_id = 301"
+        cursor_parent = self.connection.cursor()
+        cursor_parent.execute(sql_parent)
+        self.connection.commit()
+        cursor_parent.close()
+        sql_parent = "DELETE FROM empleados.empleado WHERE id = 301"
+        cursor_parent = self.connection.cursor()
+        cursor_parent.execute(sql_parent)
+        self.connection.commit()
+        cursor_parent.close()
+
+        sql_crear = "INSERT INTO empleados.empleado (id, nombre) VALUES (%s, %s)"
+        val = (301, "test name")
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
 
     # def tearDown(self):
 
@@ -42,11 +64,11 @@ class TestVistaEvaluarCandidato(TestCase):
             "evaluacion": "Good",
             "puntaje": 90
         }
-        response = self.client.post('/proyectos/evaluacion/31', data=json.dumps(data), headers=self.headers)
+        response = self.client.post('/proyectos/evaluacion/301', data=json.dumps(data), headers=self.headers)
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.data)
         self.assertEqual(data['status_code'], 201)
-        self.assertEqual(data['candidatos'], 31)
+        self.assertEqual(data['candidatos'], 301)
 
     def test_post_evaluar_candidato_candidato_not_found(self):
         data = {
