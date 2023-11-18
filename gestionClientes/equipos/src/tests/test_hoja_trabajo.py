@@ -33,8 +33,26 @@ class TestVistaHojasTrabajo(TestCase):
         self.headers ={'Content-Type': 'application/json',
                        "Authorization" : "Bearer "+str(self.token_de_acceso)}
 
-        sql_crear = "INSERT INTO empresas.hoja_trabajo ( nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s)"
+        sql_crear = "REPLACE INTO empresas.empresa (id, tipo_doc, num_doc, nombre, email, telefono) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (1, "Test", "Test", "Test", "Test", "Test")
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+
+        sql_crear = "REPLACE INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
+        val = (7, 'Test', 1)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+
+        sql_crear = "REPLACE INTO empresas.hoja_trabajo ( nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s)"
         val = ('Test Job 1', 'Description 1', 7)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        
+        sql_crear = "REPLACE INTO empresas.hoja_trabajo ( nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s)"
+        val = ('Test Job 2', 'Description 2', 7)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
@@ -53,7 +71,7 @@ class TestVistaHojasTrabajo(TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
         self.assertEqual(data['status_code'], 200)
-        self.assertEqual(len(data['hojasDetrabajo']), 1)
+        self.assertEqual(len(data['hojasDetrabajo']), 2)
 
     def test_get_hojas_trabajo_proyecto_not_found(self):
         response = self.client.get('/proyectos/1102/hojas-trabajo', headers=self.headers)
