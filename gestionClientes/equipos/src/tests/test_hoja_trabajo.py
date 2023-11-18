@@ -10,15 +10,15 @@ class TestVistaHojasTrabajo(TestCase):
         if test:
             app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
             self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='empresas',
+            user='root',
+            password='root')
+            self.connection = mysql.connector.connect(host='0.0.0.0',
             database='candidatos',
             user='root',
             password='root')
             self.connection = mysql.connector.connect(host='0.0.0.0',
             database='empleados',
-            user='root',
-            password='root')
-            self.connection = mysql.connector.connect(host='0.0.0.0',
-            database='empresas',
             user='root',
             password='root')
 

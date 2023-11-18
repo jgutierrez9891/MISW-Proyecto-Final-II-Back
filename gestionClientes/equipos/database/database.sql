@@ -14,6 +14,7 @@ CREATE TABLE empresa(
 );
 
 INSERT into empresas.empresa (id, tipo_doc, num_doc, nombre, email, telefono) value (1, "Test", "Test", "Test", "Test", "Test");
+
 CREATE TABLE representante(
     id int not null AUTO_INCREMENT,
     tipo_doc varchar(10) NOT NULL,
@@ -89,13 +90,8 @@ CREATE TABLE rol_habilidad(
     PRIMARY KEY(id_asoc)
 );
 
-CREATE TABLE empresas.empleado (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50),
-    cargo VARCHAR(50)
-);
 
-CREATE TABLE empresas.empleado_ficha_trabajo (
+CREATE TABLE empleado_ficha_trabajo (
 id INT AUTO_INCREMENT PRIMARY KEY,
     id_ficha_trabajo INT,
     id_empleado INT,
@@ -103,7 +99,7 @@ id INT AUTO_INCREMENT PRIMARY KEY,
     FOREIGN KEY (id_empleado) REFERENCES empresas.empleado(id)
 );
 
-CREATE TABLE empresas.rol_ficha_trabajo (
+CREATE TABLE rol_ficha_trabajo (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     id_ficha_trabajo INT,
     id_rol INT,
