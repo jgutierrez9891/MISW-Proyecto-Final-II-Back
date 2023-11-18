@@ -121,8 +121,8 @@ CREATE TABLE empresas.rol_ficha_trabajo (
     FOREIGN KEY (id_rol) REFERENCES empresas.rol(id_rol)
 );
 
-insert into empresas.rol (id, nombre, descripcion) value (4,"prueba 4", "descripcion 4");
-insert into empresas.rol (id, nombre, descripcion) value (2,"prueba 2", "descripcion 2");
+insert into empresas.rol (id_rol, nombre, descripcion) value (4,"prueba 4", "descripcion 4");
+insert into empresas.rol (id_rol, nombre, descripcion) value (2,"prueba 2", "descripcion 2");
 -- insert into empresas.proyecto (titulo, fecha_inicio, fecha_fin, id_empresa) value ("proyecto prueba", STR_TO_DATE('2023-01-01', '%Y-%m-%d'), STR_TO_DATE('2023-01-01', '%Y-%m-%d'),1);
 -- insert into empresas.ficha_trabajo (nombre, descripcion,id_proyecto, id_empresa) value ("equipo prueba", "descripcion prueba equipo",1,1);
 insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (4, 4);
