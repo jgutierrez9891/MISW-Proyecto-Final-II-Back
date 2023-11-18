@@ -3,7 +3,7 @@ from unittest import TestCase
 import mysql.connector
 from faker import Faker
 from flask_jwt_extended import create_access_token
-from app import app, sqlpass, test
+from app import app, sqlpass, test, rootsqlpass
 
 
 class TestFichas(TestCase):
@@ -13,7 +13,7 @@ class TestFichas(TestCase):
         self.data_factory = Faker()
 
         if test:
-            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+rootsqlpass+'@0.0.0.0:3306/empresas'
             self.connection = mysql.connector.connect(host='0.0.0.0',
             database='empresas',
             user='root',

@@ -14,6 +14,8 @@ sqlpass = os.getenv("SQL_PASSWORD")
 rootsqlpass = os.getenv("SQL_ROOT_TEST_PASS")
 if sqlpass is None:
     sqlpass = ''
+if rootsqlpass is None:
+    rootsqlpass= 'root'
 test = os.getenv('IF_TEST')
 jwt_secret_key = os.getenv('JWT_SECRET_KEY')
 
