@@ -191,7 +191,7 @@ CREATE TABLE info_laboral (
 
 
 CREATE DATABASE empleados;
-use candidatos;
+use empleados;
 
 ALTER DATABASE empleados CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
