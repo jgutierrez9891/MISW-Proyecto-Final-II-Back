@@ -11,6 +11,7 @@ import os
 
 # load_dotenv()
 sqlpass = os.getenv("SQL_PASSWORD")
+rootsqlpass = os.getenv("SQL_ROOT_TEST_PASS")
 if sqlpass is None:
     sqlpass = ''
 test = os.getenv('IF_TEST')
@@ -26,9 +27,9 @@ if(os.path.isdir('/cloudsql/')):
         }
 else:
     if test:
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+rootsqlpass+'@0.0.0.0:3306/empresas'
         app.config['SQLALCHEMY_BINDS'] = {
-            "empleados": "mysql+pymysql://root:root@0.0.0.0:3306/empleados"
+            "empleados": "mysql+pymysql://root:"+rootsqlpass+"@0.0.0.0:3306/empleados"
         }
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/empresas'
