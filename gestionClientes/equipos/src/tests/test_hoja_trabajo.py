@@ -8,7 +8,7 @@ class TestVistaHojasTrabajo(TestCase):
 
     def setUp(self):
         if test:
-            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
             self.connection = mysql.connector.connect(host='0.0.0.0',
             database='empresas',
             user='root',
