@@ -221,8 +221,8 @@ CREATE TABLE empleado (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
-insert into candidatos.empleado (id, nombre) values (10,"name 1");
-insert into candidatos.empleado (id, nombre) values (20,"name 2");
+insert into empleados.empleado (id, nombre) values (10,"name 1");
+insert into empleados.empleado (id, nombre) values (20,"name 2");
 
 CREATE TABLE empleado_evaluacion (
   id int NOT NULL AUTO_INCREMENT,
