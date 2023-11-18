@@ -1,25 +1,3 @@
-CREATE DATABASE candidatos;
-use candidatos;
-
-ALTER DATABASE candidatos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-CREATE TABLE candidato(
-    id int not null AUTO_INCREMENT,
-    tipo_doc varchar(10) NOT NULL,
-    num_doc varchar(50) NOT NULL,
-    nombre varchar(100) NOT NULL,
-    usuario varchar(50) NOT NULL,
-    clave varchar(50) NOT NULL,
-    telefono varchar(30) NOT NULL,
-    email varchar(100) NOT NULL,
-    pais varchar(50) NOT NULL,
-    ciudad varchar(50) NOT NULL,
-    aspiracion_salarial bigint NOT NULL,
-    fecha_nacimiento datetime NOT NULL,
-    idiomas varchar(200) NOT NULL,
-    PRIMARY KEY(id)
-);
-
 CREATE DATABASE empresas;
 use empresas;
 
@@ -139,3 +117,71 @@ insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "t
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda");
 insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,1);
 insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,2);
+
+CREATE DATABASE candidatos;
+use candidatos;
+
+ALTER DATABASE candidatos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE candidato(
+    id int not null AUTO_INCREMENT,
+    tipo_doc varchar(10) NOT NULL,
+    num_doc varchar(50) NOT NULL,
+    nombre varchar(100) NOT NULL,
+    usuario varchar(50) NOT NULL,
+    clave varchar(50) NOT NULL,
+    telefono varchar(30) NOT NULL,
+    email varchar(100) NOT NULL,
+    pais varchar(50) NOT NULL,
+    ciudad varchar(50) NOT NULL,
+    aspiracion_salarial bigint NOT NULL,
+    fecha_nacimiento datetime NOT NULL,
+    idiomas varchar(200) NOT NULL,
+    PRIMARY KEY(id)
+);
+CREATE TABLE entrevista(
+    id int not null AUTO_INCREMENT,
+    id_candidato int NOT NULL,
+    fecha varchar(50) NOT NULL,
+    estado varchar(100) NOT NULL,
+    nombre_entrevista varchar(100) NULL,
+    resultado int NULL,
+    id_empresa int NOT NULL,
+    PRIMARY KEY(id)
+);
+
+insert into candidatos.entrevista (id_candidato, fecha, estado, nombre_entrevista, resultado, id_empresa) values (1,"2023-09-05","finalizado", "inglés", 85, 1);
+
+CREATE TABLE info_tecnica (
+  id int NOT NULL AUTO_INCREMENT,
+  tipo varchar(50) DEFAULT NULL,
+  valor varchar(50) DEFAULT NULL,
+  id_candidato int DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY id_candidato (id_candidato),
+  CONSTRAINT info_tecnica_ibfk_1 FOREIGN KEY (id_candidato) REFERENCES candidato (id)
+);
+
+CREATE TABLE info_academica (
+  id int NOT NULL AUTO_INCREMENT,
+  tipo varchar(50) DEFAULT NULL,
+  valor varchar(50) DEFAULT NULL,
+  ano_finalizacion varchar(4) DEFAULT NULL,
+  id_candidato int DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY id_candidato (id_candidato),
+  CONSTRAINT info_academica_ibfk_1 FOREIGN KEY (id_candidato) REFERENCES candidato (id)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE info_laboral (
+  id int NOT NULL AUTO_INCREMENT,
+  cargo varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  ano_inicio int NOT NULL,
+  ano_fin int NOT NULL,
+  empresa varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  descripcion varchar(4000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  id_candidato int DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY info_laboral_candidato_idx (id_candidato),
+  CONSTRAINT info_laboral_candidato FOREIGN KEY (id_candidato) REFERENCES candidato (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
