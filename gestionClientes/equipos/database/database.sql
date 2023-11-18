@@ -195,48 +195,48 @@ use candidatos;
 
 ALTER DATABASE empleados CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE `empleado` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `tipo_doc` varchar(50) DEFAULT NULL,
-  `num_doc` varchar(50) DEFAULT NULL,
-  `nombre` varchar(100) DEFAULT NULL,
-  `usuario` varchar(50) DEFAULT NULL,
-  `telefono` varchar(30) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `pais` varchar(100) DEFAULT NULL,
-  `ciudad` varchar(50) DEFAULT NULL,
-  `fecha_nacimiento` date DEFAULT NULL,
-  `idiomas` varchar(200) DEFAULT NULL,
-  `estado` varchar(50) DEFAULT NULL,
-  `fecha_evaluacion` date DEFAULT NULL,
-  `evaluaciones` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
+CREATE TABLE empleado (
+  id int NOT NULL AUTO_INCREMENT,
+  tipo_doc varchar(50) DEFAULT NULL,
+  num_doc varchar(50) DEFAULT NULL,
+  nombre varchar(100) DEFAULT NULL,
+  usuario varchar(50) DEFAULT NULL,
+  telefono varchar(30) DEFAULT NULL,
+  email varchar(100) DEFAULT NULL,
+  pais varchar(100) DEFAULT NULL,
+  ciudad varchar(50) DEFAULT NULL,
+  fecha_nacimiento date DEFAULT NULL,
+  idiomas varchar(200) DEFAULT NULL,
+  estado varchar(50) DEFAULT NULL,
+  fecha_evaluacion date DEFAULT NULL,
+  evaluaciones int DEFAULT NULL,
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
-CREATE TABLE `empleado_evaluacion` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `evaluacion` varchar(1000) DEFAULT NULL,
-  `puntaje` int DEFAULT NULL,
-  `empleado_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `empleado_id` (`empleado_id`),
-  CONSTRAINT `empleado_evaluacion_ibfk_1` FOREIGN KEY (`empleado_id`) REFERENCES `empleado` (`id`)
+CREATE TABLE empleado_evaluacion (
+  id int NOT NULL AUTO_INCREMENT,
+  evaluacion varchar(1000) DEFAULT NULL,
+  puntaje int DEFAULT NULL,
+  empleado_id int DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY empleado_id (empleado_id),
+  CONSTRAINT empleado_evaluacion_ibfk_1 FOREIGN KEY (empleado_id) REFERENCES empleado (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
-CREATE TABLE `empleado_habilidad` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `empleado_id` int NOT NULL,
-  `habilidad_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `empleado_id` (`empleado_id`),
-  KEY `habilidad_id` (`habilidad_id`),
-  CONSTRAINT `empleado_habilidad_ibfk_1` FOREIGN KEY (`empleado_id`) REFERENCES `empleado` (`id`),
-  CONSTRAINT `empleado_habilidad_ibfk_2` FOREIGN KEY (`habilidad_id`) REFERENCES `habilidadesemp` (`id`)
+CREATE TABLE empleado_habilidad (
+  id int NOT NULL AUTO_INCREMENT,
+  empleado_id int NOT NULL,
+  habilidad_id int NOT NULL,
+  PRIMARY KEY (id),
+  KEY empleado_id (empleado_id),
+  KEY habilidad_id (habilidad_id),
+  CONSTRAINT empleado_habilidad_ibfk_1 FOREIGN KEY (empleado_id) REFERENCES empleado (id),
+  CONSTRAINT empleado_habilidad_ibfk_2 FOREIGN KEY (habilidad_id) REFERENCES habilidadesemp (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-CREATE TABLE `habilidadesemp` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `habilidad` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `habilidad` (`habilidad`)
+CREATE TABLE habilidadesemp (
+  id int NOT NULL AUTO_INCREMENT,
+  habilidad varchar(50) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY habilidad (habilidad)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
