@@ -14,6 +14,7 @@ CREATE TABLE empresa(
 );
 
 INSERT into empresas.empresa (id, tipo_doc, num_doc, nombre, email, telefono) value (1, "Test", "Test", "Test", "Test", "Test");
+INSERT into empresas.empresa (id, tipo_doc, num_doc, nombre, email, telefono) value (101, "Test", "Test", "Test", "Test", "Test");
 
 CREATE TABLE representante(
     id int not null AUTO_INCREMENT,
@@ -54,8 +55,8 @@ CREATE TABLE ficha_trabajo (
   CONSTRAINT fk_ficha_trabajo_proyecto FOREIGN KEY (id_proyecto) REFERENCES proyecto (id)
 );
 
-INSERT into empresas.ficha_trabajo (id, nombre, id_empresa) value (4, "Ficha 4", 1);
-INSERT into empresas.ficha_trabajo (id, nombre, id_empresa) value (1, "Ficha 1", 1);
+INSERT into empresas.ficha_trabajo (id, nombre, id_empresa) value (401, "Ficha 4", 101);
+INSERT into empresas.ficha_trabajo (id, nombre, id_empresa) value (101, "Ficha 1", 101);
 
 CREATE TABLE hoja_trabajo (
   id int NOT NULL AUTO_INCREMENT,
@@ -125,8 +126,8 @@ insert into empresas.rol (id_rol, nombre, descripcion) value (4,"prueba 4", "des
 insert into empresas.rol (id_rol, nombre, descripcion) value (2,"prueba 2", "descripcion 2");
 -- insert into empresas.proyecto (titulo, fecha_inicio, fecha_fin, id_empresa) value ("proyecto prueba", STR_TO_DATE('2023-01-01', '%Y-%m-%d'), STR_TO_DATE('2023-01-01', '%Y-%m-%d'),1);
 -- insert into empresas.ficha_trabajo (nombre, descripcion,id_proyecto, id_empresa) value ("equipo prueba", "descripcion prueba equipo",1,1);
-insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (4, 4);
-insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (1, 2);
+insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (401, 4);
+insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (101, 2);
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 1", "blanda");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "tecnica");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda");
