@@ -60,11 +60,6 @@ CREATE TABLE hoja_trabajo (
   CONSTRAINT fk_hoja_trabajo_proyecto FOREIGN KEY (id_proyecto) REFERENCES proyecto (id)
 );
 
-INSERT into empresas.hoja_trabajo (id, nombre_trabajo, id_proyecto) value (1, "Test1", 1);
-INSERT into empresas.hoja_trabajo (id, nombre_trabajo, id_proyecto) value (2, "Test2", 1);
-INSERT into empresas.hoja_trabajo (id, nombre_trabajo, id_proyecto) value (3, "Test3", 2);
-INSERT into empresas.hoja_trabajo (id, nombre_trabajo, id_proyecto) value (4, "Test4", 2);
-
 CREATE TABLE candidatos_hoja_trabajo (
   id int NOT NULL AUTO_INCREMENT,
   id_hoja_trabajo int NOT NULL,
