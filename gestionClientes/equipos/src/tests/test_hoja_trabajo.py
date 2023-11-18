@@ -44,7 +44,7 @@ class TestVistaHojasTrabajo(TestCase):
         cursor.execute(sql)
         self.connection.commit()
 
-        sql_crear = "REPLACE INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
+        sql_crear = "insert INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
         val = (700, 'Test', 100)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
@@ -65,7 +65,19 @@ class TestVistaHojasTrabajo(TestCase):
     
 
     def tearDown(self):
-        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto=7"
+        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto=700"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.proyecto WHERE id=700"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.empresa WHERE id=100"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
