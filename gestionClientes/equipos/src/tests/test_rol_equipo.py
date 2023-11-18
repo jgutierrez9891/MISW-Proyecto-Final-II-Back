@@ -13,6 +13,14 @@ class TestVistaAsociarEquipoRol(TestCase):
             database='candidatos',
             user='root',
             password='root')
+            self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='empleados',
+            user='root',
+            password='root')
+            self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='empresas',
+            user='root',
+            password='root')
 
         else:
             self.connection = mysql.connector.connect(host='34.27.118.190',

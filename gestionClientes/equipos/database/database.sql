@@ -118,6 +118,8 @@ insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "b
 insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,1);
 insert into empresas.rol_habilidad (id_rol, id_habilidad) value (1,2);
 
+
+
 CREATE DATABASE candidatos;
 use candidatos;
 
