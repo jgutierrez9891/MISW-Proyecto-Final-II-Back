@@ -13,6 +13,7 @@ CREATE TABLE empresa(
     PRIMARY KEY(id)
 );
 
+INSERT into empresas.empresa (id, tipo_doc, num_doc,nombre, email,telefono) value (1, "Test", "Test", "Test", "Test");
 CREATE TABLE representante(
     id int not null AUTO_INCREMENT,
     tipo_doc varchar(10) NOT NULL,
@@ -34,6 +35,8 @@ CREATE TABLE proyecto(
     id_empresa int not null,
     PRIMARY KEY(id)
 );
+
+INSERT into empresas.proyecto (id, titulo, id_empresa) value (7, "Test", 1);
 
 CREATE TABLE ficha_trabajo (
   id int NOT NULL AUTO_INCREMENT,
