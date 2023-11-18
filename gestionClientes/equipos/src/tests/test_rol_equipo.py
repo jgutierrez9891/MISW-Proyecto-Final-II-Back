@@ -72,7 +72,7 @@ class TestVistaAsociarEquipoRol(TestCase):
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
-        
+
         sql_crear = "INSERT INTO empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) VALUES (%s, %s)"
         val = (101,4)
         cursor = self.connection.cursor()
@@ -94,7 +94,7 @@ class TestVistaAsociarEquipoRol(TestCase):
         self.assertEqual(json.loads(response.data)["Mensaje"], "Rol asociado con Éxito")
 
     def test_add_rol_to_equipo_duplicate(self):
-        data = {"id_rol": 4, "id_equipo": 401}
+        data = {"id_rol": 5, "id_equipo": 401}
         response = self.client.post("/equipos/rol/asociar",headers=self.headers , data=json.dumps(data))
         self.assertEqual(response.status_code, 409)
 
