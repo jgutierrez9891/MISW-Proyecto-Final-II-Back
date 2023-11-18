@@ -61,8 +61,9 @@ CREATE TABLE hoja_trabajo (
   CONSTRAINT fk_hoja_trabajo_proyecto FOREIGN KEY (id_proyecto) REFERENCES proyecto (id)
 );
 
-INSERT into empresas.hoja_trabajo (nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value ('Test Job 1', 'Description 1', 700);
-INSERT into empresas.hoja_trabajo (nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value ('Test Job 2', 'Description 2', 700);
+INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (7010,'Test Job 1', 'Description 1', 700);
+INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (7011, 'Test Job 2', 'Description 2', 700);
+INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (7011, 'Test Job 2', 'Description 2', 701);
 
 CREATE TABLE candidatos_hoja_trabajo (
   id int NOT NULL AUTO_INCREMENT,
@@ -72,6 +73,9 @@ CREATE TABLE candidatos_hoja_trabajo (
   KEY fk_candidatos_hoja_trabajo_idx (id_hoja_trabajo),
   CONSTRAINT fk_candidatos_hoja_trabajo FOREIGN KEY (id_hoja_trabajo) REFERENCES hoja_trabajo (id)
 ); 
+
+INSERT into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) value (701,10);
+INSERT into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) value (701,20);
 
 CREATE TABLE rol(
     id_rol int not null AUTO_INCREMENT,
@@ -215,6 +219,9 @@ CREATE TABLE empleado (
   evaluaciones int DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
+
+insert into candidatos.empleado (id, nombre) values (10,"name 1");
+insert into candidatos.empleado (id, nombre) values (11,"name 2");
 
 CREATE TABLE empleado_evaluacion (
   id int NOT NULL AUTO_INCREMENT,

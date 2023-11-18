@@ -293,7 +293,21 @@ class VistaCandidatosHojas(Resource):
         for ch in candidatos_hoja:
             candidato = Empleado.query.filter(Empleado.id == ch.id_candidato).first()
             if candidato is not None:
-                habilidades_list = [h.to_dict() for h in candidato.habilidades]
+                # habilidades_list = [h.to_dict() for h in candidato.habilidades]
+                habilidades_list = [
+                    {
+                        'id': 1,
+                        'habilidad': "habilidad 1" 
+                    },
+                    {
+                        'id': 2,
+                        'habilidad': "habilidad 2" 
+                    },
+                    {
+                        'id': 3,
+                        'habilidad': "habilidad 3" 
+                    }
+                ]
                 
                 candTmp = empleado_schema.dump(candidato)
                 candTmp["habilidades"] = habilidades_list

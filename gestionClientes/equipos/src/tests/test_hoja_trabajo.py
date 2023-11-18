@@ -50,14 +50,14 @@ class TestVistaHojasTrabajo(TestCase):
         cursor.execute(sql_crear, val)
         self.connection.commit()
 
-        sql_crear = "INSERT INTO empresas.hoja_trabajo ( nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s)"
-        val = ('Test Job 1', 'Description 1', 700)
+        sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
+        val = (7010,'Test Job 1', 'Description 1', 700)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
         
-        sql_crear = "INSERT INTO empresas.hoja_trabajo ( nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s)"
-        val = ('Test Job 2', 'Description 2', 700)
+        sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
+        val = (7011,'Test Job 2', 'Description 2', 700)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
