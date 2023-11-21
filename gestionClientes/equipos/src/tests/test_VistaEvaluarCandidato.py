@@ -33,7 +33,15 @@ class TestVistaEvaluarCandidato(TestCase):
         self.token_de_acceso = create_access_token(identity=123)
         self.headers ={'Content-Type': 'application/json',
                        "Authorization" : "Bearer "+str(self.token_de_acceso)}
-        
+
+        sql_crear = "INSERT INTO empleados.empleado (id, nombre) VALUES (%s, %s)"
+        val = (301, "test name")
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        cursor.close()
+
+    def tearDown(self):
         sql_parent = "DELETE FROM empleados.empleado_evaluacion WHERE empleado_id = 301"
         cursor_parent = self.connection.cursor()
         cursor_parent.execute(sql_parent)
@@ -49,17 +57,10 @@ class TestVistaEvaluarCandidato(TestCase):
         cursor_parent.execute(sql_parent)
         self.connection.commit()
         cursor_parent.close()
-
-        sql_crear = "INSERT INTO empleados.empleado (id, nombre) VALUES (%s, %s)"
-        val = (301, "test name")
-        cursor = self.connection.cursor()
-        cursor.execute(sql_crear, val)
-        self.connection.commit()
-
-    # def tearDown(self):
+        super().tearDown()
 
 
-    def test_post_evaluar_candidato_success(self):
+    def test_1_post_evaluar_candidato_success(self):
         data = {
             "evaluacion": "Good",
             "puntaje": 90
@@ -70,7 +71,7 @@ class TestVistaEvaluarCandidato(TestCase):
         self.assertEqual(data['status_code'], 201)
         self.assertEqual(data['candidatos'], 301)
 
-    def test_post_evaluar_candidato_candidato_not_found(self):
+    def test_2_post_evaluar_candidato_candidato_not_found(self):
         data = {
             "evaluacion": "Good",
             "puntaje": 90

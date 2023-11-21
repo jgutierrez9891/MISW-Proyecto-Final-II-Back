@@ -1,6 +1,6 @@
 from flask import json, request
 from flask_restful import Resource
-from modelos.modelos import Candidatos_hoja_trabajo, Empleado, Empleado_evaluacion, Empleado_ficha_trabajo, EmpleadoSchema, Hoja_trabajo, Rol, Habilidad, Rol_ficha_trabajo, RolHabilidad, Ficha_trabajoSchema, ProyectoSchema, RolSchema, db, Proyecto, Ficha_trabajo
+from modelos.modelos import Candidatos_hoja_trabajo, Empleado, Empleado_evaluacion, Empleado_ficha_trabajo, EmpleadoSchema, Hoja_trabajo, Rol, Habilidad, Rol_ficha_trabajo, RolHabilidad, Ficha_trabajoSchema, ProyectoSchema, RolSchema, candidato, db, Proyecto, Ficha_trabajo
 from flask_jwt_extended import jwt_required
 
 ficha_schema = Ficha_trabajoSchema()
@@ -262,8 +262,6 @@ class VistaHojasTrabajo(Resource):
     @jwt_required()
     def get(self, id_proyecto):
         # validate existing project
-        print('id_proyecto')
-        print(id_proyecto)
         proyecto = Proyecto.query.filter(Proyecto.id == id_proyecto).first()
         if proyecto is None:
             return {"status_code": 404, "message": "No se encontró el proyecto"}, 404
@@ -277,6 +275,7 @@ class VistaHojasTrabajo(Resource):
             }
             hojasTmp.append(hojadTmp)
         return {"status_code": 200, "hojasDetrabajo": hojasTmp}, 200
+    
 class VistaCandidatosHojas(Resource):
 
     @jwt_required()
@@ -339,8 +338,56 @@ class VistaEvaluarCandidato(Resource):
         db.session.commit()
         return {"status_code": 201, "candidatos": id_candidato}, 201
 
-    
+class VistaAsociarCandidatosAEquipo(Resource):
 
+    @jwt_required()
+    def post(self, id_equipo):
+        equipo = Ficha_trabajo.query.filter(Ficha_trabajo.id == id_equipo).first()
+        if equipo is None:
+            return {"status_code": 404, "message": "No se encontró el equipo"}, 404
+
+        recursos = request.json.get("candidatos")
+        if recursos is None:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+        
+        if recursos.__len__() == 0:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+
+        for recurso in recursos: 
+            candidato_in = candidato.query.filter(candidato.id == recurso["id_candidato"]).first()
+            if candidato_in is None:
+                return {"status_code": 404, "message": "No se encontró el candidato con id: "+str(recurso["id_candidato"])}, 404
+            empleado_in = Empleado.query.filter(Empleado.tipo_doc == candidato_in.tipo_doc, Empleado.num_doc == candidato_in.num_doc).first()
+            if empleado_in is not None:
+                empleado_equipo = Empleado_ficha_trabajo.query.filter(Empleado_ficha_trabajo.id_ficha_trabajo == id_equipo, Empleado_ficha_trabajo.id_empleado == empleado_in.id).first()
+                if empleado_equipo is not None:
+                    return {"status_code": 409, "message": "Candidato con id "+str(recurso["id_candidato"])+" ya existe en el equipo"}, 409
+            
+        for recurso in recursos:
+            candidato_in = candidato.query.filter(candidato.id == recurso["id_candidato"]).first()
+            empleado_nuevo = Empleado(tipo_doc = candidato_in.tipo_doc,
+                                      num_doc = candidato_in.num_doc,
+                                      nombre = candidato_in.nombre,
+                                      usuario = candidato_in.usuario,
+                                      telefono = candidato_in.telefono,
+                                      email = candidato_in.email,
+                                      pais = candidato_in.pais,
+                                      ciudad = candidato_in.ciudad,
+                                      fecha_nacimiento = candidato_in.fecha_nacimiento,
+                                      idiomas = candidato_in.idiomas,
+                                      estado = "Activo")
+            db.session.add(empleado_nuevo)
+            db.session.commit()
+            empleado_nuevo = Empleado.query.filter(Empleado.tipo_doc == candidato_in.tipo_doc, Empleado.num_doc == candidato_in.num_doc).first()
+            empleado_ficha_trabajo = Empleado_ficha_trabajo(id_ficha_trabajo = id_equipo,
+                                                            id_empleado = empleado_nuevo.id)
+            db.session.add(empleado_ficha_trabajo)
+            db.session.commit()
+
+            candidato_in.estado = "CONTRATADO"
+            db.session.commit()
+        
+        return {"status_code": 200, "message": "Candidatos asociados con éxito"}, 200
         
         
 class ping(Resource):
