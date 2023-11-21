@@ -262,8 +262,6 @@ class VistaHojasTrabajo(Resource):
     @jwt_required()
     def get(self, id_proyecto):
         # validate existing project
-        print('id_proyecto')
-        print(id_proyecto)
         proyecto = Proyecto.query.filter(Proyecto.id == id_proyecto).first()
         if proyecto is None:
             return {"status_code": 404, "message": "No se encontró el proyecto"}, 404

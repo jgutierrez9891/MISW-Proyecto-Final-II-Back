@@ -51,7 +51,88 @@ class TestFichas(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
+        sql_crear = "INSERT INTO empresas.empresa (id, tipo_doc, num_doc, nombre, email, telefono) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (100, "Test", "Test", "Test", "Test", "Test")
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        cursor.close()
+
+        sql_crear = "INSERT INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
+        val = (700, 'Test', 100)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        cursor.close()
+
+        sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
+        val = (7010,'Test Job 1', 'Description 1', 700)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        cursor.close()
+        
+        sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
+        val = (7011,'Test Job 2', 'Description 2', 700)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        cursor.close()
+        sql_crear = "REPLACE INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
+        val = (770, 'Test', 100)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+
+        sql_child = "DELETE FROM empresas.candidatos_hoja_trabajo WHERE id_hoja_trabajo = 701"
+        cursor_child = self.connection.cursor()
+        cursor_child.execute(sql_child)
+        self.connection.commit()
+        cursor_child.close()
+
+        sql_parent = "DELETE FROM empresas.hoja_trabajo WHERE id = 701"
+        cursor_parent = self.connection.cursor()
+        cursor_parent.execute(sql_parent)
+        self.connection.commit()
+        cursor_parent.close()
+
+        sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
+        val = (701,'Test Job 1', 'Description 1', 770)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+
+        sql_crear = "INSERT INTO empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) VALUES (%s, %s)"
+        val = (701, 10)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        sql_crear = "REPLACE INTO empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) VALUES (%s, %s)"
+        val = (701, 20)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+
+        sql = "DELETE FROM empleados.empleado where id in(10,20)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql_crear = "INSERT INTO empleados.empleado (id, nombre ) VALUES (%s, %s)"
+        val = (10, "Nombre1" )
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        sql_crear = "INSERT INTO empleados.empleado (id, nombre ) VALUES (%s, %s)"
+        val = (20, "Nombre2" )
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+
         self.token_de_acceso = create_access_token(identity=123)
+        self.headers ={'Content-Type': 'application/json',
+                       "Authorization" : "Bearer "+str(self.token_de_acceso)}
 
         
     def tearDown(self) -> None:
@@ -70,7 +151,55 @@ class TestFichas(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        return super().tearDown()
+        sql = "DELETE FROM empresas.ficha_trabajo WHERE id_empresa=101"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.empresa WHERE id in(100,101)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto=700"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.proyecto WHERE id=700"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empleados.empleado where id in(10,20)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.candidatos_hoja_trabajo where id_hoja_trabajo =701"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto=770"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.proyecto WHERE id=770"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        
+        return super().tearDown()    
+
     
     def test_1_obtener_fichas_sin_datosOK(self):
         solicitud_consulta = self.client.get("/equipos/consultar?id_empresa=2",
@@ -92,4 +221,32 @@ class TestFichas(TestCase):
                                         headers={'Content-Type': 'application/json',
                                                  "Authorization" : "Bearer "+str(self.token_de_acceso)})
         self.assertEqual(solicitud_consulta.status_code, 400)
+    
+    def test_4_get_hojas_trabajo_success(self):
+        response = self.client.get('/proyectos/700/hojas-trabajo', headers=self.headers)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertEqual(data['status_code'], 200)
+        self.assertEqual(len(data['hojasDetrabajo']), 2)
+
+    def test_5_get_hojas_trabajo_proyecto_not_found(self):
+        response = self.client.get('/proyectos/1102/hojas-trabajo', headers=self.headers)
+        self.assertEqual(response.status_code, 404)
+        data = json.loads(response.data)
+        self.assertEqual(data['status_code'], 404)
+        self.assertEqual(data['message'], 'No se encontró el proyecto')
+
+    def test_6_get_candidatos_hojas_success(self):
+        response = self.client.get('/proyectos/770/hojas-trabajo/701', headers=self.headers)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertEqual(data['status_code'], 200)
+        self.assertEqual(len(data['candidatos']), 2)
+
+    def test_7_get_candidatos_hojas_hoja_not_found(self):
+        response = self.client.get('/proyectos/1/hojas-trabajo/200', headers=self.headers)
+        self.assertEqual(response.status_code, 404)
+        data = json.loads(response.data)
+        self.assertEqual(data['status_code'], 404)
+        self.assertEqual(data['message'], 'No se encontró la hoja de trabajo')
 

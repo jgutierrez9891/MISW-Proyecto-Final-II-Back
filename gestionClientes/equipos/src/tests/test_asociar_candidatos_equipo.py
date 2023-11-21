@@ -90,12 +90,6 @@ class TestAsociarCandidatosAEquipo(TestCase):
         cursor.execute(sql)
         self.connection_candidatos.commit()
         cursor.close()
-        sql = "DELETE FROM empleados.empleado"
-        cursor = self.connection_empleados.cursor()
-        cursor.execute(sql)
-        self.connection_empleados.commit()
-        cursor.close()
-        return super().tearDown()
 
     def test_1_asociar_un_candidato_ok(self):
         lista_candidatos = {

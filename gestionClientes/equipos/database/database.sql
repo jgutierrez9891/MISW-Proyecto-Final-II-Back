@@ -91,6 +91,8 @@ CREATE TABLE rol(
     PRIMARY KEY(id_rol)
 );
 
+INSERT INTO empresas.rol (id_rol, nombre, descripcion) VALUES (4, "empresa prueba", "descripcion prueba");
+
 CREATE TABLE habilidad(
     id_habilidad int not null AUTO_INCREMENT,
     habilidad varchar(60) NOT NULL,

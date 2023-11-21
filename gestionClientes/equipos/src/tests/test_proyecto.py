@@ -29,21 +29,6 @@ class TestProyecto(TestCase):
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
-        sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo in(1,2)"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "DELETE FROM empresas.empleado_ficha_trabajo WHERE id_ficha_trabajo in (1,2)"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "DELETE FROM empresas.ficha_trabajo WHERE id in (1,2)"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
         sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
         cursor = self.connection.cursor()
         cursor.execute(sql)
@@ -53,27 +38,12 @@ class TestProyecto(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        # sql = "DELETE FROM empresas.proyecto WHERE id in(1,2)"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (1, '"+self.data_factory.company()+"', '2023-01-01', '2023-01-30', 1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        # sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (2, '"+self.data_factory.company()+"', '2023-02-01', '2023-03-30', 1);"
-        # cursor = self.connection.cursor()
-        # cursor.execute(sql)
-        # self.connection.commit()
-        # cursor.close()
-        sql = "DELETE FROM empresas.candidatos_hoja_trabajo WHERE id_hoja_trabajo in(1,2,3,4)"
+        sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (1, '"+self.data_factory.company()+"', '2023-01-01', '2023-01-30', 1);"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM empresas.hoja_trabajo WHERE id in(1,2,3,4)"
+        sql = "insert into empresas.proyecto (id, titulo, fecha_inicio, fecha_fin, id_empresa) values (2, '"+self.data_factory.company()+"', '2023-02-01', '2023-03-30', 1);"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
@@ -122,22 +92,32 @@ class TestProyecto(TestCase):
 
         
     def tearDown(self) -> None:
+        sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo in(1,2)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.empleado_ficha_trabajo WHERE id_ficha_trabajo in (1,2)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
         sql = "DELETE FROM empresas.ficha_trabajo where id in(1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM empresas.candidatos_hoja_trabajo"
+        sql = "DELETE FROM empresas.candidatos_hoja_trabajo WHERE id_hoja_trabajo in(1,2,3,4)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM empresas.hoja_trabajo"
+        sql = "DELETE FROM empresas.hoja_trabajo WHERE id in(1,2,3,4)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM empresas.proyecto"
+        sql = "DELETE FROM empresas.proyecto WHERE id in(1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
