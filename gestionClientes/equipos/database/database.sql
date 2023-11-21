@@ -91,8 +91,6 @@ CREATE TABLE rol(
     PRIMARY KEY(id_rol)
 );
 
-INSERT INTO empresas.rol (id_rol, nombre, descripcion) VALUES (4, "empresa prueba", "descripcion prueba");
-
 CREATE TABLE habilidad(
     id_habilidad int not null AUTO_INCREMENT,
     habilidad varchar(60) NOT NULL,
@@ -123,8 +121,8 @@ CREATE TABLE empresas.rol_ficha_trabajo (
 );
 
 insert into empresas.rol (id_rol, nombre, descripcion) value (1, "empresa prueba", "descripcion prueba");
--- insert into empresas.proyecto (titulo, fecha_inicio, fecha_fin, id_empresa) value ("proyecto prueba", STR_TO_DATE('2023-01-01', '%Y-%m-%d'), STR_TO_DATE('2023-01-01', '%Y-%m-%d'),1);
--- insert into empresas.ficha_trabajo (nombre, descripcion,id_proyecto, id_empresa) value ("equipo prueba", "descripcion prueba equipo",1,1);
+INSERT INTO empresas.rol (id_rol, nombre, descripcion) VALUES (4, "empresa prueba", "descripcion prueba");
+insert into empresas.rol (id_rol, nombre, descripcion) value (5, "empresa prueba", "descripcion prueba");
 insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (401, 4);
 insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (401, 5);
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 1", "blanda");
@@ -214,5 +212,3 @@ CREATE TABLE empleado_habilidad (
   CONSTRAINT empleado_habilidad_ibfk_1 FOREIGN KEY (empleado_id) REFERENCES empleado (id),
   CONSTRAINT empleado_habilidad_ibfk_2 FOREIGN KEY (habilidad_id) REFERENCES habilidadesemp (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
-
