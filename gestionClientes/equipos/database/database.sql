@@ -13,6 +13,9 @@ CREATE TABLE empresa(
     PRIMARY KEY(id)
 );
 
+INSERT into empresas.empresa (id, tipo_doc, num_doc, nombre, email, telefono) value (1, "Test", "Test", "Test", "Test", "Test");
+INSERT into empresas.empresa (id, tipo_doc, num_doc, nombre, email, telefono) value (101, "Test", "Test", "Test", "Test", "Test");
+
 CREATE TABLE representante(
     id int not null AUTO_INCREMENT,
     tipo_doc varchar(10) NOT NULL,
@@ -35,6 +38,12 @@ CREATE TABLE proyecto(
     PRIMARY KEY(id)
 );
 
+INSERT into empresas.proyecto (id, titulo, id_empresa) value (1, "Test 0", 1);
+INSERT into empresas.proyecto (id, titulo, id_empresa) value (2, "Test 0.2", 1);
+INSERT into empresas.proyecto (id, titulo, id_empresa) value (7, "Test", 1);
+INSERT into empresas.proyecto (id, titulo, id_empresa) value (700, "Test 2", 1);
+INSERT into empresas.proyecto (id, titulo, id_empresa) value (770, "Test 3", 1);
+
 CREATE TABLE ficha_trabajo (
   id int NOT NULL AUTO_INCREMENT,
   nombre varchar(100) NOT NULL,
@@ -46,6 +55,9 @@ CREATE TABLE ficha_trabajo (
   CONSTRAINT fk_ficha_trabajo_proyecto FOREIGN KEY (id_proyecto) REFERENCES proyecto (id)
 );
 
+INSERT into empresas.ficha_trabajo (id, nombre, id_empresa) value (401, "Ficha 4", 101);
+INSERT into empresas.ficha_trabajo (id, nombre, id_empresa) value (101, "Ficha 1", 101);
+
 CREATE TABLE hoja_trabajo (
   id int NOT NULL AUTO_INCREMENT,
   nombre_trabajo varchar(100) NOT NULL,
@@ -56,6 +68,10 @@ CREATE TABLE hoja_trabajo (
   CONSTRAINT fk_hoja_trabajo_proyecto FOREIGN KEY (id_proyecto) REFERENCES proyecto (id)
 );
 
+INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (7010,'Test Job 1', 'Description 1', 700);
+INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (7011, 'Test Job 2', 'Description 2', 700);
+INSERT into empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) value (701, 'Test Job 2', 'Description 2', 770);
+
 CREATE TABLE candidatos_hoja_trabajo (
   id int NOT NULL AUTO_INCREMENT,
   id_hoja_trabajo int NOT NULL,
@@ -64,6 +80,9 @@ CREATE TABLE candidatos_hoja_trabajo (
   KEY fk_candidatos_hoja_trabajo_idx (id_hoja_trabajo),
   CONSTRAINT fk_candidatos_hoja_trabajo FOREIGN KEY (id_hoja_trabajo) REFERENCES hoja_trabajo (id)
 ); 
+
+INSERT into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) value (701,10);
+INSERT into empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) value (701,20);
 
 CREATE TABLE rol(
     id_rol int not null AUTO_INCREMENT,
@@ -106,7 +125,8 @@ CREATE TABLE equipo_
 insert into empresas.rol (nombre, descripcion) value ("empresa prueba", "descripcion prueba");
 -- insert into empresas.proyecto (titulo, fecha_inicio, fecha_fin, id_empresa) value ("proyecto prueba", STR_TO_DATE('2023-01-01', '%Y-%m-%d'), STR_TO_DATE('2023-01-01', '%Y-%m-%d'),1);
 -- insert into empresas.ficha_trabajo (nombre, descripcion,id_proyecto, id_empresa) value ("equipo prueba", "descripcion prueba equipo",1,1);
--- insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (1, 1);
+insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (401, 4);
+insert into empresas.rol_ficha_trabajo (id_ficha_trabajo, id_rol) value (401, 5);
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 1", "blanda");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 2", "tecnica");
 insert into empresas.habilidad (habilidad, tipo) value ("habilidad prueba 3", "blanda");
@@ -126,9 +146,9 @@ CREATE TABLE candidato(
     nombre varchar(100) NOT NULL,
     usuario varchar(50) NOT NULL,
     clave varchar(50) NOT NULL,
-    telefono bigint NOT NULL,
+    telefono varchar(30) NOT NULL,
     email varchar(100) NOT NULL,
-    pais varchar(100) NOT NULL,
+    pais varchar(50) NOT NULL,
     ciudad varchar(50) NOT NULL,
     aspiracion_salarial bigint NOT NULL,
     fecha_nacimiento datetime NOT NULL,
@@ -161,6 +181,38 @@ CREATE TABLE empleado (
   fecha_evaluacion date DEFAULT NULL,
   evaluaciones int DEFAULT NULL,
   PRIMARY KEY (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
+
+insert into empleados.empleado (id, nombre) values (10,"name 1");
+insert into empleados.empleado (id, nombre) values (20,"name 2");
+insert into empleados.empleado (id, nombre) values (301,"name 2");
+
+CREATE TABLE empleado_evaluacion (
+  id int NOT NULL AUTO_INCREMENT,
+  evaluacion varchar(1000) DEFAULT NULL,
+  puntaje int DEFAULT NULL,
+  empleado_id int DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY empleado_id (empleado_id),
+  CONSTRAINT empleado_evaluacion_ibfk_1 FOREIGN KEY (empleado_id) REFERENCES empleado (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE habilidadesemp (
+  id int NOT NULL AUTO_INCREMENT,
+  habilidad varchar(50) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY habilidad (habilidad)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE empleado_habilidad (
+  id int NOT NULL AUTO_INCREMENT,
+  empleado_id int NOT NULL,
+  habilidad_id int NOT NULL,
+  PRIMARY KEY (id),
+  KEY empleado_id (empleado_id),
+  KEY habilidad_id (habilidad_id),
+  CONSTRAINT empleado_habilidad_ibfk_1 FOREIGN KEY (empleado_id) REFERENCES empleado (id),
+  CONSTRAINT empleado_habilidad_ibfk_2 FOREIGN KEY (habilidad_id) REFERENCES habilidadesemp (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 

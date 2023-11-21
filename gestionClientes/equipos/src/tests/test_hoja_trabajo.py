@@ -1,56 +1,97 @@
-from datetime import datetime
 import json
 from unittest import TestCase
-from flask import Flask
-from flask_jwt_extended import JWTManager, create_access_token
-from app import VistaHojasTrabajo, db, app
-from modelos.modelos import Proyecto, Hoja_trabajo
+from flask_jwt_extended import  create_access_token
+from app import app, sqlpass, test, rootsqlpass
+import mysql.connector
 
 class TestVistaHojasTrabajo(TestCase):
 
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-        app.config['JWT_SECRET_KEY'] = 'secret'
-        self.app = app.test_client()
-        self.jwt = JWTManager(app)
+        if test:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+rootsqlpass+'@0.0.0.0:3306/empresas'
+            self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='empresas',
+            user='root',
+            password='root')
+            self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='candidatos',
+            user='root',
+            password='root')
+            self.connection = mysql.connector.connect(host='0.0.0.0',
+            database='empleados',
+            user='root',
+            password='root')
 
-        db.session.remove()
-        db.drop_all()
-        db.create_all()
-
-        # Create test data
-        fecha_inicio = datetime.strptime('2023-01-01', '%Y-%m-%d')
-        fecha_fin = datetime.strptime('2023-12-31', '%Y-%m-%d')
-
-        self.proyecto = Proyecto(id=1100, titulo='Test Project', fecha_inicio=fecha_inicio, fecha_fin=fecha_fin, id_empresa=1)
-        self.hoja1 = Hoja_trabajo(id=1, nombre_trabajo='Test Job 1', descripcion_candidato_ideal='Description 1', id_proyecto=1100)
-        self.hoja2 = Hoja_trabajo(id=2, nombre_trabajo='Test Job 2', descripcion_candidato_ideal='Description 2', id_proyecto=1100)
-
-        db.session.add(self.proyecto)
-        db.session.add(self.hoja1)
-        db.session.add(self.hoja2)
-        db.session.commit()
-
+        else:
+            self.connection = mysql.connector.connect(host='34.27.118.190',
+            database='candidatos',
+            user='root',
+            password=sqlpass)
+    
+        self.client = app.test_client()
         self.token_de_acceso = create_access_token(identity=123)
-        self.headers = {'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + str(self.token_de_acceso)}
+        self.headers ={'Content-Type': 'application/json',
+                       "Authorization" : "Bearer "+str(self.token_de_acceso)}
+
+        sql_crear = "REPLACE INTO empresas.empresa (id, tipo_doc, num_doc, nombre, email, telefono) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (100, "Test", "Test", "Test", "Test", "Test")
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+
+        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto=700"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+
+        sql_crear = "REPLACE INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
+        val = (700, 'Test', 100)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+
+        sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
+        val = (7010,'Test Job 1', 'Description 1', 700)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        
+        sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
+        val = (7011,'Test Job 2', 'Description 2', 700)
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
 
     
 
     def tearDown(self):
-        db.session.remove()
-        db.drop_all()
+        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto=700"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.proyecto WHERE id=700"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+
+        sql = "DELETE FROM empresas.empresa WHERE id=100"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
 
     def test_get_hojas_trabajo_success(self):
-        response = self.app.get('/proyectos/1100/hojas-trabajo', headers=self.headers)
+        response = self.client.get('/proyectos/700/hojas-trabajo', headers=self.headers)
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
         self.assertEqual(data['status_code'], 200)
         self.assertEqual(len(data['hojasDetrabajo']), 2)
 
     def test_get_hojas_trabajo_proyecto_not_found(self):
-        response = self.app.get('/proyectos/2/hojas-trabajo', headers=self.headers)
+        response = self.client.get('/proyectos/1102/hojas-trabajo', headers=self.headers)
         self.assertEqual(response.status_code, 404)
         data = json.loads(response.data)
         self.assertEqual(data['status_code'], 404)

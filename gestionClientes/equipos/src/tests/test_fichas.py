@@ -3,7 +3,7 @@ from unittest import TestCase
 import mysql.connector
 from faker import Faker
 from flask_jwt_extended import create_access_token
-from app import app, sqlpass, test
+from app import app, sqlpass, test, rootsqlpass
 
 
 class TestFichas(TestCase):
@@ -13,7 +13,7 @@ class TestFichas(TestCase):
         self.data_factory = Faker()
 
         if test:
-            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+rootsqlpass+'@0.0.0.0:3306/empresas'
             self.connection = mysql.connector.connect(host='0.0.0.0',
             database='empresas',
             user='root',
@@ -24,6 +24,16 @@ class TestFichas(TestCase):
             user='root',
             password=sqlpass)
 
+        sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo in (1,2)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.ficha_trabajo WHERE id in (1,2)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
         sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
         cursor = self.connection.cursor()
         cursor.execute(sql)
@@ -50,7 +60,12 @@ class TestFichas(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM empresas.ficha_trabajo where id in(1,2)"
+        sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo in(1,2)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.ficha_trabajo WHERE id in (1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
