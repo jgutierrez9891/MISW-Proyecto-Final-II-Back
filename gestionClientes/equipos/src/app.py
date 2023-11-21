@@ -29,9 +29,9 @@ if(os.path.isdir('/cloudsql/')):
         }
 else:
     if test:
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+rootsqlpass+'@0.0.0.0:3306/empresas'
+        app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://root:{rootsqlpass}@0.0.0.0:3306/empresas"
         app.config['SQLALCHEMY_BINDS'] = {
-            "empleados": "mysql+pymysql://root:"+rootsqlpass+"@0.0.0.0:3306/empleados"
+            "empleados": f"mysql+pymysql://root:{rootsqlpass}@0.0.0.0:3306/empleados"
         }
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/empresas'
