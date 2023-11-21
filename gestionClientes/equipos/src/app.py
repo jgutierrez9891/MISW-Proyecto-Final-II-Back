@@ -7,9 +7,15 @@ from modelos.modelos import db
 from vistas.vistas import (VistaAsociarEquipoRol, VistaActualizarRol, VistaCandidatosHojas, VistaConsultarFichas, VistaConsultarProyectos, VistaConsultarRol, VistaCrearProyecto, VistaConsultarHabilidades, VistaEvaluarCandidato, VistaHojasTrabajo, ping)
 
 import os
+# from dotenv import load_dotenv
+
+# load_dotenv()
 sqlpass = os.getenv("SQL_PASSWORD")
+rootsqlpass = os.getenv("SQL_ROOT_TEST_PASS")
 if sqlpass is None:
     sqlpass = ''
+if rootsqlpass is None:
+    rootsqlpass= 'root'
 test = os.getenv('IF_TEST')
 jwt_secret_key = os.getenv('JWT_SECRET_KEY')
 
@@ -23,9 +29,9 @@ if(os.path.isdir('/cloudsql/')):
         }
 else:
     if test:
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/empresas'
+        app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://root:{rootsqlpass}@0.0.0.0:3306/empresas"
         app.config['SQLALCHEMY_BINDS'] = {
-            "empleados": "mysql+pymysql://root:root@34.27.118.190:3306/empleados"
+            "empleados": f"mysql+pymysql://root:{rootsqlpass}@0.0.0.0:3306/empleados"
         }
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+sqlpass+'@34.27.118.190:3306/empresas'
