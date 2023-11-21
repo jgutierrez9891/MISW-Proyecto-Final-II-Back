@@ -24,20 +24,10 @@ class TestFichas(TestCase):
             user='root',
             password=sqlpass)
 
-        sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo in (1,2)"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-        sql = "DELETE FROM empresas.ficha_trabajo WHERE id in (1,2)"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
         sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
         cursor = self.connection.cursor()
         cursor.execute(sql)
-        self.connection.commit()
+        self.connection.commit()        
         sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (2, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
         cursor = self.connection.cursor()
         cursor.execute(sql)
@@ -57,68 +47,44 @@ class TestFichas(TestCase):
         cursor.execute(sql_crear, val)
         self.connection.commit()
         cursor.close()
-
         sql_crear = "INSERT INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
         val = (700, 'Test', 100)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
         cursor.close()
-
         sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
         val = (7010,'Test Job 1', 'Description 1', 700)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
         cursor.close()
-        
         sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
         val = (7011,'Test Job 2', 'Description 2', 700)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
         cursor.close()
-        sql_crear = "REPLACE INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
+        sql_crear = "INSERT INTO empresas.proyecto ( id, titulo, id_empresa) VALUES (%s, %s, %s)"
         val = (770, 'Test', 100)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
-
-        sql_child = "DELETE FROM empresas.candidatos_hoja_trabajo WHERE id_hoja_trabajo = 701"
-        cursor_child = self.connection.cursor()
-        cursor_child.execute(sql_child)
-        self.connection.commit()
-        cursor_child.close()
-
-        sql_parent = "DELETE FROM empresas.hoja_trabajo WHERE id = 701"
-        cursor_parent = self.connection.cursor()
-        cursor_parent.execute(sql_parent)
-        self.connection.commit()
-        cursor_parent.close()
-
         sql_crear = "INSERT INTO empresas.hoja_trabajo (id, nombre_trabajo, descripcion_candidato_ideal, id_proyecto) VALUES (%s, %s, %s,%s)"
         val = (701,'Test Job 1', 'Description 1', 770)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
-
         sql_crear = "INSERT INTO empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) VALUES (%s, %s)"
         val = (701, 10)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
-        sql_crear = "REPLACE INTO empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) VALUES (%s, %s)"
+        sql_crear = "INSERT INTO empresas.candidatos_hoja_trabajo (id_hoja_trabajo, id_candidato) VALUES (%s, %s)"
         val = (701, 20)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
-
-        sql = "DELETE FROM empleados.empleado where id in(10,20)"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-
         sql_crear = "INSERT INTO empleados.empleado (id, nombre ) VALUES (%s, %s)"
         val = (10, "Nombre1" )
         cursor = self.connection.cursor()
@@ -146,6 +112,17 @@ class TestFichas(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
+        sql = "DELETE FROM empresas.candidatos_hoja_trabajo where id_hoja_trabajo =701"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        cursor.close()
+        sql_parent = "DELETE FROM empresas.hoja_trabajo WHERE id = 701"
+        cursor_parent = self.connection.cursor()
+        cursor_parent.execute(sql_parent)
+        self.connection.commit()
+        cursor_parent.close()
         sql = "DELETE FROM empresas.ficha_trabajo WHERE id in (1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
@@ -156,20 +133,12 @@ class TestFichas(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-
-        sql = "DELETE FROM empresas.empresa WHERE id in(100,101)"
+        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto in(700,770)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-
-        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto=700"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-
-        sql = "DELETE FROM empresas.proyecto WHERE id=700"
+        sql = "DELETE FROM empresas.proyecto WHERE id in(700,770)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
@@ -179,20 +148,7 @@ class TestFichas(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-
-        sql = "DELETE FROM empresas.candidatos_hoja_trabajo where id_hoja_trabajo =701"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-
-        sql = "DELETE FROM empresas.hoja_trabajo WHERE id_proyecto=770"
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        self.connection.commit()
-        cursor.close()
-
-        sql = "DELETE FROM empresas.proyecto WHERE id=770"
+        sql = "DELETE FROM empresas.empresa WHERE id in(100,101)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
