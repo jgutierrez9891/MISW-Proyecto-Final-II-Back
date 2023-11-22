@@ -116,3 +116,17 @@ class empresaSchema(ma.SQLAlchemyAutoSchema):
         model = empresa
         include_relationships = False
         load_instance = True
+
+class ResultadoPruebaTecnica(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    candidato_id = db.Column(db.Integer, db.ForeignKey(LLAVE_CANDIDATO))
+    nombre = db.Column(db.String(100))
+    fecha_prueba = db.Column(db.DateTime)
+    puntaje = db.Column(db.Integer)
+class ResultadoPruebaTecnicaSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = ResultadoPruebaTecnica
+        include_relationships = False
+        load_instance = True
+        
+

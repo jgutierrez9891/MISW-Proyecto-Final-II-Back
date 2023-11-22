@@ -3,12 +3,13 @@ from flask_restful import Api
 from modelos import db
 from vistas import (VistaCrearCandidato, VistaHistorialEntrevistas, VistaInformacionTecnica, 
                     VistaConsultarCandidato, VistaConsultarCandidatosDisponibles, VistaResultadosEntrevistas,
-                    VistaInformacionLaboral, ping)
+                    VistaInformacionLaboral, VistaConsultarPruebas, ping)
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 
 import os
+
 sqlpass = os.getenv("SQL_PASSWORD")
 app = Flask(__name__)
 test = os.getenv('IF_TEST')
@@ -29,7 +30,7 @@ else:
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:{sqlpass}@34.27.118.190:3306/candidatos'
         app.config['SQLALCHEMY_BINDS'] = {
-        "empresas": "mysql+pymysql://root:{sqlpass}@34.27.118.190:3306/empresas"
+        "empresas": f"mysql+pymysql://root:{sqlpass}@34.27.118.190:3306/empresas"
     }
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -51,6 +52,7 @@ api.add_resource(VistaConsultarCandidato, '/candidato/detalle')
 api.add_resource(VistaConsultarCandidatosDisponibles, '/candidatos/disponibles')
 api.add_resource(VistaResultadosEntrevistas, '/candidato/resultadosEntrevistas')
 api.add_resource(VistaInformacionLaboral, '/candidato/infoLaboral')
+api.add_resource(VistaConsultarPruebas, '/candidato/pruebas/<doc_empleado>')
 api.add_resource(ping, '/candidato/ping')
 
 jwt = JWTManager(app)

@@ -1,7 +1,7 @@
 from http.client import NOT_FOUND
-from flask import request
+from flask import request, make_response
 from flask_restful import Resource
-from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema, infoLaboral
+from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema, infoLaboral, ResultadoPruebaTecnicaSchema, ResultadoPruebaTecnica
 from servicios import SaveCandidate, SaveInfoTecnica, save_info_laboral
 from flask_jwt_extended import jwt_required
 import re
@@ -18,6 +18,9 @@ empresa_schema_single = empresaSchema()
 
 infoTecnica_schema = infoTecnicaSchema(many=True)
 infoTecnica_schema_single = infoTecnicaSchema()
+
+resultadoPruebaTecnica_schema = ResultadoPruebaTecnicaSchema(many=True)
+resultadoPruebaTecnica_schema_single = ResultadoPruebaTecnicaSchema()
 
 MENSAJE_CREACION_OK = 'Informacion registrada exitosamente'
 MENSAJE_TODOS_DATOS = 'Ingrese todos los campos requeridos'
@@ -285,6 +288,23 @@ class VistaInformacionLaboral(Resource):
 
         return {"response":list_of_items, "status_code": 200}
 
+class VistaConsultarPruebas(Resource):
+
+    @jwt_required()
+    def get(self, doc_empleado):
+        print("doc_empleado")
+        print(doc_empleado)
+        
+        candid = candidato.query.filter(candidato.num_doc == doc_empleado).first()
+        if candid is None:
+            return {"status_code": 404, "message": "Candidato no encontrado"}, 404
+
+        pruebas = ResultadoPruebaTecnica.query.filter(ResultadoPruebaTecnica.candidato_id == candid.id).all()
+
+        if pruebas is not None and len(pruebas)>0:
+            return {"status_code": 200, "pruebas": resultadoPruebaTecnica_schema.dump(pruebas)}, 200
+        else:
+            return make_response('',204)
 
 class ping(Resource):
     
