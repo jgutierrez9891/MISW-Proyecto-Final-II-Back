@@ -70,6 +70,33 @@ CREATE TABLE info_laboral (
   CONSTRAINT info_laboral_candidato FOREIGN KEY (id_candidato) REFERENCES candidato (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE resultado_prueba_tecnica (
+  id int NOT NULL AUTO_INCREMENT,
+  candidato_id int NOT NULL,
+  nombre varchar(100) NOT NULL,
+  fecha_prueba date DEFAULT NULL,
+  puntaje int DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY candidato_id (candidato_id),
+  CONSTRAINT candidato_id_ibfk_1 FOREIGN KEY (candidato_id) REFERENCES candidato (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
+
+
+INSERT INTO candidatos.candidato 
+(id, tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas, estado) 
+VALUES 
+(1001, 'cc', '123456789', 'John Doe', 'john_doe', 'password', '1234567890', 'john.doe@example.com', 'USA', 'New York', 50000, '1990-01-15', 'English, Spanish', 'DISPONIBLE');
+INSERT INTO candidatos.candidato 
+(id, tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas, estado) 
+VALUES 
+(1002, 'cc', 'abc123456', 'John Doe', 'john_doe', 'password', '1234567890', 'john.doe@example.com', 'USA', 'New York', 50000, '1990-01-15', 'English, Spanish', 'DISPONIBLE');
+
+INSERT INTO candidatos.resultado_prueba_tecnica 
+(id, candidato_id, nombre, fecha_prueba, puntaje) 
+VALUES 
+(1001, 1001, 'Prueba A', '2023-01-01', 80);
+
+
 
 CREATE DATABASE empresas;
 use empresas;

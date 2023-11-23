@@ -77,6 +77,11 @@ class TestConsultaCandidatos(TestCase):
         self.token_de_acceso = create_access_token(identity=123)
     
     def tearDown(self):
+        sql = "DELETE FROM candidatos.resultado_prueba_tecnica"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
         sql = "DELETE FROM candidatos.info_tecnica"
         cursor = self.connection.cursor()
         cursor.execute(sql)
