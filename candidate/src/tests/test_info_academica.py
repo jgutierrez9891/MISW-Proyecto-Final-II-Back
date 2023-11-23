@@ -23,6 +23,39 @@ class TestInfoAcademica(TestCase):
             password=sqlpass)
 
         self.client = app.test_client()
+        
+        
+        fake = Faker()
+        self.tipo_doc = random.choice(["cc","ce","pass"])
+        self.num_doc = fake.random_number()
+        self.nombre = fake.name()
+        self.usuario = fake.lexify(text = '??????')
+        self.clave = fake.lexify(text = '??????')
+        self.telefono = fake.msisdn()
+        self.email = fake.email()
+        self.email_invalido = random.choice(['pruebagmail.com','prueba@gmailcom','prueba@gmail.','@gmail.com'])
+        self.pais = fake.country()
+        self.city = fake.city()
+        self.aspiracion_salarial = fake.random_number()
+        self.fecha_nacimiento = fake.date()
+        self.idiomas = random.choice(['español','inglés','alemán','francés','portuges','italiano'])
+        
+        json_request = {
+            "tipo_doc": self.tipo_doc,
+            "num_doc": self.num_doc,
+            "nombre": self.nombre,
+            "usuario": self.usuario,
+            "clave": self.clave,
+            "telefono": self.telefono,
+            "email": self.email,
+            "pais": self.pais,
+            "ciudad": self.city,
+            "aspiracion_salarial": self.aspiracion_salarial,
+            "fecha_nacimiento": self.fecha_nacimiento,
+            "idiomas": self.idiomas
+        }
+        post_request = self.client.post("/candidato/create", json=json_request)
+        self.assertEqual(post_request.status_code, 200)
         #Token de autenticación
         self.token_de_acceso = create_access_token(identity=123)
         self.headers ={'Content-Type': 'application/json',

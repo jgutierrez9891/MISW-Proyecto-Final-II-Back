@@ -8,6 +8,7 @@ from vistas.vistas import (VistaLogInCandidato,VistaLogInEmpresa,CambioContrase√
 import os
 sqlpass = os.getenv("SQL_PASSWORD")
 test = os.getenv('IF_TEST')
+jwt_secret_key = os.getenv('JWT_SECRET_KEY')
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000", "https://micro-web-kdbo2knypq-uc.a.run.app", "http://localhost", "https://localhost"])
 
@@ -30,7 +31,7 @@ else:
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
-app.config['JWT_SECRET_KEY'] = 'frase-secreta'
+app.config['JWT_SECRET_KEY'] = jwt_secret_key
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=1440)
 
 app_context = app.app_context()
