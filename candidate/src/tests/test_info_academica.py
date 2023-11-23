@@ -26,36 +26,35 @@ class TestInfoAcademica(TestCase):
         
         
         fake = Faker()
+        #Data para crear usuario de prueba
         self.tipo_doc = random.choice(["cc","ce","pass"])
-        self.num_doc = fake.random_number()
+        self.num_doc = str(fake.random_number())+str(fake.random_number())
         self.nombre = fake.name()
         self.usuario = fake.lexify(text = '??????')
         self.clave = fake.lexify(text = '??????')
         self.telefono = fake.msisdn()
         self.email = fake.email()
-        self.email_invalido = random.choice(['pruebagmail.com','prueba@gmailcom','prueba@gmail.','@gmail.com'])
         self.pais = fake.country()
         self.city = fake.city()
         self.aspiracion_salarial = fake.random_number()
         self.fecha_nacimiento = fake.date()
         self.idiomas = random.choice(['español','inglés','alemán','francés','portuges','italiano'])
-        
-        json_request = {
-            "tipo_doc": self.tipo_doc,
-            "num_doc": self.num_doc,
-            "nombre": self.nombre,
-            "usuario": self.usuario,
-            "clave": self.clave,
-            "telefono": self.telefono,
-            "email": self.email,
-            "pais": self.pais,
-            "ciudad": self.city,
-            "aspiracion_salarial": self.aspiracion_salarial,
-            "fecha_nacimiento": self.fecha_nacimiento,
-            "idiomas": self.idiomas
-        }
-        post_request = self.client.post("/candidato/create", json=json_request)
-        self.assertEqual(post_request.status_code, 200)
+
+        sql_crear = "INSERT INTO candidatos.candidato (tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (self.tipo_doc, self.num_doc, self.nombre, self.usuario, self.clave, self.telefono, self.email, self.pais, self.city, self.aspiracion_salarial, self.fecha_nacimiento, self.idiomas)
+        #Crear el candidato en BD
+        cursor = self.connection.cursor()
+        cursor.execute(sql_crear, val)
+        self.connection.commit()
+        cursor.close()
+
+        #Consultar el id del candidato
+        cursor = self.connection.cursor()
+        cursor.execute(f"SELECT * FROM candidatos.candidato WHERE num_doc = {self.num_doc}")
+        candidatoCreado = cursor.fetchall()
+        self.id_candidato = candidatoCreado[0][0]
+        self.connection.commit()
+        cursor.close()
         #Token de autenticación
         self.token_de_acceso = create_access_token(identity=123)
         self.headers ={'Content-Type': 'application/json',
@@ -67,7 +66,7 @@ class TestInfoAcademica(TestCase):
         json_request = {
             "tipo": "UNIVERSIDAD",
             "valor": "Andes",
-            "id_candidato": 1,
+            "id_candidato": self.id_candidato,
             "ano_finalizacion":1987
         }
         post_request = self.client.post("/candidato/infoAcademica", data=json.dumps(json_request),
@@ -80,7 +79,7 @@ class TestInfoAcademica(TestCase):
         json_request = {
             "tipo": "UNIVERSIDAD",
             "valor": "Andes",
-            "id_candidato": 1
+            "id_candidato": self.id_candidato
         }
         post_request = self.client.post("/candidato/infoAcademica", data=json.dumps(json_request),
                                         headers=self.headers)
@@ -102,7 +101,7 @@ class TestInfoAcademica(TestCase):
         json_request = {
             "tipo": "UNIVERSIDAD",
             "valor": "Andes",
-            "id_candidato": 1,
+            "id_candidato": self.id_candidato,
             "ano_finalizacion":1987
         }
         post_request = self.client.post("/candidato/infoAcademica", data=json.dumps(json_request),
