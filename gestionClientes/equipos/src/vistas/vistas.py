@@ -7,7 +7,7 @@ ficha_schema = Ficha_trabajoSchema()
 empleado_schema = EmpleadoSchema()
 rol_schema = RolSchema()
 proyectos_schema = ProyectoSchema(many=True)
-    
+MENSAJE_INFO_INCOMPLETA = "Información incompleta. Asegúrese de enviar los datos esperados"    
 class VistaCrearProyecto(Resource):
 
     @jwt_required()
@@ -18,7 +18,7 @@ class VistaCrearProyecto(Resource):
         proyecto_fecha_fin = request.json.get("fecha_fin")
         proyecto_equipos = request.json.get("equipos")
 
-        if empresa_id is None or empresa_id is None or proyecto_titulo is None or proyecto_titulo is None or proyecto_fecha_inicio is None or proyecto_fecha_inicio is None:
+        if empresa_id is None or proyecto_titulo is None or proyecto_titulo is None or proyecto_fecha_inicio is None or proyecto_fecha_inicio is None:
             return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar todos los datos de la empresa y representante"}, 400
         
         if proyecto_fecha_fin and proyecto_fecha_fin != "":
@@ -51,7 +51,6 @@ class VistaCrearProyecto(Resource):
             db.session.add(proyecto)
             db.session.commit()
         except Exception as err:
-            print("VA A RETORNAR 500 POR ERROR: "+str(err))
             return {"status_code": 500, "message": "Error creando proyecto"}, 500
         
         proyecto = Proyecto.query.filter(Proyecto.titulo == proyecto_titulo, Proyecto.id_empresa == empresa_id).first();
@@ -65,7 +64,6 @@ class VistaCrearProyecto(Resource):
                     equipo_tmp.id_proyecto = proyecto.id
                     db.session.commit()
         except Exception as err:
-            print("VA A RETORNAR 500 POR ERROR: "+str(err))
             return {"status_code": 500, "message": "Error asignando proyectos"}, 500
 
         return {"status_code": 200, "message": "Proyecto creado satisfactoriamente"}, 200
@@ -149,7 +147,7 @@ class VistaActualizarRol(Resource):
         lista_habilidades_tecnicas = request.json.get("lista_habilidades_tecnicas")
 
         if id_rol is None or titulo_rol is None or descripcion_rol is None or lista_habilidades_blandas is None or lista_habilidades_tecnicas is None:
-            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+            return {"status_code": 400, "message": MENSAJE_INFO_INCOMPLETA}, 400
         
         rol = Rol.query.filter(Rol.id_rol == id_rol).first()
         
@@ -194,7 +192,7 @@ class VistaAsociarEquipoRol(Resource):
 
     def _perform_operation(self, idRol, id_equipo, operation):
         if idRol is None or id_equipo is None:
-            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+            return {"status_code": 400, "message": MENSAJE_INFO_INCOMPLETA}, 400
 
         rol, equipo = self._get_rol_and_equipo(idRol, id_equipo)
 
@@ -214,7 +212,6 @@ class VistaAsociarEquipoRol(Resource):
                 db.session.commit()
                 return {"status_code": 200, "Mensaje": "Rol asociado con Éxito"}, 200
             except Exception as err:
-                print("VA A RETORNAR 500 POR ERROR: " + str(err))
                 return {"status_code": 500, "message": "Error asociando el rol al equipo"}, 500
 
         elif operation == 'delete':
@@ -225,7 +222,6 @@ class VistaAsociarEquipoRol(Resource):
                 db.session.commit()
                 return {"status_code": 200, "Mensaje": "Rol desasociado con Éxito"}, 200
             except Exception as err:
-                print("VA A RETORNAR 500 POR ERROR: " + str(err))
                 return {"status_code": 500, "message": "Error desasociando el rol del equipo"}, 500
 
     @jwt_required()
@@ -286,10 +282,10 @@ class VistaHojasTrabajo(Resource):
         candidatos = request.json.get("candidatos")
 
         if nombre_trabajo is None or descripcion_candidato_ideal is None or candidatos is None:
-            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+            return {"status_code": 400, "message": MENSAJE_INFO_INCOMPLETA}, 400
         
         if nombre_trabajo == "" or descripcion_candidato_ideal == "":
-            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+            return {"status_code": 400, "message": MENSAJE_INFO_INCOMPLETA}, 400
         
         if candidatos.__len__() == 0:
             return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los candidatos"}, 400
@@ -323,8 +319,6 @@ class VistaCandidatosHojas(Resource):
 
     @jwt_required()
     def get(self, id_proyecto, id_hoja):
-        print('id_hoja')
-        print(id_hoja)
         hoja = Hoja_trabajo.query.filter(Hoja_trabajo.id == id_hoja).first()
         if hoja is None:
             return {"status_code": 404, "message": "No se encontró la hoja de trabajo"}, 404
@@ -335,7 +329,6 @@ class VistaCandidatosHojas(Resource):
         for ch in candidatos_hoja:
             candidato = Empleado.query.filter(Empleado.id == ch.id_candidato).first()
             if candidato is not None:
-                # habilidades_list = [h.to_dict() for h in candidato.habilidades]
                 habilidades_list = [
                     {
                         'id': 1,
@@ -361,8 +354,6 @@ class VistaEvaluarCandidato(Resource):
 
     @jwt_required()
     def post(self, id_candidato):
-        print('id_candidato')
-        print(id_candidato)
         candidato = Empleado.query.filter(Empleado.id == id_candidato).first()
         if candidato is None:
             return {"status_code": 404, "message": "No se encontró el candidato"}, 404
@@ -373,9 +364,6 @@ class VistaEvaluarCandidato(Resource):
                                          puntaje = puntajejson,
                                          empleado_id= id_candidato
                                          )
-        print("json content")
-        print(evaluacion)
-        print(puntajejson)
 
         db.session.add(evaluacion)
         db.session.commit()
@@ -391,10 +379,10 @@ class VistaAsociarCandidatosAEquipo(Resource):
 
         recursos = request.json.get("candidatos")
         if recursos is None:
-            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+            return {"status_code": 400, "message": MENSAJE_INFO_INCOMPLETA}, 400
         
         if recursos.__len__() == 0:
-            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+            return {"status_code": 400, "message": MENSAJE_INFO_INCOMPLETA}, 400
 
         for recurso in recursos: 
             candidato_in = candidato.query.filter(candidato.id == recurso["id_candidato"]).first()
