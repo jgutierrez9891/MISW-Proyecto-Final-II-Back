@@ -275,6 +275,49 @@ class VistaHojasTrabajo(Resource):
             }
             hojasTmp.append(hojadTmp)
         return {"status_code": 200, "hojasDetrabajo": hojasTmp}, 200
+
+    @jwt_required()
+    def post(self, id_proyecto):
+        proyecto = Proyecto.query.filter(Proyecto.id == id_proyecto).first()
+        if proyecto is None:
+            return {"status_code": 404, "message": "No se encontró el proyecto"}, 404
+        nombre_trabajo = request.json.get("nombre_trabajo") 
+        descripcion_candidato_ideal = request.json.get("descripcion_candidato_ideal")
+        candidatos = request.json.get("candidatos")
+
+        if nombre_trabajo is None or descripcion_candidato_ideal is None or candidatos is None:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+        
+        if nombre_trabajo == "" or descripcion_candidato_ideal == "":
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los datos esperados"}, 400
+        
+        if candidatos.__len__() == 0:
+            return {"status_code": 400, "message": "Información incompleta. Asegúrese de enviar los candidatos"}, 400
+        
+        for candidato_in in candidatos:
+            candidato_existente = candidato.query.filter(candidato.id == candidato_in["id"]).first()
+            if candidato_existente is None:
+                return {"status_code": 404, "message": "No se encontró el candidato con id: "+str(candidato_in["id"])}, 404
+        
+        hoja = Hoja_trabajo(nombre_trabajo = nombre_trabajo,
+                            descripcion_candidato_ideal = descripcion_candidato_ideal,
+                            id_proyecto = id_proyecto)
+        db.session.add(hoja)
+        db.session.commit()
+        hoja = Hoja_trabajo.query.filter(Hoja_trabajo.nombre_trabajo == nombre_trabajo, Hoja_trabajo.id_proyecto == id_proyecto).first()
+        db.session.commit()
+
+        for candidato_in in candidatos:
+            candidato_existente = candidato.query.filter(candidato.id == candidato_in["id"]).first()
+            candidato_existente.estado = "EN_PROCESO"
+            db.session.commit()
+            candidato_hoja = Candidatos_hoja_trabajo(id_hoja_trabajo = hoja.id,
+                                                     id_candidato = candidato_in["id"])
+            db.session.add(candidato_hoja)
+            db.session.commit()
+        
+        return {"status_code": 201, "message": "Hoja de trabajo creada satisfactoriamente"}, 201
+        
     
 class VistaCandidatosHojas(Resource):
 

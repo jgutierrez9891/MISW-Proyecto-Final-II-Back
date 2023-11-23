@@ -4,25 +4,43 @@ import mysql.connector
 from faker import Faker
 from flask_jwt_extended import create_access_token
 from app import app, sqlpass, test, rootsqlpass
+import random
 
+IP_NO_TEST = "34.27.118.190"
+IP_TEST = "0.0.0.0"
 
 class TestFichas(TestCase):
 
     def setUp(self):
         self.client = app.test_client()
         self.data_factory = Faker()
+        fake = Faker()
 
         if test:
             app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+rootsqlpass+'@0.0.0.0:3306/empresas'
-            self.connection = mysql.connector.connect(host='0.0.0.0',
+            self.connection = mysql.connector.connect(host=IP_TEST,
             database='empresas',
             user='root',
             password='root')
+            self.connection_candidatos = mysql.connector.connect(host=IP_TEST,
+            database='candidatos',
+            user='root',
+            password='root')
         else:
-            self.connection = mysql.connector.connect(host='34.27.118.190',
+            self.connection = mysql.connector.connect(host=IP_NO_TEST,
             database='empresas',
             user='root',
             password=sqlpass)
+            self.connection_candidatos = mysql.connector.connect(host=IP_NO_TEST,
+            database='candidatos',
+            user='root',
+            password=sqlpass)
+
+        #Data para crear candidatos de prueba
+        self.tipo_doc_1 = random.choice(["cc","ce","pass"])
+        self.tipo_doc_2 = random.choice(["cc","ce","pass"])
+        self.num_doc_1 = str(fake.random_number())+str(fake.random_number())
+        self.num_doc_2 = str(fake.random_number())+str(fake.random_number())
 
         sql = "insert into empresas.ficha_trabajo (id, nombre, descripcion, id_empresa) values (1, '"+self.data_factory.company()+"', '"+self.data_factory.company()+"', 1);"
         cursor = self.connection.cursor()
@@ -95,6 +113,19 @@ class TestFichas(TestCase):
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
+        sql_crear_1 = "INSERT INTO candidatos.candidato (id, tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (100, self.tipo_doc_1, self.num_doc_1, fake.name(), fake.lexify(text = '??????'), fake.lexify(text = '??????'), fake.msisdn(), fake.email(), fake.country(), fake.city(), fake.random_number(), fake.date(), random.choice(['español','inglés','alemán','francés','portuges','italiano']))
+        #Crear el candidato en BD
+        cursor = self.connection_candidatos.cursor()
+        cursor.execute(sql_crear_1, val)
+        sql_crear_2 = "INSERT INTO candidatos.candidato (id, tipo_doc, num_doc, nombre, usuario, clave, telefono, email, pais, ciudad, aspiracion_salarial, fecha_nacimiento, idiomas) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (200, self.tipo_doc_2, self.num_doc_2, fake.name(), fake.lexify(text = '??????'), fake.lexify(text = '??????'), fake.msisdn(), fake.email(), fake.country(), fake.city(), fake.random_number(), fake.date(), random.choice(['español','inglés','alemán','francés','portuges','italiano']))
+        #Crear el candidato en BD
+        cursor = self.connection_candidatos.cursor()
+        cursor.execute(sql_crear_2, val)
+        self.connection_candidatos.commit()
+        cursor.close()
+
 
         self.token_de_acceso = create_access_token(identity=123)
         self.headers ={'Content-Type': 'application/json',
@@ -112,11 +143,15 @@ class TestFichas(TestCase):
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM empresas.candidatos_hoja_trabajo where id_hoja_trabajo =701"
+        sql = "DELETE FROM empresas.candidatos_hoja_trabajo where id_hoja_trabajo in(700,701)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
+        sql = "DELETE FROM empresas.candidatos_hoja_trabajo where id_candidato in(100,200)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
         cursor.close()
         sql_parent = "DELETE FROM empresas.hoja_trabajo WHERE id = 701"
         cursor_parent = self.connection.cursor()
@@ -152,6 +187,11 @@ class TestFichas(TestCase):
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM candidatos.candidato where id in(100,200)"
+        cursor = self.connection_candidatos.cursor()
+        cursor.execute(sql)
+        self.connection_candidatos.commit()
         cursor.close()
         
         return super().tearDown()    
@@ -205,4 +245,120 @@ class TestFichas(TestCase):
         data = json.loads(response.data)
         self.assertEqual(data['status_code'], 404)
         self.assertEqual(data['message'], 'No se encontró la hoja de trabajo')
+    
+    def test_8_crear_hoja_trabajo_OK(self):
+        datos = {
+            "nombre_trabajo": "Test Job 3",
+            "descripcion_candidato_ideal": "Description 3",
+            "candidatos": [
+                {
+                    "id": 100
+                },
+                {
+                    "id": 200
+                }
+            ]
+        }
+        solicitud_consulta = self.client.post("/proyectos/700/hojas-trabajo",
+                                        data=json.dumps(datos),
+                                        headers={'Content-Type': 'application/json',
+                                                 "Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(solicitud_consulta.status_code, 201)
+    
+    def test_8_crear_hoja_trabajo_ERROR_no_existe_candidato(self):
+        datos = {
+            "nombre_trabajo": "Test Job 3",
+            "descripcion_candidato_ideal": "Description 3",
+            "candidatos": [
+                {
+                    "id": 10001
+                },
+                {
+                    "id": 200
+                }
+            ]
+        }
+        solicitud_consulta = self.client.post("/proyectos/700/hojas-trabajo",
+                                        data=json.dumps(datos),
+                                        headers={'Content-Type': 'application/json',
+                                                 "Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(solicitud_consulta.status_code, 404)
+        data = json.loads(solicitud_consulta.get_data())
+        self.assertEqual(data['message'], 'No se encontró el candidato con id: 10001')
+    
+    def test_9_crear_hoja_trabajo_ERROR_no_existe_proyecto(self):
+        datos = {
+            "nombre_trabajo": "Test Job 3",
+            "descripcion_candidato_ideal": "Description 3",
+            "candidatos": [
+                {
+                    "id": 10001
+                },
+                {
+                    "id": 200
+                }
+            ]
+        }
+        solicitud_consulta = self.client.post("/proyectos/7000/hojas-trabajo",
+                                        data=json.dumps(datos),
+                                        headers={'Content-Type': 'application/json',
+                                                 "Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(solicitud_consulta.status_code, 404)
+        data = json.loads(solicitud_consulta.get_data())
+        self.assertEqual(data['message'], 'No se encontró el proyecto')
+    
+    def test_10_crear_hoja_trabajo_ERROR_datos_incompletos(self):
+        datos = {
+            "nombre_trabajo": "Test Job 3",
+            "candidatos": [
+                {
+                    "id": 100
+                },
+                {
+                    "id": 200
+                }
+            ]
+        }
+        solicitud_consulta = self.client.post("/proyectos/7/hojas-trabajo",
+                                        data=json.dumps(datos),
+                                        headers={'Content-Type': 'application/json',
+                                                 "Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(solicitud_consulta.status_code, 400)
+        data = json.loads(solicitud_consulta.get_data())
+        self.assertEqual(data['message'], 'Información incompleta. Asegúrese de enviar los datos esperados')
+    
+    def test_11_crear_hoja_trabajo_ERROR_datos_vacios(self):
+        datos = {
+            "nombre_trabajo": "",
+            "descripcion_candidato_ideal": "Description 3",
+            "candidatos": [
+                {
+                    "id": 100
+                },
+                {
+                    "id": 200
+                }
+            ]
+        }
+        solicitud_consulta = self.client.post("/proyectos/7/hojas-trabajo",
+                                        data=json.dumps(datos),
+                                        headers={'Content-Type': 'application/json',
+                                                 "Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(solicitud_consulta.status_code, 400)
+        data = json.loads(solicitud_consulta.get_data())
+        self.assertEqual(data['message'], 'Información incompleta. Asegúrese de enviar los datos esperados')
+    
+    def test_12_crear_hoja_trabajo_ERROR_candidatos_vacio(self):
+        datos = {
+            "nombre_trabajo": "Otro trabajo mas",
+            "descripcion_candidato_ideal": "Description 3",
+            "candidatos": []
+        }
+        solicitud_consulta = self.client.post("/proyectos/7/hojas-trabajo",
+                                        data=json.dumps(datos),
+                                        headers={'Content-Type': 'application/json',
+                                                 "Authorization" : "Bearer "+str(self.token_de_acceso)})
+        self.assertEqual(solicitud_consulta.status_code, 400)
+        data = json.loads(solicitud_consulta.get_data())
+        self.assertEqual(data['message'], 'Información incompleta. Asegúrese de enviar los candidatos')
 
