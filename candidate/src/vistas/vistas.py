@@ -1,7 +1,7 @@
 from http.client import NOT_FOUND
 from flask import request, make_response
 from flask_restful import Resource
-from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema, infoLaboral, ResultadoPruebaTecnicaSchema, ResultadoPruebaTecnica
+from modelos import db, infoAcademica, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema, infoLaboral, ResultadoPruebaTecnicaSchema, ResultadoPruebaTecnica
 from servicios import SaveCandidate, SaveInfoTecnica, save_info_laboral
 from flask_jwt_extended import jwt_required
 import re
@@ -305,6 +305,40 @@ class VistaConsultarPruebas(Resource):
             return {"status_code": 200, "pruebas": resultadoPruebaTecnica_schema.dump(pruebas)}, 200
         else:
             return make_response('',204)
+        
+#Vista que guarda la información técnica de un candidato
+class VistaInformacionAcademica(Resource):
+
+    @jwt_required()
+    def post(self):
+
+        tipo = request.json.get("tipo")
+        valor = request.json.get("valor")
+        id_candidato = request.json.get("id_candidato") 
+        ano_finalizacion = request.json.get("ano_finalizacion")
+
+        if tipo is None or valor is None or id_candidato is None or ano_finalizacion is None:
+            return {"status_code": 400, "message": MENSAJE_TODOS_DATOS}, 400
+        
+        elif tipo == "" or valor == "" or id_candidato == "" or ano_finalizacion == "":
+            return {"status_code": 400, "message": MENSAJE_CAMPO_VACIO}, 400
+        
+        candidato_id = candidato.query.filter(candidato.id == id_candidato).first()
+        db.session.commit()
+
+        if candidato_id is None:
+            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+
+
+        new_infoAcademica = infoAcademica(
+            tipo=tipo,
+            valor=valor,
+            id_candidato=id_candidato,
+            ano_finalizacion = ano_finalizacion
+        )
+        db.session.add(new_infoAcademica)
+        db.session.commit()
+        return {"id":new_infoAcademica.id, "status_code": 201, "message": MENSAJE_CREACION_OK}, 201
 
 class ping(Resource):
     
