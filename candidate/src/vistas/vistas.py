@@ -302,7 +302,7 @@ class VistaConsultarPruebas(Resource):
         pruebas = ResultadoPruebaTecnica.query.filter(ResultadoPruebaTecnica.candidato_id == candid.id).all()
 
         if pruebas is not None and len(pruebas)>0:
-            return {"status_code": 200, "pruebas": resultadoPruebaTecnica_schema.dump(pruebas)}, 200
+            return {"status_code": 200, "pruebas": resultadoPruebaTecnica_schema.dump(pruebas), "nombre":candid.nombre}, 200
         else:
             return make_response('',204)
 
