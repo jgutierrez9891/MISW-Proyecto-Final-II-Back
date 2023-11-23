@@ -170,7 +170,7 @@ class TestFichas(TestCase):
         respuesta_consulta = json.loads(solicitud_consulta.get_data())
         self.assertEqual(solicitud_consulta.status_code, 200)
         self.assertIsNotNone(respuesta_consulta["fichas"])
-        self.assertEqual(len(respuesta_consulta["fichas"]), 2)
+        self.assertEqual(len(respuesta_consulta["fichas"]), 3)
     
     def test_3_obtener_fichas_ERROR_no_idempresa(self):
         solicitud_consulta = self.client.get("/equipos/consultar",
