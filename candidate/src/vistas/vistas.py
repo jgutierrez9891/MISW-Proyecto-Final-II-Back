@@ -311,16 +311,17 @@ class VistaInformacionAcademica(Resource):
 
     @jwt_required()
     def post(self):
+        
+        institucion = request.json.get("institucion")
+        titulo = request.json.get("titulo")
+        fecha_inicio = request.json.get("fecha_inicio")
+        fecha_fin = request.json.get("fecha_fin")
+        id_candidato = request.json.get("id_candidato")
 
-        tipo = request.json.get("tipo")
-        valor = request.json.get("valor")
-        id_candidato = request.json.get("id_candidato") 
-        ano_finalizacion = request.json.get("ano_finalizacion")
-
-        if tipo is None or valor is None or id_candidato is None or ano_finalizacion is None:
+        if institucion is None or titulo is None or fecha_inicio is None or fecha_fin is None or id_candidato is None:
             return {"status_code": 400, "message": MENSAJE_TODOS_DATOS}, 400
         
-        elif tipo == "" or valor == "" or id_candidato == "" or ano_finalizacion == "":
+        elif institucion == "" or titulo == "" or fecha_inicio == "" or fecha_fin == "" or id_candidato == "":
             return {"status_code": 400, "message": MENSAJE_CAMPO_VACIO}, 400
         
         candidato_id = candidato.query.filter(candidato.id == id_candidato).first()
@@ -331,14 +332,50 @@ class VistaInformacionAcademica(Resource):
 
 
         new_infoAcademica = infoAcademica(
-            tipo=tipo,
-            valor=valor,
-            id_candidato=id_candidato,
-            ano_finalizacion = ano_finalizacion
+            institucion = request.json.get("institucion"),
+            titulo = request.json.get("titulo"),
+            fecha_inicio = request.json.get("fecha_inicio"),
+            fecha_fin = request.json.get("fecha_fin"),
+            id_candidato = request.json.get("id_candidato"),
         )
+        
         db.session.add(new_infoAcademica)
         db.session.commit()
         return {"id":new_infoAcademica.id, "status_code": 201, "message": MENSAJE_CREACION_OK}, 201
+    
+    
+    @jwt_required()
+    def get(self):
+        
+        id_candidato = request.json.get("id_candidato")
+
+        if id_candidato is None:
+            return {"status_code": 400, "message": MENSAJE_TODOS_DATOS}, 400
+        
+        elif id_candidato == "":
+            return {"status_code": 400, "message": MENSAJE_CAMPO_VACIO}, 400
+        
+        candidate = candidato.query.filter(candidato.id == id_candidato).first()
+        db.session.commit()
+
+        if candidate is None:
+            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+
+
+
+        object = infoAcademica.query.filter(infoAcademica.id_candidato == id_candidato).all()
+        db.session.commit()
+
+        listOfItems = []
+        
+        for infoAcademica_item in object:
+            infoAcademicaFormat = {"institucion":infoAcademica_item.institucion, 
+                                   "titulo":infoAcademica_item.titulo, 
+                                   "fecha_inicio":infoAcademica_item.fecha_inicio, 
+                                   "fecha_fin":infoAcademica_item.fecha_fin, 
+                                   "id_candidato":infoAcademica_item.id_candidato}
+            listOfItems.append(infoAcademicaFormat)
+        return {"response":listOfItems, "status_code": 200}
 
 class ping(Resource):
     
