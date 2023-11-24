@@ -348,7 +348,7 @@ class VistaInformacionAcademica(Resource):
     @jwt_required()
     def get(self):
         
-        id_candidato = request.json.get("id_candidato")
+        id_candidato = request.args.get("id_candidato")
 
         if id_candidato is None:
             return {"status_code": 400, "message": MENSAJE_TODOS_DATOS}, 400

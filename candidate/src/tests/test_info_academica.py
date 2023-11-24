@@ -113,35 +113,22 @@ class TestInfoAcademica(TestCase):
         
         
     def test_05_success_consultar_InfoAcademica(self):
-        json_request_get = {
-            "id_candidato":self.id_candidato
-        }
-        get_request = self.client.get("/candidato/infoAcademica", data=json.dumps(json_request_get),
-                                        headers=self.headers)
+        get_request = self.client.get("/candidato/infoAcademica?id_candidato="+self.id_candidato,
+                                        headers=self.bad_headers)
         self.assertEqual(get_request.status_code, 200)
         
     def test_06_fail_campo_no_enviado_consultar_InfoAcademica(self):
-        json_request_get = {
-            "test":self.id_candidato
-        }
-        post_request = self.client.get("/candidato/infoAcademica", data=json.dumps(json_request_get),
-                                        headers=self.headers)
+        post_request = self.client.get("/candidato/infoAcademica?id_candidatos="+self.id_candidato,
+                                        headers=self.bad_headers)
         self.assertEqual(post_request.status_code, 400)
         
     def test_07_fail_candidato_no_existe_consultar_InfoAcademica(self):
-        json_request_get = {
-            "id_candidato":10000000
-        }
-        post_request = self.client.get("/candidato/infoAcademica", data=json.dumps(json_request_get),
-                                        headers=self.headers)
+        post_request = self.client.get("/candidato/infoAcademica?id_candidato=10000000",
+                                        headers=self.bad_headers)
         self.assertEqual(post_request.status_code, 409)
 
-
     def test_08_fail_no_token_consultar_InfoAcademica(self):
-        json_request_get = {
-            "id_candidato":10000000
-        }
-        post_request = self.client.get("/candidato/infoAcademica", data=json.dumps(json_request_get),
+        post_request = self.client.get("/candidato/infoAcademica?id_candidato="+self.id_candidato,
                                         headers=self.bad_headers)
         self.assertEqual(post_request.status_code, 401)
 
