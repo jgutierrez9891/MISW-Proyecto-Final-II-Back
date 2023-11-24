@@ -364,18 +364,18 @@ class VistaInformacionAcademica(Resource):
 
 
 
-        infoAcademicaList = infoAcademica.query.filter(infoAcademica.id_candidato == id_candidato).all()
+        info_academica_list = infoAcademica.query.filter(infoAcademica.id_candidato == id_candidato).all()
         db.session.commit()
 
         listOfItems = []
         
-        for infoAcademica_item in infoAcademicaList:
-            infoAcademicaFormat = {"institucion":infoAcademica_item.institucion, 
-                                   "titulo":infoAcademica_item.titulo, 
-                                   "fecha_inicio":infoAcademica_item.fecha_inicio, 
-                                   "fecha_fin":infoAcademica_item.fecha_fin, 
-                                   "id_candidato":infoAcademica_item.id_candidato}
-            listOfItems.append(infoAcademicaFormat)
+        for info_academica_item in info_academica_list:
+            info_academica_format = {"institucion":info_academica_item.institucion, 
+                                   "titulo":info_academica_item.titulo, 
+                                   "fecha_inicio":info_academica_item.fecha_inicio, 
+                                   "fecha_fin":info_academica_item.fecha_fin, 
+                                   "id_candidato":info_academica_item.id_candidato}
+            listOfItems.append(info_academica_format)
         return {"response":listOfItems, "status_code": 200}
 
 class ping(Resource):
