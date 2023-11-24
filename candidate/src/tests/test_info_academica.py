@@ -113,22 +113,22 @@ class TestInfoAcademica(TestCase):
         
         
     def test_05_success_consultar_InfoAcademica(self):
-        get_request = self.client.get("/candidato/infoAcademica?id_candidato="+self.id_candidato,
-                                        headers=self.bad_headers)
+        get_request = self.client.get("/candidato/infoAcademica?id_candidato="+str(self.id_candidato),
+                                        headers=self.headers)
         self.assertEqual(get_request.status_code, 200)
         
     def test_06_fail_campo_no_enviado_consultar_InfoAcademica(self):
-        post_request = self.client.get("/candidato/infoAcademica?id_candidatos="+self.id_candidato,
-                                        headers=self.bad_headers)
+        post_request = self.client.get("/candidato/infoAcademica?id_candidatos="+str(self.id_candidato),
+                                        headers=self.headers)
         self.assertEqual(post_request.status_code, 400)
         
     def test_07_fail_candidato_no_existe_consultar_InfoAcademica(self):
         post_request = self.client.get("/candidato/infoAcademica?id_candidato=10000000",
-                                        headers=self.bad_headers)
+                                        headers=self.headers)
         self.assertEqual(post_request.status_code, 409)
 
     def test_08_fail_no_token_consultar_InfoAcademica(self):
-        post_request = self.client.get("/candidato/infoAcademica?id_candidato="+self.id_candidato,
+        post_request = self.client.get("/candidato/infoAcademica?id_candidato="+str(self.id_candidato),
                                         headers=self.bad_headers)
         self.assertEqual(post_request.status_code, 401)
 
