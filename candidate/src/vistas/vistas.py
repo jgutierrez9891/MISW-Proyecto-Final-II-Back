@@ -25,6 +25,7 @@ resultadoPruebaTecnica_schema_single = ResultadoPruebaTecnicaSchema()
 MENSAJE_CREACION_OK = 'Informacion registrada exitosamente'
 MENSAJE_TODOS_DATOS = 'Ingrese todos los campos requeridos'
 MENSAJE_CAMPO_VACIO = 'Campo requerido se encuentra vacío'
+MENSAJE_CANDIDATO_NO_EXISTE = 'El id_candidato ingresado no existe'
     
 class VistaCrearCandidato(Resource):
 
@@ -133,7 +134,7 @@ class VistaInformacionTecnica(Resource):
         db.session.commit()
 
         if candidato_id is None:
-            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+            return {"status_code": 409, "message": MENSAJE_CANDIDATO_NO_EXISTE}, 409
 
         data = request.json
         response = SaveInfoTecnica(
@@ -259,7 +260,7 @@ class VistaInformacionLaboral(Resource):
         db.session.commit()
 
         if candidato_id is None:
-            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+            return {"status_code": 409, "message": MENSAJE_CANDIDATO_NO_EXISTE}, 409
 
         response = save_info_laboral(
             cargo,
@@ -328,7 +329,7 @@ class VistaInformacionAcademica(Resource):
         db.session.commit()
 
         if candidato_id is None:
-            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+            return {"status_code": 409, "message": MENSAJE_CANDIDATO_NO_EXISTE}, 409
 
 
         new_infoAcademica = infoAcademica(
@@ -359,16 +360,16 @@ class VistaInformacionAcademica(Resource):
         db.session.commit()
 
         if candidate is None:
-            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+            return {"status_code": 409, "message": MENSAJE_CANDIDATO_NO_EXISTE}, 409
 
 
 
-        object = infoAcademica.query.filter(infoAcademica.id_candidato == id_candidato).all()
+        infoAcademicaList = infoAcademica.query.filter(infoAcademica.id_candidato == id_candidato).all()
         db.session.commit()
 
         listOfItems = []
         
-        for infoAcademica_item in object:
+        for infoAcademica_item in infoAcademicaList:
             infoAcademicaFormat = {"institucion":infoAcademica_item.institucion, 
                                    "titulo":infoAcademica_item.titulo, 
                                    "fecha_inicio":infoAcademica_item.fecha_inicio, 
