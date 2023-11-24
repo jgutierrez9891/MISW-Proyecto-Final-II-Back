@@ -193,13 +193,4 @@ class TestInfoLaboral(TestCase):
 
     def tearDown(self):
 
-        infosLaborales = db.session.query(infoLaboral).all()
-        for item in infosLaborales:
-            db.session.delete(item)
-        
-        candidatos = db.session.query(candidato).all()
-        for item in candidatos:
-            db.session.delete(item)
-
-        db.session.commit()
         return super().tearDown()
