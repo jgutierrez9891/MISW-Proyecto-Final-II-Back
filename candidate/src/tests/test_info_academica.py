@@ -113,58 +113,35 @@ class TestInfoAcademica(TestCase):
         
         
     def test_05_success_consultar_InfoAcademica(self):
-        json_request = {
-            "institucion":"ANDES",
-            "titulo":"UNVIERSITARIO",
-            "fecha_inicio":"2017-05-05",
-            "fecha_fin":"2023-05-05",
-            "id_candidato":self.id_candidato
-        }
-        post_request = self.client.post("/candidato/infoAcademica", data=json.dumps(json_request),
-                                        headers=self.headers)
-        
-        
         json_request_get = {
             "id_candidato":self.id_candidato
         }
-        get_request = self.client.post("/candidato/infoAcademica", data=json.dumps(json_request_get),
+        get_request = self.client.get("/candidato/infoAcademica", data=json.dumps(json_request_get),
                                         headers=self.headers)
-        
-        self.assertEqual(post_request.status_code, 200)
         self.assertEqual(get_request.status_code, 200)
         
     def test_06_fail_campo_no_enviado_consultar_InfoAcademica(self):
-        json_request = json_request = {
-            "institucion":"ANDES",
-            "titulo":"UNVIERSITARIO",
-            "id_candidato":self.id_candidato
+        json_request_get = {
+            "test":self.id_candidato
         }
-        post_request = self.client.post("/candidato/infoAcademica", data=json.dumps(json_request),
+        post_request = self.client.get("/candidato/infoAcademica", data=json.dumps(json_request_get),
                                         headers=self.headers)
         self.assertEqual(post_request.status_code, 400)
         
     def test_07_fail_candidato_no_existe_consultar_InfoAcademica(self):
-        json_request = json_request = {
-            "institucion":"ANDES",
-            "titulo":"UNVIERSITARIO",
-            "fecha_inicio":"2017-05-05",
-            "fecha_fin":"2023-05-05",
-            "id_candidato":10000000000000000
+        json_request_get = {
+            "id_candidato":10000000
         }
-        post_request = self.client.post("/candidato/infoAcademica", data=json.dumps(json_request),
+        post_request = self.client.get("/candidato/infoAcademica", data=json.dumps(json_request_get),
                                         headers=self.headers)
         self.assertEqual(post_request.status_code, 409)
 
 
     def test_08_fail_no_token_consultar_InfoAcademica(self):
-        json_request = json_request = {
-            "institucion":"ANDES",
-            "titulo":"UNVIERSITARIO",
-            "fecha_inicio":"2017-05-05",
-            "fecha_fin":"2023-05-05",
-            "id_candidato":self.id_candidato
+        json_request_get = {
+            "id_candidato":10000000
         }
-        post_request = self.client.post("/candidato/infoAcademica", data=json.dumps(json_request),
+        post_request = self.client.get("/candidato/infoAcademica", data=json.dumps(json_request_get),
                                         headers=self.bad_headers)
         self.assertEqual(post_request.status_code, 401)
 
