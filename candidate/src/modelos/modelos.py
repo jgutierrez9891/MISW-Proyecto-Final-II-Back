@@ -30,14 +30,15 @@ class infoTecnicaSchema(ma.Schema):
 
 class infoAcademica(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    tipo = db.Column(db.String(50))
-    valor = db.Column(db.String(50))
-    ano_finalizacion = db.Column(db.String(4))
+    institucion = db.Column(db.String(45))
+    titulo = db.Column(db.String(45))
+    fecha_inicio = db.Column(db.String(45))
+    fecha_fin = db.Column(db.String(45))
     id_candidato = db.Column(db.Integer, db.ForeignKey(LLAVE_CANDIDATO))
 
 class infoAcademicaSchema(ma.Schema):
     class Meta:
-        fields = ("id", "tipo", "valor", "ano_finalizacion", "id_candidato")
+        fields = ("id", "institucion", "titulo", "fecha_inicio", "fecha_fin", "id_candidato")
         include_relationships = True
         load_instance = True
 

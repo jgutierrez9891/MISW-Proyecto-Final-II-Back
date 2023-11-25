@@ -3,7 +3,7 @@ from flask_restful import Api
 from modelos import db
 from vistas import (VistaCrearCandidato, VistaHistorialEntrevistas, VistaInformacionTecnica, 
                     VistaConsultarCandidato, VistaConsultarCandidatosDisponibles, VistaResultadosEntrevistas,
-                    VistaInformacionLaboral, VistaConsultarPruebas, ping)
+                    VistaInformacionLaboral, VistaConsultarPruebas, VistaInformacionAcademica, ping)
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
@@ -11,10 +11,12 @@ from datetime import timedelta
 import os
 
 sqlpass = os.getenv("SQL_PASSWORD")
-app = Flask(__name__)
+rootsqlpass = os.getenv("SQL_ROOT_TEST_PASS")
+if rootsqlpass is None:
+    rootsqlpass= 'root'
 test = os.getenv('IF_TEST')
 jwt_secret_key = os.getenv('JWT_SECRET_KEY')
-
+app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000", "https://micro-web-kdbo2knypq-uc.a.run.app", "http://localhost", "https://localhost"])
 if(os.path.isdir('/cloudsql/')):
     app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:{sqlpass}@/candidatos?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
@@ -23,9 +25,9 @@ if(os.path.isdir('/cloudsql/')):
         }
 else:
     if test:
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@0.0.0.0:3306/candidatos'
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:{rootsqlpass}@0.0.0.0:3306/candidatos'
         app.config['SQLALCHEMY_BINDS'] = {
-            "empresas": "mysql+pymysql://root:root@0.0.0.0:3306/empresas"
+            "empresas": f'mysql+pymysql://root:{rootsqlpass}@0.0.0.0:3306/empresas'
         }
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:{sqlpass}@34.27.118.190:3306/candidatos'
@@ -48,6 +50,7 @@ api = Api(app)
 api.add_resource(VistaCrearCandidato, '/candidato/create')
 api.add_resource(VistaHistorialEntrevistas, '/candidato/historialEntrevistas')
 api.add_resource(VistaInformacionTecnica, '/candidato/infoTecnica')
+api.add_resource(VistaInformacionAcademica, '/candidato/infoAcademica')
 api.add_resource(VistaConsultarCandidato, '/candidato/detalle')
 api.add_resource(VistaConsultarCandidatosDisponibles, '/candidatos/disponibles')
 api.add_resource(VistaResultadosEntrevistas, '/candidato/resultadosEntrevistas')

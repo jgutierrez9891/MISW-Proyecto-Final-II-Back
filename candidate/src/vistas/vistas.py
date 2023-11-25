@@ -1,7 +1,7 @@
 from http.client import NOT_FOUND
 from flask import request, make_response
 from flask_restful import Resource
-from modelos import db, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema, infoLaboral, ResultadoPruebaTecnicaSchema, ResultadoPruebaTecnica
+from modelos import db, infoAcademica, candidato, candidatoSchema, entrevista, entrevistaSchema, empresa, empresaSchema, infoTecnica, infoTecnicaSchema, infoLaboral, ResultadoPruebaTecnicaSchema, ResultadoPruebaTecnica
 from servicios import SaveCandidate, SaveInfoTecnica, save_info_laboral
 from flask_jwt_extended import jwt_required
 import re
@@ -25,6 +25,7 @@ resultadoPruebaTecnica_schema_single = ResultadoPruebaTecnicaSchema()
 MENSAJE_CREACION_OK = 'Informacion registrada exitosamente'
 MENSAJE_TODOS_DATOS = 'Ingrese todos los campos requeridos'
 MENSAJE_CAMPO_VACIO = 'Campo requerido se encuentra vacío'
+MENSAJE_CANDIDATO_NO_EXISTE = 'El id_candidato ingresado no existe'
     
 class VistaCrearCandidato(Resource):
 
@@ -133,7 +134,7 @@ class VistaInformacionTecnica(Resource):
         db.session.commit()
 
         if candidato_id is None:
-            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+            return {"status_code": 409, "message": MENSAJE_CANDIDATO_NO_EXISTE}, 409
 
         data = request.json
         response = SaveInfoTecnica(
@@ -259,7 +260,7 @@ class VistaInformacionLaboral(Resource):
         db.session.commit()
 
         if candidato_id is None:
-            return {"status_code": 409, "message": "El id_candidato ingresado no existe"}, 409
+            return {"status_code": 409, "message": MENSAJE_CANDIDATO_NO_EXISTE}, 409
 
         response = save_info_laboral(
             cargo,
@@ -302,9 +303,80 @@ class VistaConsultarPruebas(Resource):
         pruebas = ResultadoPruebaTecnica.query.filter(ResultadoPruebaTecnica.candidato_id == candid.id).all()
 
         if pruebas is not None and len(pruebas)>0:
-            return {"status_code": 200, "pruebas": resultadoPruebaTecnica_schema.dump(pruebas)}, 200
+            return {"status_code": 200, "pruebas": resultadoPruebaTecnica_schema.dump(pruebas), "nombre":candid.nombre}, 200
         else:
             return make_response('',204)
+        
+#Vista que guarda la información técnica de un candidato
+class VistaInformacionAcademica(Resource):
+
+    @jwt_required()
+    def post(self):
+        
+        institucion = request.json.get("institucion")
+        titulo = request.json.get("titulo")
+        fecha_inicio = request.json.get("fecha_inicio")
+        fecha_fin = request.json.get("fecha_fin")
+        id_candidato = request.json.get("id_candidato")
+
+        if institucion is None or titulo is None or fecha_inicio is None or fecha_fin is None or id_candidato is None:
+            return {"status_code": 400, "message": MENSAJE_TODOS_DATOS}, 400
+        
+        elif institucion == "" or titulo == "" or fecha_inicio == "" or fecha_fin == "" or id_candidato == "":
+            return {"status_code": 400, "message": MENSAJE_CAMPO_VACIO}, 400
+        
+        candidato_id = candidato.query.filter(candidato.id == id_candidato).first()
+        db.session.commit()
+
+        if candidato_id is None:
+            return {"status_code": 409, "message": MENSAJE_CANDIDATO_NO_EXISTE}, 409
+
+
+        new_infoAcademica = infoAcademica(
+            institucion = request.json.get("institucion"),
+            titulo = request.json.get("titulo"),
+            fecha_inicio = request.json.get("fecha_inicio"),
+            fecha_fin = request.json.get("fecha_fin"),
+            id_candidato = request.json.get("id_candidato"),
+        )
+        
+        db.session.add(new_infoAcademica)
+        db.session.commit()
+        return {"id":new_infoAcademica.id, "status_code": 201, "message": MENSAJE_CREACION_OK}, 201
+    
+    
+    @jwt_required()
+    def get(self):
+        
+        id_candidato = request.args.get("id_candidato")
+
+        if id_candidato is None:
+            return {"status_code": 400, "message": MENSAJE_TODOS_DATOS}, 400
+        
+        elif id_candidato == "":
+            return {"status_code": 400, "message": MENSAJE_CAMPO_VACIO}, 400
+        
+        candidate = candidato.query.filter(candidato.id == id_candidato).first()
+        db.session.commit()
+
+        if candidate is None:
+            return {"status_code": 409, "message": MENSAJE_CANDIDATO_NO_EXISTE}, 409
+
+
+
+        info_academica_list = infoAcademica.query.filter(infoAcademica.id_candidato == id_candidato).all()
+        db.session.commit()
+
+        listOfItems = []
+        
+        for info_academica_item in info_academica_list:
+            info_academica_format = {"institucion":info_academica_item.institucion, 
+                                   "titulo":info_academica_item.titulo, 
+                                   "fecha_inicio":info_academica_item.fecha_inicio, 
+                                   "fecha_fin":info_academica_item.fecha_fin, 
+                                   "id_candidato":info_academica_item.id_candidato}
+            listOfItems.append(info_academica_format)
+        return {"response":listOfItems, "status_code": 200}
 
 class ping(Resource):
     
