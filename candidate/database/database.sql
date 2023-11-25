@@ -48,9 +48,10 @@ CREATE TABLE info_tecnica (
 
 CREATE TABLE info_academica (
   id int NOT NULL AUTO_INCREMENT,
-  tipo varchar(50) DEFAULT NULL,
-  valor varchar(50) DEFAULT NULL,
-  ano_finalizacion varchar(4) DEFAULT NULL,
+  institucion varchar(50) DEFAULT NULL,
+  titulo varchar(50) DEFAULT NULL,
+  fecha_inicio varchar(50) DEFAULT NULL,
+  fecha_fin varchar(50) DEFAULT NULL,
   id_candidato int DEFAULT NULL,
   PRIMARY KEY (id),
   KEY id_candidato (id_candidato),
