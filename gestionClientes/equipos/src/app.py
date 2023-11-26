@@ -4,7 +4,7 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from modelos.modelos import db
-from vistas.vistas import (VistaAsociarEquipoRol, VistaActualizarRol, VistaCandidatosHojas, VistaConsultarFichas, VistaConsultarProyectos, VistaConsultarRol, VistaCrearProyecto, VistaConsultarHabilidades, VistaEvaluarCandidato, VistaHojasTrabajo, ping, VistaAsociarCandidatosAEquipo)
+from vistas.vistas import (VistaAsociarEquipoRol, VistaActualizarRol, VistaCandidatosHojas, VistaConsultarEmpleados, VistaConsultarFichas, VistaConsultarProyectos, VistaConsultarRol, VistaCrearProyecto, VistaConsultarHabilidades, VistaEvaluarCandidato, VistaHojasTrabajo, ping, VistaAsociarCandidatosAEquipo)
 
 import os
 # from dotenv import load_dotenv
@@ -64,6 +64,7 @@ api.add_resource(VistaHojasTrabajo, '/proyectos/<int:id_proyecto>/hojas-trabajo'
 api.add_resource(VistaCandidatosHojas, '/proyectos/<int:id_proyecto>/hojas-trabajo/<int:id_hoja>')
 api.add_resource(VistaEvaluarCandidato, '/proyectos/evaluacion/<int:id_candidato>')
 api.add_resource(VistaAsociarCandidatosAEquipo, '/equipos/<int:id_equipo>/candidatos')
+api.add_resource(VistaConsultarEmpleados, '/empleados/<int:doc_empleado>')
 
 
 jwt = JWTManager(app)
