@@ -134,6 +134,23 @@ class VistaConsultarProyectos(Resource):
             return {"status_code": 404, "message": "No se encontraron registros para la empresa con id "+str(empresa_id)}, 404
         
         
+class VistaConsultarEmpleados(Resource):
+    
+    @jwt_required()
+    def get(self, doc_empleado):
+        print("doc_empleado")
+        print(doc_empleado)
+        
+        candid = Empleado.query.filter(Empleado.num_doc == doc_empleado).first()
+        if candid is None:
+            return {"status_code": 404, "message": "Candidato no encontrado"}, 404
+
+    
+        return {"status_code": 200, "nombre":candid.nombre, "id_candidato":candid.id}, 200
+
+        
+        
+        
         
 class VistaActualizarRol(Resource):
     

@@ -34,8 +34,8 @@ class TestVistaEvaluarCandidato(TestCase):
         self.headers ={'Content-Type': 'application/json',
                        "Authorization" : "Bearer "+str(self.token_de_acceso)}
 
-        sql_crear = "INSERT INTO empleados.empleado (id, nombre) VALUES (%s, %s)"
-        val = (301, "test name")
+        sql_crear = "INSERT INTO empleados.empleado (id, nombre, num_doc) VALUES (%s, %s, %s)"
+        val = (301, "test name", "prueba_doc")
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
@@ -60,6 +60,7 @@ class TestVistaEvaluarCandidato(TestCase):
         super().tearDown()
 
 
+
     def test_1_post_evaluar_candidato_success(self):
         data = {
             "evaluacion": "Good",
@@ -81,5 +82,7 @@ class TestVistaEvaluarCandidato(TestCase):
         data = json.loads(response.data)
         self.assertEqual(data['status_code'], 404)
         self.assertEqual(data['message'], 'No se encontró el candidato')
+
+
 
 
