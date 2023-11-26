@@ -22,7 +22,7 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:4200", "http://localhost:4201", "http://localhost:8000", "https://micro-web-kdbo2knypq-uc.a.run.app", "http://localhost", "https://localhost"])
 
 if(os.path.isdir('/cloudsql/')):
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:{sqlpass}@/empresas?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:{sqlpass}@/empresas?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs'
     app.config['SQLALCHEMY_BINDS'] = {
             "empleados": f'mysql+pymysql://root:{sqlpass}@/empleados?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs',
             "candidatos": f'mysql+pymysql://root:{sqlpass}@/candidatos?unix_socket=/cloudsql/proyecto-final-01-399101:us-central1:abcjobs' 
