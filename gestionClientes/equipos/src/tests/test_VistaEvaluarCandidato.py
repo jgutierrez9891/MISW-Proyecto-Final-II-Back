@@ -60,6 +60,7 @@ class TestVistaEvaluarCandidato(TestCase):
         super().tearDown()
 
 
+
     def test_1_post_evaluar_candidato_success(self):
         data = {
             "evaluacion": "Good",
