@@ -34,8 +34,8 @@ class TestVistaEvaluarCandidato(TestCase):
         self.headers ={'Content-Type': 'application/json',
                        "Authorization" : "Bearer "+str(self.token_de_acceso)}
 
-        sql_crear = "INSERT INTO empleados.empleado (id, nombre) VALUES (%s, %s)"
-        val = (301, "test name")
+        sql_crear = "INSERT INTO empleados.empleado (id, nombre, num_doc) VALUES (%s, %s, %s)"
+        val = (301, "test name","prueba_doc")
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
@@ -81,5 +81,15 @@ class TestVistaEvaluarCandidato(TestCase):
         data = json.loads(response.data)
         self.assertEqual(data['status_code'], 404)
         self.assertEqual(data['message'], 'No se encontró el candidato')
+        
+        
+    def test_3_consultar_pruebas_candidato_existente(self):
+        response = self.client.get("/empleados/prueba_doc", headers={"Authorization": "Bearer " + str(self.token)})
+        self.assertEqual(response.status_code, 200)
+
+    def test_4_consultar_pruebas_no_existen_candidato_existente(self):
+        response = self.client.get("/empleados/prueba_doc2", headers={"Authorization": "Bearer " + str(self.token)})
+        self.assertEqual(response.status_code, 400)
+
 
 
