@@ -109,7 +109,7 @@ class TestVistaConsultarPruebas(TestCase):
 
     def test_consultar_pruebas_no_existen_candidato_existente(self):
         response = self.client.get("/candidato/pruebas/abc123456", headers={"Authorization": "Bearer " + str(self.token)})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
     def test_consultar_pruebas_candidato_no_existente(self):
         response = self.client.get("/candidato/pruebas/987654321", headers={"Authorization": "Bearer " + str(self.token)})

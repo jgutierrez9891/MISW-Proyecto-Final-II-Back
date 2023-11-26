@@ -84,11 +84,11 @@ class TestVistaEvaluarCandidato(TestCase):
         
         
     def test_3_consultar_pruebas_candidato_existente(self):
-        response = self.client.get("/empleados/prueba_doc", headers={"Authorization": "Bearer " + str(self.token)})
+        response = self.client.get("/empleados/prueba_doc", headers={"Authorization": "Bearer " + str(self.token_de_acceso)})
         self.assertEqual(response.status_code, 200)
 
     def test_4_consultar_pruebas_no_existen_candidato_existente(self):
-        response = self.client.get("/empleados/prueba_doc2", headers={"Authorization": "Bearer " + str(self.token)})
+        response = self.client.get("/empleados/prueba_doc2", headers={"Authorization": "Bearer " + str(self.token_de_acceso)})
         self.assertEqual(response.status_code, 400)
 
 
