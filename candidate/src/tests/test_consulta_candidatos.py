@@ -62,13 +62,13 @@ class TestConsultaCandidatos(TestCase):
         cursor.execute(sql_crear, val)
         self.connection.commit()
 
-        sql_crear = "INSERT INTO candidatos.info_academica (tipo, valor, ano_finalizacion, id_candidato) VALUES (%s, %s, %s, %s)"
-        val = (random.choice(["UNIVERSITARIA","TECNOLÓGICA","TÉCNICA"]), fake.lexify(text = '??????'), fake.lexify(text = '????'), 100)
+        sql_crear = "INSERT INTO candidatos.info_academica (institucion, titulo, fecha_inicio, fecha_fin, id_candidato) VALUES (%s, %s, %s, %s, %s)"
+        val = (random.choice(["UNIVERSITARIA","TECNOLÓGICA","TÉCNICA"]), fake.lexify(text = '??????'), "2016-05-06","2023-06-06",100)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
-        sql_crear = "INSERT INTO candidatos.info_academica (tipo, valor, ano_finalizacion, id_candidato) VALUES (%s, %s, %s, %s)"
-        val = (random.choice(["UNIVERSITARIA","TECNOLÓGICA","TÉCNICA"]), fake.lexify(text = '??????'), fake.lexify(text = '????'), 100)
+        sql_crear = "INSERT INTO candidatos.info_academica (institucion, titulo, fecha_inicio, fecha_fin, id_candidato) VALUES (%s, %s, %s, %s, %s)"
+        val = (random.choice(["UNIVERSITARIA","TECNOLÓGICA","TÉCNICA"]), fake.lexify(text = '??????'), "2016-05-06","2023-06-06",100)
         cursor = self.connection.cursor()
         cursor.execute(sql_crear, val)
         self.connection.commit()
@@ -77,6 +77,11 @@ class TestConsultaCandidatos(TestCase):
         self.token_de_acceso = create_access_token(identity=123)
     
     def tearDown(self):
+        sql = "DELETE FROM candidatos.resultado_prueba_tecnica"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
         sql = "DELETE FROM candidatos.info_tecnica"
         cursor = self.connection.cursor()
         cursor.execute(sql)

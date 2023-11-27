@@ -92,22 +92,32 @@ class TestProyecto(TestCase):
 
         
     def tearDown(self) -> None:
-        sql = "DELETE FROM empresas.ficha_trabajo"
+        sql = "DELETE FROM empresas.rol_ficha_trabajo WHERE id_ficha_trabajo in(1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM empresas.candidatos_hoja_trabajo"
+        sql = "DELETE FROM empresas.empleado_ficha_trabajo WHERE id_ficha_trabajo in (1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM empresas.hoja_trabajo"
+        sql = "DELETE FROM empresas.ficha_trabajo where id in(1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
         cursor.close()
-        sql = "DELETE FROM empresas.proyecto"
+        sql = "DELETE FROM empresas.candidatos_hoja_trabajo WHERE id_hoja_trabajo in(1,2,3,4)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.hoja_trabajo WHERE id in(1,2,3,4)"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        self.connection.commit()
+        cursor.close()
+        sql = "DELETE FROM empresas.proyecto WHERE id in(1,2)"
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
@@ -204,7 +214,7 @@ class TestProyecto(TestCase):
                                                 "id": 1
                                             },
                                             {
-                                                "id": 3
+                                                "id": 3000
                                             }
                                         ]
                                     }

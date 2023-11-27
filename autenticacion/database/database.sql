@@ -35,8 +35,6 @@ CREATE TABLE empresa(
     PRIMARY KEY(id)
 );
 
-insert into empresas.empresa (tipo_doc, num_doc, email, telefono, nombre) values ("NITs","1010999-10","daachalabu@unal.edu.co", 300229,"empresa Prueba");
-
 
 CREATE TABLE representante(
     id int not null AUTO_INCREMENT,
@@ -51,4 +49,3 @@ CREATE TABLE representante(
     PRIMARY KEY(id)
 );
 
-insert into empresas.representante (tipo_doc, num_doc, nombre, email, telefono, usuario, clave, id_empresa) values ("CC","1023456789","Mauricio Peña", "mauricio.pena@softwareia.com", 3123456789,"maupena", "miclave123", 1);
