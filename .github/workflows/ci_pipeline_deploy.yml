@@ -115,6 +115,7 @@ jobs:
       DB_USER: root
       DB_PASSWORD: root
       IF_TEST: "True"
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }} 
     steps:
       - uses: actions/checkout@v1
       - name: Install autenticacion_db
